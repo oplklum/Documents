@@ -1,0 +1,12 @@
+{
+  "devices": {
+  },
+  "links": {
+    "link1": {
+      "src": "of:0000fefefe000001/2",
+      "dst": "of:0000fefefe000002/1",
+      "type": "OPTICAL",
+      "state": "ACTIVE"
+    }
+  }
+}

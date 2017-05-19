@@ -1,0 +1,23 @@
+{
+  "devices":{
+    "netconf:192.168.6.244:830":{
+      "basic":{
+        "driver": "oplink-netconf",
+        "type":"FIBER_SWITCH",
+        "manufacturer":"Oplink a Molex company",
+        "hwVersion":"x86-1.0",
+        "swVersion":"sdn-1.0"
+      }
+    }
+  },
+  "apps":{
+    "org.onosproject.netconf":{
+      "devices":[{
+        "username":"root",
+        "password":"root",
+        "ip":"192.168.6.244",
+        "port":830
+      }]
+    }
+  }
+}

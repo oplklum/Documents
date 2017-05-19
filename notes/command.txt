@@ -1,0 +1,37 @@
+
+
+
+http://172.16.166.27:8181/onos/ui/login.html
+http://172.16.166.27:8181/onos/v1/flows
+http://172.16.166.27:8181/onos/ui/index.html
+http://172.16.166.27:8181/onos/v1/roadm
+http://172.16.166.27:8181/onos/v1/roadm/of:0000ffffffff0001/channels
+http://172.16.166.27:8181/onos/v1/roadm/of:0000ffffffff0002/channels
+http://172.16.166.27:8181/onos/v1/roadm/of:0000ffffffff0001/ports
+http://172.16.166.27:8181/onos/v1/roadm/of:0000ffffffff0002/ports
+
+R1: ROADM 1 0000ffffffff0001
+R2: ROADM 2 0000ffffffff0002		
+R1 Linein -> R1 Express Out1 -> R2 Express In1 -> R2 LineOut
+R2 Linein -> R2 Express Out1 -> R1 Express In1 -> R1 LineOut	
+R1 Port5 : 0dBm
+R2 Port5 : 0dBm	
+Inport: 14  Outport:2
+Channel:1   Attn:0
+R1 Linein -> R1 Express Out2 -> R2 Express In2 -> R2 LineOut
+R2 Linein -> R2 Express Out2 -> R1 Express In2 -> R1 LineOut	
+R1 Port6 : 1dBm
+R2 Port6 : 1dBm	
+Inport: 15  Outport:2
+Channel:1   Attn:1dB
+
+flow-mod
+curl -u onos:rocks -v -X POST -H "Content-Type: application/json" -d @ http://192.168.4.46:8181/onos/v1/flows/of:0000ffffffff0001
+curl -u karaf:karaf -v -X POST -H "Content-Type: application/json" -d @ http://172.16.166.27:8181/onos/v1/flows/of:0000ffffffff0002
+delete
+curl -u karaf:karaf -v -X DELETE http://172.16.166.27:8181/onos/v1/flows/of:0000ffffffff0001/id
+curl -u karaf:karaf -v -X DELETE http://172.16.166.27:8181/onos/v1/flows/of:0000ffffffff0002/id
+
+power set
+curl -u karaf:karaf -v -X POST -H "Content-Type: application/json" -d @ http://172.16.166.27:8181/onos/v1/roadm/of:0000ffffffff0001
+curl -u karaf:karaf -v -X POST -H "Content-Type: application/json" -d @ http://172.16.166.27:8181/onos/v1/roadm/of:0000ffffffff0002

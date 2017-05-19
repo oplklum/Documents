@@ -1,0 +1,38 @@
+{of:0000fefefe000003/0=ProtectedTransportEndpointState
+  {pathState=[
+    TransportEndpointState
+    {id=primary_port, live=false, description=TransportEndpointDescription
+      {output=FilteredConnectPoint
+        {connectPoint=of:0000fefefe000003/1, trafficSelector=DefaultTrafficSelector{criteria=[]}
+        },
+        enabled=true
+      },
+      attributes={inputStatus=inService}
+    },
+    TransportEndpointState
+    {id=secondary_port, live=false, description=TransportEndpointDescription
+      {output=FilteredConnectPoint
+        {connectPoint=of:0000fefefe000003/2, trafficSelector=DefaultTrafficSelector{criteria=[]}
+        },
+        enabled=true
+      },
+      attributes={inputStatus=outOfService}
+    }],
+    activePathIndex=1, description=ProtectedTransportEndpointDescription
+    {paths=[
+      TransportEndpointDescription
+      {output=FilteredConnectPoint
+        {connectPoint=of:0000fefefe000003/1, trafficSelector=DefaultTrafficSelector{criteria=[]}
+        },
+        enabled=true
+      },
+      TransportEndpointDescription
+      {output=FilteredConnectPoint
+        {connectPoint=of:0000fefefe000003/2, trafficSelector=DefaultTrafficSelector{criteria=[]}
+        }, 
+        enabled=true
+      }], 
+      peer=of:0000fefefe000003, fingerprint=OplinkOPS
+    }
+  }
+}

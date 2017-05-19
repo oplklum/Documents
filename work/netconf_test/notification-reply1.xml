@@ -1,0 +1,46 @@
+<notifications>
+<notification
+xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+<eventTime>2007-07-08T00:01:00Z</eventTime>
+<event xmlns="http://example.com/event/1.0">
+<eventClass>fault</eventClass>
+<reportingEntity>
+<card>Ethernet0</card>
+</reportingEntity>
+<severity>major</severity>
+</event>
+</notification>
+<notification
+xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+<eventTime>2007-07-08T00:02:00Z</eventTime>
+<event xmlns="http://example.com/event/1.0">
+<eventClass>fault</eventClass>
+<reportingEntity>
+<card>Ethernet2</card>
+</reportingEntity>
+<severity>critical</severity>
+</event>
+</notification>
+<notification
+xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+<eventTime>2007-07-08T00:04:00Z</eventTime>
+<event xmlns="http://example.com/event/1.0">
+<eventClass>fault</eventClass>
+<reportingEntity>
+<card>ATM1</card>
+</reportingEntity>
+<severity>minor</severity>
+</event>
+</notification>
+<notification
+xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+<eventTime>2007-07-08T00:10:00Z</eventTime>
+<event xmlns="http://example.com/event/1.0">
+<eventClass>state</eventClass>
+<reportingEntity>
+<card>Ethernet0</card>
+</reportingEntity>
+<operState>enabled</operState>
+</event>
+</notification>
+</notifications>

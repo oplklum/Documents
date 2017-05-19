@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html dir="ltr" class="client-js" lang="zh-Hans"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Shell编程基础 - Ubuntu中文</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
+mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Shell编程基础","wgTitle":"Shell编程基础","wgCurRevisionId":153842,"wgRevisionId":153842,"wgArticleId":116,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["程序开发"],"wgBreakFrames":!1,"wgPageContentLanguage":"zh-hans","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"zh","wgMonthNames":["","1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],"wgMonthNamesShort":["","1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],"wgRelevantPageName":"Shell编程基础","wgRelevantArticleId":116,"wgIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgWikiEditorEnabledModules":{"toolbar":!1,"dialogs":!1,"preview":!1,"publish":!1}});mw.loader.implement("user.options",function($,jQuery){mw.user.options.set({"variant":"zh-hans"});});mw.loader.implement("user.tokens",function($,jQuery){mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\"});});mw.loader.load(["mediawiki.page.startup","mediawiki.legacy.wikibits"]);
+} );</script>
+<link rel="stylesheet" href="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/load_002.css">
+<!--[if IE 6]><link rel="stylesheet" href="/skins/Cavendish/IE60Fixes.css?303" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/Cavendish/IE70Fixes.css?303" media="screen" /><![endif]-->
+<link rel="stylesheet" href="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/brown.css" media="screen">
+<link rel="stylesheet" href="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/extensions.css" media="screen">
+<link rel="stylesheet" href="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/style.css" media="screen">
+<style>
+.mw-collapsible-toggle{float:right;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}  .mw-content-ltr .mw-collapsible-toggle,.mw-content-rtl .mw-content-ltr .mw-collapsible-toggle{float:right} .mw-content-rtl .mw-collapsible-toggle,.mw-content-ltr .mw-content-rtl .mw-collapsible-toggle{float:left}.mw-customtoggle,.mw-collapsible-toggle{cursor:pointer} caption .mw-collapsible-toggle,.mw-content-ltr caption .mw-collapsible-toggle,.mw-content-rtl caption .mw-collapsible-toggle,.mw-content-rtl .mw-content-ltr caption .mw-collapsible-toggle,.mw-content-ltr .mw-content-rtl caption .mw-collapsible-toggle{float:none} li .mw-collapsible-toggle,.mw-content-ltr li .mw-collapsible-toggle,.mw-content-rtl li .mw-collapsible-toggle,.mw-content-rtl .mw-content-ltr li .mw-collapsible-toggle,.mw-content-ltr .mw-content-rtl li .mw-collapsible-toggle{float:none} .mw-collapsible-toggle-li{list-style:none}
+.suggestions{overflow:hidden;position:absolute;top:0;left:0;width:0;border:none;z-index:1099;padding:0;margin:-1px 0 0 0}.suggestions-special{position:relative;background-color:white;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0;margin-top:-2px;display:none;padding:0.25em 0.25em;line-height:1.25em}.suggestions-results{background-color:white;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0}.suggestions-result{color:black;margin:0;line-height:1.5em;padding:0.01em 0.25em;text-align:left; overflow:hidden;-o-text-overflow:ellipsis; text-overflow:ellipsis;white-space:nowrap}.suggestions-result-current{background-color:#4C59A6;color:white}.suggestions-special .special-label{color:gray;text-align:left}.suggestions-special .special-query{color:black;font-style:italic;text-align:left}.suggestions-special .special-hover{background-color:silver}.suggestions-result-current .special-label,.suggestions-result-current .special-query{color:white}.highlight{font-weight:bold}
+#interwiki-completelist{font-weight:bold}  ol.references{font-size:100%}.references-small{font-size:90%}sup.reference{white-space:nowrap}    .references-2column{font-size:90%;-moz-column-count:2;column-count:2}.same-bg{background:none }ol.references > li:target,sup.reference:target,cite:target{background-color:#DDEEFF}  table.wikitable,table.prettytable{background:#f9f9f9;border:1px #aaaaaa solid;border-collapse:collapse;margin-top:1em;margin-bottom:1em}table.wikitable th,table.wikitable td,table.prettytable th,table.prettytable td{border:1px #aaaaaa solid;padding:0.2em}table.wikitable th,table.prettytable th{background:#f2f2f2;text-align:center}table.wikitable caption,table.prettytable caption{margin-left:inherit;margin-right:inherit}  .notice{text-align:justify;margin:1em;padding:0.2em}#disambig{border-top:3px double #cccccc;border-bottom:3px double #cccccc}#spoiler{border-top:2px solid #ddd;border-bottom:2px solid #ddd} .Talk-Notice{border:1px solid #C0C090;background-color:#F8EABA;margin-bottom:3px;width:80%;border-spacing:3px;margin-left:auto;margin-right:auto}.Talk-Notice:after{content:"The CSS for this template should be changed. See [[Wikipedia:Template Standardisation]]."} .Talk-Notice td{background:inherit} div.thumb{border-top:1em solid #FFFFFF;margin-top:1em}  .allpagesredirect{font-style:italic}  .Use_Default_Date_Convention{display:inline}.Use_AD_and_BC{display:none}.Use_BCE_and_CE{display:none}     .audiolink a{background:url(http://upload.wikimedia.org/wikipedia/commons/f/f7/Loudspeaker.png) center left no-repeat !important;padding-left:16px !important;padding-right:0 !important} div.listenlist{background:url(http://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Gnome-speakernotes.png/30px-Gnome-speakernotes.png);padding-left:40px}div.videolist{background:url(http://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Video.svg/40px-Video.svg.png);padding-left:50px}div.multivideolist{background:url(http://upload.wikimedia.org/wikipedia/en/thumb/7/7a/FilmRoll-small.png/40px-FilmRoll-small.png);padding-left:50px} div.medialist{min-height:50px;margin:1em;background-position:top left;background-repeat:no-repeat}div.medialist ul{list-style-type:none;list-style-image:none;margin:0}div.medialist ul li{padding-bottom:0.5em}div.medialist ul li li{font-size:91%;padding-bottom:0} .plainlinksneverexpand{background:none ! important;padding:0 ! important}.plainlinksneverexpand .urlexpansion{display:none ! important} .plainlinksneverexpand a{background:none !important;padding:0 !important} .plainlinksneverexpand a.external.text:after{display:none !important}.plainlinksneverexpand a.external.autonumber:after{display:none !important} .infobox{border:1px solid #aaaaaa;background-color:#f9f9f9;color:black;margin-bottom:0.5em;margin-left:1em;padding:0.2em;float:right;clear:right}.infobox td,.infobox th{vertical-align:top}.infobox caption{font-size:larger;margin-left:inherit}.infobox.bordered{border-collapse:collapse}.infobox.bordered td,.infobox.bordered th{border:1px solid #aaaaaa}.infobox.bordered .borderless td,.infobox.bordered .borderless th{border:0}.infobox.sisterproject{width:20em;font-size:90%} .infobox.bordered .mergedtoprow td,.infobox.bordered .mergedtoprow th{border:0;border-top:1px solid #aaaaaa;border-right:1px solid #aaaaaa}.infobox.bordered .mergedrow td,.infobox.bordered .mergedrow th{border:0;border-right:1px solid #aaaaaa} .infobox.geography{text-align:left;border-collapse:collapse;line-height:1.2em;font-size:90%}.infobox.geography td,.infobox.geography th{border-top:solid 1px #aaaaaa;padding:0.4em 0.6em 0.4em 0.6em}.infobox.geography .mergedtoprow td,.infobox.geography .mergedtoprow th{border-top:solid 1px #aaaaaa;padding:0.4em 0.6em 0.2em 0.6em}.infobox.geography .mergedrow td,.infobox.geography .mergedrow th{border:0;padding:0 0.6em 0.2em 0.6em}.infobox.geography .mergedbottomrow td,.infobox.geography .mergedbottomrow th{border-top:0;border-bottom:solid 1px #aaaaaa;padding:0 0.6em 0.4em 0.6em}.infobox.geography .maptable td,.infobox.geography .maptable th{border:0;padding:0} .IPA{font-family:"Segoe UI","Chrysanthi Unicode","Doulos SIL","Gentium","GentiumAlt","Code2000","TITUS Cyberbit Basic","DejaVu Sans","Bitstream Cyberbit","Arial Unicode MS","Lucida Sans Unicode","Hiragino Kaku Gothic Pro","Matrix Unicode"}.Unicode{font-family:"Segoe UI","TITUS Cyberbit Basic","Code2000","Doulos SIL","Chrysanthi Unicode","Bitstream Cyberbit","Bitstream CyberBase","Thryomanes","Gentium","GentiumAlt","Visual Geez Unicode","Lucida Grande","Arial Unicode MS","Microsoft Sans Serif","Lucida Sans Unicode"}.latinx{font-family:"TITUS Cyberbit Basic","Code2000","Microsoft Sans Serif"}.polytonic,.interwiki-el a{font-family:"Athena","Gentium","Palatino Linotype","Segoe UI","Arial Unicode MS","Lucida Sans Unicode","Lucida Grande","Code2000"}.mufi{font-family:"Alphabetum","Cardo","LeedsUni","Junicode","TITUS Cyberbit Basic","ALPHA-Demo"}.interwiki-ja a{font-family:"Meiryo","MS PMincho","MS Mincho","MS PGothic","MS Gothic","Arial Unicode MS"}.interwiki-ko a{font-family:"Malgun Gothic","Gulim","Dotum","Arial Unicode MS"}.interwiki-ru a,.interwiki-uk a,.interwiki-be a,.interwiki-bg a,.interwiki-sr a,.interwiki-mk a,.interwiki-os a,.interwiki-tg a,.interwiki-mo a,.interwiki-kk a,.interwiki-ky a,.interwiki-tt a,.interwiki-ba a,.interwiki-cv a,.interwiki-mn a,.interwiki-xal a,.interwiki-udm a,.interwiki-ab a,.interwiki-av a,.interwiki-ce a{ font-family:"Times CY","Times New Roman",Times,serif}.interwiki-ar a,.interwiki-fa a,.interwiki-ur a,.interwiki-ug a{ font-family:"Arial Unicode MS","Microsoft Sans Serif","Times New Roman",Times,serif;direction:rtl}.interwiki-he a,.interwiki-yi a{ font-family:Cardo,"Arial Unicode MS",Code2000,David,"Times New Roman",Times,serif;direction:rtl}.interwiki-af a,.interwiki-als a,.interwiki-an a,.interwiki-ang a,.interwiki-ast a,.interwiki-az a,.interwiki-ba a,.interwiki-bat-smg a,.interwiki-bm a,.interwiki-br a,.interwiki-bs a,.interwiki-ca a,.interwiki-ceb a,.interwiki-co a,.interwiki-cs a,.interwiki-csb a,.interwiki-cy a,.interwiki-da a,.interwiki-de a,.interwiki-en a,.interwiki-eo a,.interwiki-es a,.interwiki-et a,.interwiki-eu a,.interwiki-ff a,.interwiki-fi a,.interwiki-fiu-vro a,.interwiki-fo a,.interwiki-fr a,.interwiki-frp a,.interwiki-fur a,.interwiki-fy a,.interwiki-ga a,.interwiki-gd a,.interwiki-gl a,.interwiki-gv a,.interwiki-ha a,.interwiki-hr a,.interwiki-ht a,.interwiki-hu a,.interwiki-ia a,.interwiki-id a,.interwiki-ie a,.interwiki-ilo a,.interwiki-io a,.interwiki-is a,.interwiki-it a,.interwiki-jbo a,.interwiki-jv a,.interwiki-kg a,.interwiki-ksh a,.interwiki-ku a,.interwiki-kw a,.interwiki-la a,.interwiki-lad a,.interwiki-lb a,.interwiki-li a,.interwiki-lij a,.interwiki-lmo a,.interwiki-ln a,.interwiki-lt a,.interwiki-lv a,.interwiki-map-bms a,.interwiki-mi a,.interwiki-ms a,.interwiki-na a,.interwiki-nap a,.interwiki-nds a,.interwiki-nl a,.interwiki-nn a,.interwiki-no a,.interwiki-nrm a,.interwiki-oc a,.interwiki-om a,.interwiki-os a,.interwiki-pam a,.interwiki-pl a,.interwiki-pms a,.interwiki-pt a,.interwiki-rm a,.interwiki-ro a,.interwiki-sc a,.interwiki-scn a,.interwiki-sco a,.interwiki-se a,.interwiki-simple a,.interwiki-sk a,.interwiki-sl a,.interwiki-so a,.interwiki-sq a,.interwiki-su a,.interwiki-sv a,.interwiki-sw a,.interwiki-tet a,.interwiki-tpi a,.interwiki-tk a,.interwiki-tl a,.interwiki-tw a,.interwiki-tr a,.interwiki-uz a,.interwiki-vec a,.interwiki-vi a,.interwiki-wa a,.interwiki-war a,.interwiki-wo a,.interwiki-yo a,.interwiki-cdo a,.interwiki-zh-min-nan a{font-family:"Times New Roman",Times,serif}#wpSave{font-weight:bold} .hiddenStructure{display:none;speak:none} .nounderlines a{text-decoration:none} #EnWpMainPage{width:100%;margin-top:1em}#EnWpMainPage h2{font-size:130%;font-weight:bold;margin:0;padding:0;border:0}#EnWpMpMargin{margin-right:13.8em}#EnWpMpCol1{float:left;clear:left;width:50%}#EnWpMpCol2{width:49.9%;float:left}#EnWpMpBrowse{background:#f8fcff url(http://upload.wikimedia.org/wikipedia/en/9/9f/MP-three-books.png) no-repeat 180% 9%;border:1px solid #c7c7c7}#EnWpMpBrowseCats li{font-size:85%;margin-left:1em;line-height:1.5}#EnWpMpBrowseCats h3{font-size:120%;margin:.2em 0 .1em -.8em;padding:0;font-weight:normal}#EnWpMpBrowseCats h3 a{font-weight:bold}#EnWpMpBook{background-image:url(http://upload.wikimedia.org/wikipedia/en/7/7e/MP-open-book.png)}#EnWpMpFeaturedPic{text-align:center;margin:0 0 .5em;font-size:85%;font-weight:bold}#EnWpMpFeaturedPic h2{font-size:145%;text-align:left}.EnWpMpBrowseRight{float:right;width:12.7em}.EnWpMpBrowseBottom{margin:1em 0}.EnWpMpBrowseBottom #EnWpMpBrowseCats li,.EnWpMpBrowseBottom #EnWpMpUsefulLinks,.EnWpMpBrowseBottom #EnWpMpFeaturedPic{float:left;width:24%;margin:0;line-height:normal}.EnWpMpBrowseBottom #EnWpMpBrowseCats h3{margin-left:0}#EnWpMpUsefulLinks{clear:left}#EnWpMpSearch{background:url(http://upload.wikimedia.org/wikipedia/en/a/ae/MP-magnifying-glass.png) no-repeat top right}#EnWpMpSearch input{vertical-align:middle}#EnWpMpSearchInner{float:right;width:20em;text-align:center}#bodySearchMP{margin:0;padding:0}#bodySearchMP .bodySearchWrap{float:right;width:17.5em;text-align:left;padding:.8em 0}#bodySearchMP label{display:block;font-size:95%;font-weight:bold;margin-bottom:-.2em}#bodySearchMP .bodySearchBtnGo{font-weight:bold;padding-left:.3em;padding-right:.3em;margin-left:.5em}.EnWpMpContentBox{border:1px solid;margin-bottom:.9em}#EnWpMpCol2 .EnWpMpContentBox{margin-left:.9em}.EnWpMpImage{float:right;margin:0 0 .2em .2em}.EnWpMpImage img{position:relative;z-index:3}#EnWpMpSisterProjects{float:left;width:49%}.EnWpMpSisterProject{float:left;width:17em;margin:0;height:5.5em;margin:0}.EnWpMpSisterImg{float:left;width:40px;height:100%}#EnWpMpOtherLangs{margin-left:50%}#EnWpMainPageNoCSS{display:none}#EnWpMpBook2{background-image:url(http://upload.wikimedia.org/wikipedia/commons/8/8e/MP-open-book2.png)}#EnWpMpSearch2{background:url(http://upload.wikimedia.org/wikipedia/en/3/3a/MP-magnifying-glass2.png) no-repeat top right} .charboxblack a:link,.charboxblack a:hover,.charboxblack a:visited,.charboxblack a:active{color:black}.charboxsilver a:link,.charboxsilver a:hover,.charboxsilver a:visited,.charboxsilver a:active{color:silver}.charboxgray a:link,.charboxgray a:hover,.charboxgray a:visited,.charboxgray a:active{color:gray}.charboxwhite a:link,.charboxwhite a:hover,.charboxwhite a:visited,.charboxwhite a:active{color:white}.charboxmaroon a:link,.charboxmaroon a:hover,.charboxmaroon a:visited,.charboxmaroon a:active{color:maroon}.charboxred a:link,.charboxred a:hover,.charboxred a:visited,.charboxred a:active{color:red}.charboxpurple a:link,.charboxpurple a:hover,.charboxpurple a:visited,.charboxpurple a:active{color:purple}.charboxfuchsia a:link,.charboxfuchsia a:hover,.charboxfuchsia a:visited,.charboxfuchsia a:active{color:fuchsia}.charboxgreen a:link,.charboxgreen a:hover,.charboxgreen a:visited,.charboxgreen a:active{color:green}.charboxlime a:link,.charboxlime a:hover,.charboxlime a:visited,.charboxlime a:active{color:lime}.charboxolive a:link,.charboxolive a:hover,.charboxolive a:visited,.charboxolive a:active{color:olive}.charboxyellow a:link,.charboxyellow a:hover,.charboxyellow a:visited,.charboxyellow a:active{color:yellow}.charboxnavy a:link,.charboxnavy a:hover,.charboxnavy a:visited,.charboxnavy a:active{color:navy}.charboxblue a:link,.charboxblue a:hover,.charboxblue a:visited,.charboxblue a:active{color:blue}.charboxteal a:link,.charboxteal a:hover,.charboxteal a:visited,.charboxteal a:active{color:teal}.charboxaqua a:link,.charboxaqua a:hover,.charboxaqua a:visited,.charboxaqua a:active{color:aqua} .allpagesredirect a:link{color:#0066ff}  .tickerDiffLink{} .tickerMiscLink{}  .tickerList ul,.tickerList ul li{list-style:none;text-indent:-2em;margin-left:2em;text-align:left}.tickerList ul ul,.tickerList ul ul li{list-style:none;text-indent:0;margin-left:1.5em;text-align:left} .tickerEntry_deleted{} .tickerEntry_replaced{} .tickerEntry_tagged{} .tickerEntry_redir{} .tickerEntry_recat{} .tickerEntry_notify{} .tickerEntry_changed{}  .tickerAction_deleted:before{content:"(×)";color:#FF0000;font-family:monospace;font-weight:bold;font-size:100%;background:pink}.tickerAction_replaced:before{content:" REPL ";color:#CC88FF;font-family:monospace;font-weight:bold;font-size:100%}.tickerAction_addedBad:before{content:" +VfD ";color:#FF8800;font-family:monospace;font-weight:bold;font-size:100%}.tickerAction_removedBad:before{content:" -VfD ";color:#00BB00;font-family:monospace;font-weight:bold;font-size:100%}.tickerAction_addedGood:before{content:" +OK ";color:#00BB00;font-family:monospace;font-weight:bold;font-size:100%}.tickerAction_removedGood:before{content:" -OK ";color:#FF8800;font-family:monospace;font-weight:bold;font-size:100%} .tickerUsage{font-size:80%} .tickerTemplateEntry{font-weight:bold} .tickerSubEntry{} .tickerMinorEntry{color:#666} .tickerMinorEntry a,.tickerMinorEntry a:link,.tickerMinorEntry a:visited{color:#669}#bodyContent .tickerMinorEntry a.extiw,#bodyContent .tickerMinorEntry a.extiw:link,#bodyContent .tickerMinorEntry a.extiw:visited{color:#669}   .toccolours{border:1px solid #aaaaaa;background-color:#f9f9f9;padding:5px;font-size:95%} #bodyContent .plainlinks a{padding:0 !important}#p-nav h5{display:none}.portlet a{text-decoration:none}.portlet a:hover{text-decoration:underline}#p-nav .pBody{padding-right:0}#p-nav a{display:block;width:100%} #editpage-specialchars a{text-decoration:none}#editpage-specialchars a:hover{text-decoration:underline}     div.thumb div a img{background-color:#f9f9f9} #file img{background:url(http://upload.wikimedia.org/wikipedia/commons/5/5d/Checker-16x16.png) repeat} #spoken{position:absolute;float:right;text-align:right;font-size:90%;right:0;z-index:1;background:none;border-bottom-style:none;top:-2.2em;display:block !important} .plainlinksneverexpand a.external.text:after{display:none !important }  div.Boxmerge,div.NavFrame{margin:0px;padding:2px;border:1px solid #aaaaaa;border-collapse:collapse;font-size:95%}div.Boxmerge div.NavFrame{border-style:none;border-style:hidden}div.NavFrame + div.NavFrame,div.NavFrame + table.collapsible,table.collapsible + div.NavFrame,table.collapsible + table.collapsible{border-top-style:none;border-top-style:hidden}div.NavPic{background-color:#ffffff;margin:0px;padding:2px;float:left}div.NavFrame div.NavHead{height:1.6em;font-weight:bold;font-size:100%;text-align:center;background-color:#efefef;cursor:pointer}div.NavFrame p{font-size:100%}div.NavFrame div.NavContent{font-size:100%}div.NavFrame div.NavContent p{font-size:100%}div.NavEnd{margin:0px;padding:0px;line-height:1px;clear:both}span.NavToggle{float:right;display:none; text-align:right;font-weight:normal;font-size:smaller} table.ambox{width:80%;margin:0 auto;border-collapse:collapse;background:#fbfbfb;border:1px solid #aaa;border-left:10px solid #1e90ff; }table.ambox th,table.ambox td{ padding:0.25em 0.5em; }table.ambox td.ambox-image{ width:52px;padding:2px 0px 2px 0.5em; text-align:center}table.ambox td.ambox-imageright{ width:52px;padding:2px 4px 2px 0px; text-align:center}table.ambox-notice{border-left:10px solid #1e90ff;   }table.ambox-serious{border-left:10px solid #b22222; }table.ambox-content{border-left:10px solid #f28500; }table.ambox-style{border-left:10px solid #f4c430; }table.ambox-merge{border-left:10px solid #9932cc; }table.ambox-growth{border-left:10px solid #228b22; }table.ambox-protection{border-left:10px solid #bba; }table.ambox-talk{border-left:10px solid #18e7f8; }table.ambox.ambox-mini{ float:right;clear:right;margin:0 0 0 1em;width:25%} .geo-default{display:inline}.geo-nondefault{display:none}.geo-dms{display:inline}.geo-dec{display:inline}.geo-multi-punct{display:none}.longitude .latitude{white-space:nowrap} .geo{}   #content span.coordinates a.external.text:after,#content span.coordinates a.external.autonumber:after{content:""} #coordinates{position:absolute;z-index:1;border:none;background:none;right:12px;top:1.3em;float:right;margin:0.0em;padding:0.0em;line-height:1.5em;text-align:right;text-indent:0;font-size:85%;text-transform:none;white-space:normal} #coordinates a[href ^="http://"]{background:url(http://upload.wikimedia.org/wikipedia/de/d/d4/Gnome-globe.png) center right no-repeat;padding-right:18px !important}  #catlinks{border:1px solid #aaa;background-color:#f9f9f9;padding:5px;margin-top:1em;clear:both}  table.navbox{background-color:#f9f9f9;border:1px solid #aaaaaa;clear:both;font-size:90%;margin:auto;padding:2px;text-align:center;width:100%}table.navbox + table.navbox{margin-top:-1px; }.navbox-title,.navbox-abovebelow,table.navbox th{text-align:center; padding-left:1em;padding-right:1em}.navbox-group{ white-space:nowrap;text-align:right;font-weight:bold;padding-left:1em;padding-right:1em}.navbox,.navbox-subgroup{background:#fdfdfd; }.navbox-title,table.navbox th{background:#ccccff; }.navbox-abovebelow,.navbox-group,.navbox-subgroup .navbox-title{background:#ddddff; }.navbox-subgroup .navbox-group,.navbox-subgroup .navbox-abovebelow{background:#e6e6ff; }.navbox-even{background:#f7f7f7; }.navbox-odd{background:transparent; }table.navbox tr:not(:first-child) th{background-color:#ddf}#toolbar{border:1px solid #aaaaaa} .editsection{font-weight:normal !important;margin-left:1em} .noedit{padding-top:1px}.noedit .editsection{display:none} .messagebox{border:1px solid #aaa;background-color:#f9f9f9;width:80%;margin:0 auto 1em auto;padding:.2em}.messagebox.merge{border:1px solid #c0b8cc;background-color:#f0e5ff;text-align:center}.messagebox.cleanup{border:1px solid #9f9fff;background-color:#efefff;text-align:center}.messagebox.standard-talk{border:1px solid #c0c090;background-color:#f8eaba}.messagebox.nested-talk{border:1px solid #c0c090;background-color:#f8eaba;width:100%;margin:2px 4px 2px 4px}.messagebox.small{width:238px;font-size:85%;float:right;clear:both;margin:0 0 1em 1em;line-height:1.25em}.messagebox.small-talk{width:238px;font-size:85%;float:right;clear:both;margin:0 0 1em 1em;line-height:1.25em;background:#F8EABA} .template-documentation{clear:both;margin:1em 0 0 0;border:1px solid #aaa;background-color:#ecfcf4;padding:5px} #bodyContent a[href$=".pdf"].external,#bodyContent a[href*=".pdf?"].external,#bodyContent a[href*=".pdf#"].external,#bodyContent a[href$=".PDF"].external,#bodyContent a[href*=".PDF?"].external,#bodyContent a[href*=".PDF#"].external{background:url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Icons-mini-file_acrobat.gif/15px-Icons-mini-file_acrobat.gif) center right no-repeat;padding-right:16px}  span.PDFlink a{background:url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Icons-mini-file_acrobat.gif/15px-Icons-mini-file_acrobat.gif) center right no-repeat !important;padding-right:17px !important}span.geolink a{background:url(http://upload.wikimedia.org/wikipedia/en/a/a7/Monobook-globe.png) center right no-repeat !important;padding-right:11px !important} .TipTrackButton_tip,.TipMouseButton_tip,.TipClickButton_tip,.TipTrack_tip,.TipMouse_tip,.TipClick_tip{border:1px solid #8888aa;background:#f7f8ff;padding:0.5em} span.lanLabel{color:#777777;padding-left:0.5em}tt span.minor{margin:0 -2px 0 -3px;font-size:12px}tt span.newpage{margin:0 1px 0 -6px;font-size:12px}tt span.bot{margin:0 -6px 0 1px;font-size:12px}  div.user-block{padding:5px;border:1px solid #A9A9A9;background-color:#FFEFD5} @media screen,handheld,projection{cite *.printonly{display:none}} .plainlinksneverexpand a.external.text:after{display:none !important}.plainlinksneverexpand a.external.autonumber:after{display:none !important} .plainlinksneverexpand a.external.text:after{display:none !important}.plainlinksneverexpand a.external.autonumber:after{display:none !important} .messagebox{border:1px solid #aaa;background-color:#f9f9f9;width:80%;margin:0 auto 1em auto;padding:.2em}.messagebox.merge{border:1px solid #c0b8cc;background-color:#f0e5ff;text-align:center}.messagebox.cleanup{border:1px solid #9f9fff;background-color:#efefff;text-align:center}.messagebox.standard-talk{border:1px solid #c0c090;background-color:#f8eaba;margin:4px auto}.messagebox.nested-talk{border:1px solid #c0c090;background-color:#f8eaba;width:100%;margin:2px 0 0 0;padding:2px}.messagebox.small{width:238px;font-size:85%;float:right;clear:both;margin:0 0 1em 1em;line-height:1.25em}.messagebox.small-talk{width:238px;font-size:85%;float:right;clear:both;margin:0 0 1em 1em;line-height:1.25em;background:#F8EABA} th.mbox-text,td.mbox-text{ border:none;padding:0.25em 0.9em; width:100%}td.mbox-image{ border:none;padding:2px 0 2px 0.9em; text-align:center}td.mbox-imageright{ border:none;padding:2px 0.9em 2px 0; text-align:center} table.ambox{ margin:-1px 10% 0px; border:1px solid #aaa;border-left:10px solid #1e90ff; background:#fbfbfb}.ambox th.mbox-text,.ambox td.mbox-text{ border:none;padding:0.25em 0.5em; width:100%; }.ambox td.mbox-image{ border:none;padding:2px 0 2px 0.5em; text-align:center}.ambox td.mbox-imageright{ border:none;padding:2px 0.5em 2px 0; text-align:center}table.ambox-notice{border-left:10px solid #1e90ff; }table.ambox-speedy{border-left:10px solid #b22222; background:#fee; }table.ambox-serious,table.ambox-delete{ border-left:10px solid #b22222; }table.ambox-content{border-left:10px solid #f28500; }table.ambox-style{border-left:10px solid #f4c430; }table.ambox-merge,table.ambox-move{ border-left:10px solid #9932cc; }table.ambox-protection{border-left:10px solid #bba; } table.imbox{margin:4px 10%;border-collapse:collapse;border:3px solid #1e90ff; background:#fbfbfb}.imbox .mbox-text .imbox{ margin:0 -0.5em; }.mbox-inside .imbox{ margin:4px}table.imbox-notice{border:3px solid #1e90ff; }table.imbox-speedy{border:3px solid #b22222; background:#fee; }table.imbox-delete{border:3px solid #b22222; }table.imbox-content{border:3px solid #f28500; }table.imbox-style{border:3px solid #f4c430; }table.imbox-move{border:3px solid #9932cc; }table.imbox-protection{border:3px solid #bba; }table.imbox-license{border:3px solid #88a; background:#f7f8ff; }table.imbox-featured{border:3px solid #cba135; } table.cmbox{margin:3px 10%;border-collapse:collapse;border:1px solid #aaa;background:#DFE8FF; }table.cmbox-notice{background:#DFE8FF; }table.cmbox-speedy{margin-top:4px;margin-bottom:4px;border:4px solid #b22222; background:#FFDBDB; }table.cmbox-delete{background:#FFDBDB; }table.cmbox-content{background:#FFE7CE; }table.cmbox-style{background:#FFF9DB; }table.cmbox-move{background:#F1D0FF; }table.cmbox-protection{background:#EFEFE1; } table.ombox{margin:4px 10%;border-collapse:collapse;border:1px solid #aaa; background:#f9f9f9}table.ombox-small{ clear:right;float:right;margin:4px 0 4px 1em;width:238px;font-size:88%;line-height:1.25em}table.ombox-notice{border:1px solid #aaa; }table.ombox-speedy{border:2px solid #b22222; background:#fee; }table.ombox-delete{border:2px solid #b22222; }table.ombox-content{border:1px solid #f28500; }table.ombox-style{border:1px solid #f4c430; }table.ombox-move{border:1px solid #9932cc; }table.ombox-protection{border:2px solid #bba; } table.tmbox{margin:4px 10%;border-collapse:collapse;border:1px solid #c0c090; background:#f8eaba}table.tmbox-small{ clear:right;float:right;margin:4px 0 4px 1em;width:238px;font-size:88%;line-height:1.25em}.mbox-inside .tmbox{ margin:2px}table.tmbox-speedy{border:2px solid #b22222; background:#fee; }table.tmbox-delete{border:2px solid #b22222; }table.tmbox-content{border:2px solid #f28500; }table.tmbox-style{border:2px solid #f4c430; }table.tmbox-move{border:2px solid #9932cc; }table.tmbox-protection,table.tmbox-notice{border:1px solid #c0c090; }   .mcBoto{background-color:#d0b0ff; border:0.15em solid #000000;border-color:#f0d0ff #b090e0 #9070c0 #f0d0ff; border-radius-topleft:.5em;border-radius-topright:.5em;-moz-border-radius:.5em .5em 0em 0em;cursor:pointer;display:inline;margin-right:0.1em;padding:0.2em 0.3em 0.2em 0.3em;position:relative}.mcBoto a,.mcBoto strong{background:none !important;color:#7050a0 !important; font-size:90%;font-weight:bold;padding:0 !important;text-decoration:none !important}.mcBoto a:hover,.mcBoto strong:hover{color:black !important;text-decoration:underline !important}.mcBotoSel{background-color:#9070c0; border:0.15em solid #000000;border-color:#b090e0 #7050a0 #9070c0 #b090e0; border-radius-topleft:.5em;border-radius-topright:.5em;-moz-border-radius:.5em .5em 0em 0em;cursor:default;display:inline;margin-right:0.1em;padding:0.2em 0.3em 0.2em 0.3em;position:relative;color:white}.mcBotoSel a{background:none !important;color:white !important;cursor:default;font-size:90%;font-weight:bold;padding:0 !important;text-decoration:none !important}.mcContingut{background-color:#f8f8ff;border:0.2em solid #9070c0; border-color:#9070c0 #7050a0 #7050a0 #9070c0 ; -moz-border-radius:0em .5em .5em 0em;border-radius-topright:.5em;border-radius-bottomright:.5em;padding:1em;position:static}.mcPestanya{background-color:#f8f8ff;border-color:#7050a0 #b090e0 #b090e0 #7050a0; width:100%} .mcVerd .mcBoto{background-color:#a5e085; border-color:#c0f090 #90d060 #75c045 #c0f090}.mcVerd .mcBoto a,.mcVerd .mcBoto strong{color:#60b030 !important; font-size:90%}.mcVerd .mcBoto a:hover,.mcVerd .mcBoto strong:hover{color:black !important;text-decoration:underline}.mcVerd .mcBotoSel{background-color:#75c045; border-color:#90d060 #60b030 #75c045 #90d060}.mcVerd .mcContingut{background-color:#f5fffa;border-color:#75c045 #60b030 #60b030 #75c045 }.mcVerd .mcPestanya{background-color:#f5fffa;border-color:#60b030 #90d060 #90d060 #60b030} .mcVermell .mcBoto{background-color:#FFAAAA; border-color:#FFCCCC #FF8888 #FF0000 #FFCCCC}.mcVermell .mcBoto a,.mcVermell .mcBoto strong{color:#CC0000 !important; font-size:90%}.mcVermell .mcBoto a:hover .mcVermell .mcBoto strong:hover{color:black !important;text-decoration:underline}.mcVermell .mcBotoSel{background-color:#FF0000; border-color:#FF8888 #CC0000 #FF0000 #FF8888}.mcVermell .mcContingut{background-color:#fffafa;border-color:#FF0000 #CC0000 #CC0000 #FF0000}.mcVermell .mcPestanya{background-color:#fffafa;border-color:#CC0000 #FF0000 #FF0000 #CC0000} .mcBlau .mcBoto{background-color:#a7c1e6; border-color:#c8d6e9 #88abde #5b8dd6 #c8d6e9}.mcBlau .mcBoto a,.mcBlau .mcBoto strong{color:#3379de !important; font-size:90%}.mcBlau .mcBoto a:hover .mcBlau .mcBoto strong:hover{color:black !important;text-decoration:underline}.mcBlau .mcBotoSel{background-color:#5b8dd6; border-color:#88abde #3379de #5b8dd6 #88abde}.mcBlau .mcContingut{background-color:#f0f8ff;border-color:#5b8dd6 #3379de #3379de #5b8dd6}.mcBlau .mcPestanya{background-color:#f0f8ff;border-color:#3379de #88abde #88abde #3379de} .mcGroc .mcBoto{background-color:#fff1a4; border-color:#fef4bc #ffe977 #ffe147 #fef4bc}.mcGroc .mcBoto a,.mcGroc .mcBoto strong{color:#ffd813 !important; font-size:90%}.mcGroc .mcBoto a:hover .mcGroc .mcBoto strong:hover{color:black !important;text-decoration:underline}.mcGroc .mcBotoSel{background-color:#ffe147; border-color:#ffe977 #ffd813 #ffe147 #ffe977}.mcGroc .mcContingut{background-color:#fffce8;border-color:#ffe147 #ffd813 #ffd813 #ffe147}.mcGroc .mcPestanya{background-color:#fffce8;border-color:#ffd813 #88abde #88abde #ffd813} .mcTaronja .mcBoto{background-color:#ffbd7f; border-color:#ffd0a4 #ffac5d #ff9d42 #ffd0a4}.mcTaronja .mcBoto a,.mcTaronja .mcBoto strong{color:#ff820e !important; font-size:90%}.mcTaronja .mcBoto a:hover .mcTaronja .mcBoto strong:hover{color:black !important;text-decoration:underline}.mcTaronja .mcBotoSel{background-color:#ff9d42; border-color:#ffac5d #ff820e #ff9d42 #ffac5d}.mcTaronja .mcContingut{background-color:#ffeedd; border-color:#ff9d42 #ff820e #ff820e #ff9d42}.mcTaronja .mcPestanya{background-color:#ffeedd; border-color:#ff820e #ffac5d #ffac5d #ff820e}   strong.mw-plusminus-neg{color:#c00}.mw-plusminus-pos{color:#060}.mw-plusminus-neg{color:#900}
+.postedit-container{margin:0 auto;position:fixed;top:0;height:0;left:50%;z-index:1000;font-size:13px}.postedit-container:hover{cursor:pointer}.postedit{position:relative;top:0.6em;left:-50%;padding:.6em 3.6em .6em 1.1em;line-height:1.5625em;color:#626465;background-color:#f4f4f4;border:1px solid #dcd9d9;text-shadow:0 0.0625em 0 rgba(255,255,255,0.5);border-radius:5px;box-shadow:0 2px 5px 0 #ccc;-webkit-transition:all 0.25s ease-in-out;-moz-transition:all 0.25s ease-in-out;-ms-transition:all 0.25s ease-in-out;-o-transition:all 0.25s ease-in-out;transition:all 0.25s ease-in-out}.skin-monobook .postedit{top:6em !important}.postedit-faded{opacity:0}.postedit-icon{padding-left:41px;  line-height:25px;background-repeat:no-repeat;background-position:8px 50%}.postedit-icon-checkmark{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABblBMVEUAAAD///////9PfTf///80aRdTgjn///9Feij///////////9Rfzf///////////9PfjZRgDh1o1xOfTb///////+bwYqLtnj///////9PfTa82K////9WhT6YxIL///9QgDdTgzr////////j7uDl7eLq8efi693k7OH///////9UhjuBr2rp9uRUhjr///9YljVKgir///9WiTlYjT3////9/v57vFlbkT5PjC9dlD/5/fhuq09stUTs9uhxuElctCpfnT1huDFloEZloUZmpENmvDZpvDxpvTxqvjxrvT5rvT9rwTxsqktswD5uwkBvuUdxw0NztFBztU9ztVBzwkp0tlJ1xkd2t1R3uVR4w1F4xk54x014yE15uVZ5v1R5xVB6v1R7yFJ8wVh9xVl9yFR9yVd9ylN+xVh+yFd/x1l/yFeAylmEx1+Ny2uY0Hqe04Wj1Ymv3Ze33qLD47TJ5L3O6cPU7Mrq9eb2+/Q4j37OAAAAQHRSTlMAAQIEBAUFBQwPFB4fJCUoKiosQEhJS01RUlZZXmdydXaChYuSlJSWmJmoq6uur8LExcvM19fg5ejt8fX2+Pr7SljgewAAAKpJREFUGBkFwQNCAwAAAMDLtl3LtrG4rWXbtvX77gAgZ6grFwC0bhwNVgKgdPZx8b0dgLi+s7Wn0VoAqpfOI9+BNADZI7fLrz2pSEwGHZuH+78lSK8ZLkLezF3ooyUG3VPXq2USei9WngeyoG195yBYWDF3E/2pAhl1e9Gr8bGT+bfOFCC2fnvh4X7rcqIAQNNu+HT6sxkAjceTL/2ZAIhv+PorBwBJxfkA//dFHSCBy/UTAAAAAElFTkSuQmCC);background-image:url(/resources/src/mediawiki.action/images/green-checkmark.png?9048a)!ie;background-position:left}.postedit-close{position:absolute;padding:0 .8em;right:0;top:0;font-size:1.25em;font-weight:bold;line-height:2.3em;color:black;text-shadow:0 0.0625em 0 white;text-decoration:none;opacity:0.2;filter:alpha(opacity=20)}.postedit-close:hover{color:black;text-decoration:none;opacity:0.4;filter:alpha(opacity=40)}</style><style>
+.suggestions a.mw-searchSuggest-link,.suggestions a.mw-searchSuggest-link:hover,.suggestions a.mw-searchSuggest-link:active,.suggestions a.mw-searchSuggest-link:focus{color:black;text-decoration:none}.suggestions-result-current a.mw-searchSuggest-link,.suggestions-result-current a.mw-searchSuggest-link:hover,.suggestions-result-current a.mw-searchSuggest-link:active,.suggestions-result-current a.mw-searchSuggest-link:focus{color:white}.suggestions a.mw-searchSuggest-link .special-query{ overflow:hidden;-o-text-overflow:ellipsis; text-overflow:ellipsis;white-space:nowrap}</style><meta name="ResourceLoaderDynamicStyles" content="">
+<link rel="stylesheet" href="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/load.css">
+<style>a:lang(ar),a:lang(kk-arab),a:lang(mzn),a:lang(ps),a:lang(ur){text-decoration:none}</style>
+<script async="" src="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/load.php"></script>
+<meta name="generator" content="MediaWiki 1.26.3">
+<link rel="shortcut icon" href="http://wiki.ubuntu.org.cn/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="http://wiki.ubuntu.org.cn/opensearch_desc.php" title="Ubuntu中文 (zh-hans)">
+<link rel="EditURI" type="application/rsd+xml" href="http://wiki.ubuntu.org.cn/api.php?action=rsd">
+<link rel="alternate" type="application/atom+xml" title="Ubuntu中文的Atom feed" href="http://wiki.ubuntu.org.cn/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9&amp;feed=atom">
+<script src="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/load_002.php"></script></head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-Shell编程基础 skin-cavendish action-view">
+<div id="internal"></div>
+<!-- Skin-Version: 2.3.4 //Please leave this for bugtracking purpose//-->
+<div id="globalWrapper" class="view">
+	<div id="p-personal" class="portlet">
+		<h5>个人工具</h5>
+		<div class="pBody">
+			<ul>
+						
+			<li id="pt-login" class="top-nav-element">
+				<span class="top-nav-left">&nbsp;</span>
+				<a class="top-nav-mid " href="http://wiki.ubuntu.org.cn/index.php?title=%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95&amp;returnto=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80">
+				   登录</a>
+				<span class="top-nav-right">&nbsp;</span></li>
+							
+			</ul>
+		</div>
+	</div>
+	<div id="header">
+		<a name="top" id="contentTop"></a>
+		<h6>
+		<a href="http://wiki.ubuntu.org.cn/%E9%A6%96%E9%A1%B5" title="首页">Shell编程基础 - Ubuntu中文</a></h6>
+		<div id="p-cactions" class="portlet"><ul>
+
+				<li id="ca-nstab-main" class="selected"><a href="http://wiki.ubuntu.org.cn/Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80" title="查看内容页面">页面</a></li>
+				<li id="ca-talk" class="new"><a href="http://wiki.ubuntu.org.cn/index.php?title=%E8%AE%A8%E8%AE%BA:Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;action=edit&amp;redlink=1" title="关于内容页面的讨论">讨论</a></li>
+				<li id="ca-viewsource"><a href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;action=edit" title="本页面受到保护。
+您可以查看其源代码">查看源代码</a></li>
+				<li id="ca-history"><a href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;action=history" title="本页面过去的版本">历史</a></li>			</ul></div>
+					<div id="p-search" class="portlet" role="search">
+			<h3><label for="searchInput">搜索</label></h3>
+
+			<div id="searchBody" class="pBody">
+				<form action="/index.php" id="searchform">
+					<input name="title" value="特殊:搜索" type="hidden">
+					<input name="search" placeholder="搜索" title="搜索Ubuntu中文[Alt+Shift+f]" accesskey="f" id="searchInput" autocomplete="off" type="search">
+					<input name="go" value="前往" title="若相同标题存在，则直接前往该页面" id="searchGoButton" class="searchButton" type="submit">&nbsp;
+						<input name="fulltext" value="搜索" title="搜索含这些文字的页面" id="mw-searchButton" class="searchButton" type="submit">
+				</form>
+
+							</div>
+		</div>
+		</div>
+	<div id="mBody">
+		<div id="side">
+			<div id="nav">
+	<div class="generated-sidebar portlet" id="p-navigation" role="navigation">
+		<h3>导航</h3>
+		<div class="pBody">
+							<ul>
+											<li id="n-mainpage-description"><a href="http://wiki.ubuntu.org.cn/%E9%A6%96%E9%A1%B5" title="访问首页[Alt+Shift+z]" accesskey="z">首页</a></li>
+											<li id="n-recentchanges"><a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9" title="本wiki最近更改的列表[Alt+Shift+r]" accesskey="r">最近更改</a></li>
+											<li id="n-randompage"><a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E9%9A%8F%E6%9C%BA" title="载入一个随机页面[Alt+Shift+x]" accesskey="x">随机页面</a></li>
+											<li id="n-.E9.A1.B5.E9.9D.A2.E5.88.86.E7.B1.BB"><a href="http://wiki.ubuntu.org.cn/%E5%88%86%E7%B1%BB:%E9%A1%B5%E9%9D%A2%E5%88%86%E7%B1%BB">页面分类</a></li>
+											<li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="查找帮助的地方">帮助</a></li>
+									</ul>
+					</div>
+		</div>
+		<div class="generated-sidebar portlet" id="p-.E7.BC.96.E8.BE.91" role="navigation">
+		<h3>编辑</h3>
+		<div class="pBody">
+							<ul>
+											<li id="n-.E7.BC.96.E8.BE.91.E6.8C.87.E5.8D.97"><a href="http://wiki.ubuntu.org.cn/%E5%88%86%E7%B1%BB:%E8%B4%A1%E7%8C%AE">编辑指南</a></li>
+											<li id="n-.E6.B2.99.E7.9B.92"><a href="http://wiki.ubuntu.org.cn/%E6%B2%99%E7%9B%92">沙盒</a></li>
+											<li id="n-currentevents"><a href="http://wiki.ubuntu.org.cn/Ubuntu%E4%B8%AD%E6%96%87:%E6%96%B0%E9%97%BB%E5%8A%A8%E6%80%81" title="查看当前事件的背景信息">新闻动态</a></li>
+											<li id="n-.E5.AD.97.E8.AF.8D.E5.A4.84.E7.90.86"><a href="http://wiki.ubuntu.org.cn/MediaWiki:Conversiontable/zh-hant">字词处理</a></li>
+									</ul>
+					</div>
+		</div>
+			<div class="portlet" id="p-tb" role="navigation">
+			<h3>工具</h3>
+
+			<div class="pBody">
+				<ul>
+											<li id="t-whatlinkshere"><a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%85%A5%E9%A1%B5%E9%9D%A2/Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80" title="所有链接至本页面的wiki页面的列表[Alt+Shift+j]" accesskey="j">链入页面</a></li>
+											<li id="t-recentchangeslinked"><a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E9%93%BE%E5%87%BA%E6%9B%B4%E6%94%B9/Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80" title="链自本页的页面的最近更改[Alt+Shift+k]" accesskey="k">相关更改</a></li>
+											<li id="t-specialpages"><a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E7%89%B9%E6%AE%8A%E9%A1%B5%E9%9D%A2" title="所有特殊页面的列表[Alt+Shift+q]" accesskey="q">特殊页面</a></li>
+											<li id="t-print"><a href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;printable=yes" rel="alternate" title="本页面的可打印版本[Alt+Shift+p]" accesskey="p">打印版本</a></li>
+											<li id="t-permalink"><a href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;oldid=153842" title="本页面该版本的固定链接">固定链接</a></li>
+											<li id="t-info"><a href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;action=info" title="关于此页面的更多信息">页面信息</a></li>
+									</ul>
+							</div>
+		</div>
+	</div>
+</div>
+		</div><!-- end of SIDE div -->
+		<div id="column-content">
+			<div id="content">
+				<a id="top"></a>
+								<h1 id="firstHeading" class="firstHeading">Shell编程基础</h1>
+				<div id="bodyContent">
+					<h3 id="siteSub">来自Ubuntu中文</h3>
+					<div id="contentSub"></div>
+															<div id="jump-to-nav">跳转至： <a href="#column-one">导航</a>, <a href="#searchInput">搜索</a></div>					<!-- start content -->
+					<div id="mw-content-text" dir="ltr" class="mw-content-ltr" lang="zh-Hans"><p>原作者 Leal；请参阅页面底部的编者列表。
+</p><p>授权许可：
+</p>
+<ul><li> <a rel="nofollow" class="external text" href="http://creativecommons.org/licenses/by-sa/2.0/">创作共享署名协议</a></li>
+<li> <a rel="nofollow" class="external text" href="http://www.gnu.org/copyleft/fdl.html">GNU 自由文档许可证</a></li></ul>
+<p>注意：本文仍然在持续的修订之中，且错漏之处可能较多。如果能够阅读英语的话，可以考虑试试较为完善的 <a rel="nofollow" class="external text" href="http://mywiki.wooledge.org/BashGuide/">Wooledge BashGuide</a>。这个站点除了教程之外，还有一些类似“bash 百科”的内容。<a rel="nofollow" class="external text" href="https://gnu.org/s/bash/manual">Bash 官方手册</a>也是你的好朋友。
+</p>
+<div id="toc" class="toc"><div id="toctitle"><h2>目录</h2><span class="toctoggle">&nbsp;[<a href="#" id="togglelink">隐藏</a>]&nbsp;</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#.E4.BB.8E.E7.AC.AC.E4.B8.80.E8.A1.8C.E5.BC.80.E5.A7.8B"><span class="tocnumber">1</span> <span class="toctext">从第一行开始</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#.E5.8F.98.E9.87.8F"><span class="tocnumber">2</span> <span class="toctext">变量</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="#.E5.8F.98.E9.87.8F.E8.B5.8B.E5.80.BC.E5.92.8C.E5.BC.95.E7.94.A8"><span class="tocnumber">2.1</span> <span class="toctext">变量赋值和引用</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#.E5.8F.98.E9.87.8F.E7.AE.97.E6.9C.AF"><span class="tocnumber">2.2</span> <span class="toctext">变量算术</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-5"><a href="#Shell.E9.87.8C.E7.9A.84.E6.B5.81.E7.A8.8B.E6.8E.A7.E5.88.B6"><span class="tocnumber">3</span> <span class="toctext">Shell里的流程控制</span></a>
+<ul>
+<li class="toclevel-2 tocsection-6"><a href="#if_.E8.AF.AD.E5.8F.A5"><span class="tocnumber">3.1</span> <span class="toctext">if 语句</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#.26.26_.E5.92.8C_.7C.7C_.E6.93.8D.E4.BD.9C.E7.AC.A6"><span class="tocnumber">3.2</span> <span class="toctext">&amp;&amp; 和 || 操作符</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#case_.E8.AF.AD.E5.8F.A5"><span class="tocnumber">3.3</span> <span class="toctext">case 语句</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#select_.E5.BE.AA.E7.8E.AF.E8.AF.AD.E5.8F.A5"><span class="tocnumber">3.4</span> <span class="toctext">select 循环语句</span></a></li>
+<li class="toclevel-2 tocsection-10"><a href="#while.2Ffor_.E5.BE.AA.E7.8E.AF"><span class="tocnumber">3.5</span> <span class="toctext">while/for 循环</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-11"><a href="#Shell.E9.87.8C.E7.9A.84.E4.B8.80.E4.BA.9B.E7.89.B9.E6.AE.8A.E7.AC.A6.E5.8F.B7"><span class="tocnumber">4</span> <span class="toctext">Shell里的一些特殊符号</span></a>
+<ul>
+<li class="toclevel-2 tocsection-12"><a href="#.E5.BC.95.E5.8F.B7"><span class="tocnumber">4.1</span> <span class="toctext">引号</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-13"><a href="#Here_Document"><span class="tocnumber">5</span> <span class="toctext">Here Document</span></a></li>
+<li class="toclevel-1 tocsection-14"><a href="#Shell.E9.87.8C.E7.9A.84.E5.87.BD.E6.95.B0"><span class="tocnumber">6</span> <span class="toctext">Shell里的函数</span></a></li>
+<li class="toclevel-1 tocsection-15"><a href="#.E5.91.BD.E4.BB.A4.E8.A1.8C.E5.8F.82.E6.95.B0"><span class="tocnumber">7</span> <span class="toctext">命令行参数</span></a></li>
+<li class="toclevel-1 tocsection-16"><a href="#Shell.E8.84.9A.E6.9C.AC.E7.A4.BA.E4.BE.8B"><span class="tocnumber">8</span> <span class="toctext">Shell脚本示例</span></a>
+<ul>
+<li class="toclevel-2 tocsection-17"><a href="#.E4.B8.80.E8.88.AC.E7.BC.96.E7.A8.8B.E6.AD.A5.E9.AA.A4"><span class="tocnumber">8.1</span> <span class="toctext">一般编程步骤</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#.E4.BA.8C.E8.BF.9B.E5.88.B6.E5.88.B0.E5.8D.81.E8.BF.9B.E5.88.B6.E7.9A.84.E8.BD.AC.E6.8D.A2"><span class="tocnumber">8.2</span> <span class="toctext">二进制到十进制的转换</span></a></li>
+<li class="toclevel-2 tocsection-19"><a href="#.E6.96.87.E4.BB.B6.E5.BE.AA.E7.8E.AF.E7.A7.BB.E5.8A.A8"><span class="tocnumber">8.3</span> <span class="toctext">文件循环移动</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-20"><a href="#.E8.84.9A.E6.9C.AC.E8.B0.83.E8.AF.95"><span class="tocnumber">9</span> <span class="toctext">脚本调试</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id=".E4.BB.8E.E7.AC.AC.E4.B8.80.E8.A1.8C.E5.BC.80.E5.A7.8B">从第一行开始</span></h2>
+<p>我们可以使用任意一种文字编辑器，比如gedit、kedit、emacs、vi等来编写shell脚本，它必须以如下行开始（必须放在文件的第一行）： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+</pre></div>
+<p>此行称为 <a rel="nofollow" class="external text" href="https://en.wikipedia.org/wiki/shebang">shebang</a>（就是 sharp (#) + bang (!) 的意思），会指引操作系统使用接下来指定的程序运行此文件。此处 <tt>/bin/bash</tt> 执行我们的文件。
+</p><p>一些人使用 <tt>#!/bin/sh</tt> 来让 <tt>sh</tt> 执行文件，按照习惯这表示任何支持 <a rel="nofollow" class="external text" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">POSIX shell 命令语言</a>的 <tt>sh</tt>程序。为了用上我们所喜欢的 <tt>bash</tt> 拓展语法功能，我们就不这么用了。如果你使用别的脚本，例如 <tt>/bin/tcsh</tt>，照着样子加个 <tt>#!</tt> 就行。
+</p><p>编辑结束并保存后，如果直接要执行该脚本，必须先使其具有可执行属性： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>chmod +x filename
+</pre></div>
+<p>此后在该脚本所在目录下，输入 <tt>./filename&lt;tt&gt; 即可执行该脚本。 
+</tt></p><tt>
+<h2><span class="mw-headline" id=".E5.8F.98.E9.87.8F">变量</span></h2>
+<p>Shell 变量默认全都是字符串。
+</p>
+<h3><span class="mw-headline" id=".E5.8F.98.E9.87.8F.E8.B5.8B.E5.80.BC.E5.92.8C.E5.BC.95.E7.94.A8">变量赋值和引用</span></h3>
+</tt><p><tt>Shell 编程中，使用变量无需事先声明。变量名的命名遵守正则表达式 &lt;tt&gt;[a-zA-Z_][a-zA-Z0-9_]+</tt>，也就是由大小写字母数字和下划线组成，且不能以数字开头。请注意 shell 环境中的确有以数字和特殊符号开头的变量名，但是那些东西不可以用接下来的方式赋值。
+</p><p>需要给变量赋值时，可以这么写： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nv">varname</span><span class="o">=</span>值 <span class="o">[</span><span class="nv">var2</span><span class="o">=</span>val2 ....<span class="o">]</span>
+</pre></div>
+<p>请注意这边等号左右不能有空格。
+要取用一个变量的值，只需在变量名前面加一个 <tt>$</tt>：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c"># assign</span>
+<span class="nv">a</span><span class="o">=</span><span class="s2">"hello world"</span>  <span class="c"># 等号两边均不能有空格存在</span>
+<span class="c"># print</span>
+<span class="nb">printf</span> <span class="s1">'%s\n'</span> <span class="s2">"A is: </span><span class="nv">$a</span><span class="s2">"</span>
+</pre></div>
+<p>挑个自己喜欢的编辑器，输入上述内容，并保存为文件 first，然后执行 chmod +x first 使其可执行，最后输入 ./first 执行该脚本。其输出结果如下：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>A is: hello world
+</pre></div>
+<p>有时候变量名可能会和其它文字（匹配最长的符合变量名或特殊变量名要求的内容）混淆，比如： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nv">num</span><span class="o">=</span>2
+<span class="nb">echo</span> <span class="s2">"this is the </span><span class="nv">$numnd</span><span class="s2">"</span>   <span class="c"># 输出 this is the       — shell 尝试寻找 $numnd 的值</span>
+<span class="nb">echo</span> <span class="s2">"this is the </span><span class="si">${</span><span class="nv">num</span><span class="si">}</span><span class="s2">nd"</span> <span class="c"># 输出 this is the 2nd   — 修好了！</span>
+<span class="c"># 花括号可以隔开变量名，但是放歪了的话…</span>
+<span class="nb">echo</span> <span class="s2">"this is the {</span><span class="nv">$num</span><span class="s2">}nd"</span> <span class="c"># 输出 this is the {2}nd — 切是切开了，但是…</span>
+</pre></div>
+<h3><span class="mw-headline" id=".E5.8F.98.E9.87.8F.E7.AE.97.E6.9C.AF">变量算术</span></h3>
+<p>Shell 变量默认都是字符串。这也就是说，你尝试这么做，肯定没用：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nv">var</span><span class="o">=</span>1
+<span class="nv">var</span><span class="o">=</span><span class="nv">$var</span>+1
+<span class="nb">echo</span> <span class="nv">$var</span> <span class="c"># 输出 1+1</span>
+</pre></div>
+<p>我们可以用很多方法达成我们的目标。首先是好孩子的方法——C 风格表达式。
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nv">var</span><span class="o">=</span>0
+<span class="c"># bash 里面可以用 (( )) 执行 C 风格的算术表达式。</span>
+<span class="c"># 如果你接下来还会读 if 那一段的话，你还会知道这玩意的返回和 C 的非零真假判断一致。</span>
+<span class="o">((</span> var +<span class="o">=</span> <span class="m">1</span> <span class="o">))</span> <span class="c"># 这是一种，现在 var 是 1</span>
+<span class="o">((</span> var++ <span class="o">))</span>    <span class="c"># 这也是一种自增，2</span>
+<span class="o">((</span> <span class="nv">var</span> <span class="o">=</span> var * var <span class="o">))</span> <span class="c"># 怎么来乘法了！var 现在是 4。</span>
+<span class="nb">let</span> <span class="s1">'var = var / 3'</span>   <span class="c"># 还是只有 bash 才能用的拓展。除法是整数除法，向 0 舍入，1。</span>
+<span class="c"># 来一点不一定要 bash 的方法吧，毕竟 sh 还有很多种，总不能全报错了吧。</span>
+<span class="c"># $(( )) 会展开成为这个 C 表达式求值的结果。以前 bash 有个 $[ ] 一样，但是别去用。</span>
+<span class="nb">echo</span> <span class="k">$((</span>var <span class="o">+=</span> <span class="m">2</span><span class="k">))</span>    <span class="c"># echo 出 3，var 现在是 3。</span>
+<span class="nv">var</span><span class="o">=</span><span class="k">$((</span>var-1<span class="k">))</span>        <span class="c"># 展开成 var=2，var 现在是……还用说吗，2。</span>
+</pre></div>
+<p>以前还有人用 expr 之类的外部程序来，不过这属于杀鸡用牛刀。并且调用外部程序浪费时间性能差。
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nv">var</span><span class="o">=</span>1
+<span class="nv">var</span><span class="o">=</span><span class="k">$(</span>expr <span class="s2">"</span><span class="nv">$var</span><span class="s2">"</span> + 1<span class="k">)</span> <span class="c"># expr 收到三个参数 '1' '+' '1'，</span>
+
+                      <span class="c"># 按照 expr --help 里面写的方法运行</span>
+                      <span class="c"># 然后输出替换掉 $() 这里变成 var=2。</span>
+
+<span class="nv">var</span><span class="o">=</span><span class="sb">`</span>expr <span class="s2">"</span><span class="nv">$var</span><span class="s2">"</span> + 1<span class="sb">`</span>  <span class="c"># 前面一行的老写法，千万千万不要学。</span>
+</pre></div>
+<h2><span class="mw-headline" id="Shell.E9.87.8C.E7.9A.84.E6.B5.81.E7.A8.8B.E6.8E.A7.E5.88.B6">Shell里的流程控制</span></h2>
+<h3><span class="mw-headline" id="if_.E8.AF.AD.E5.8F.A5">if 语句</span></h3>
+<p>if 表达式如果条件命令组为真，则执行 then 后的部分。标准形式：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="k">if</span> 
+  判断命令，可以有很多个，真假取最后的返回值
+<span class="k">then</span>
+  如果前述为真做什么
+<span class="o">[</span> <span class="c"># 方括号代表可选，别真打进去了！</span>
+<span class="k">elif</span>
+  可以再来个判断，如果签名为假继续尝试这里
+<span class="k">then</span>
+  如果前述为真做什么 <span class="o">]</span>
+<span class="k">else</span>
+  如果全都不行做什么
+<span class="k">fi</span> <span class="c"># 结束，就是倒写的 if 啦。</span>
+</pre></div>
+<p>现实生活中一般判断只有一个命令，所以你看到的一般是：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="k">if</span> ....<span class="p">;</span> <span class="k">then</span> <span class="c"># 你也可以写成 if 之后换行，这样就不用分号了。</span>
+  ....
+<span class="k">fi</span>
+</pre></div>
+<p>大多数情况下，可以使用测试命令来对条件进行测试，比如可以比较字符串、判断文件是否存在及是否可读等等……在 bash 中一般采用更好用的 <tt><a href="http://wiki.ubuntu.org.cn/index.php?title=...&amp;action=edit&amp;redlink=1" class="new" title="...（页面不存在）"> ... </a></tt> 语法进行条件测试，而通用方法是 <tt>[ ... ]&lt;tt&gt;（相当于 &lt;tt&gt;test ...</tt>）。两者都接纳的常用测试语句有：
+</p>
+<dl><dt><tt>-f "filename"</tt></dt>
+<dd>判断是否是一个文件</dd>
+<dt><tt>-x "/bin/ls"</tt></dt>
+<dd>判断/bin/ls是否存在并有可执行权限</dd>
+<dt><tt>-n "$var"</tt></dt>
+<dd>判断 $var 变量是否有值</dd>
+<dt><tt>"$a" == "$b"</tt></dt>
+<dd>判断$a和$b是否相等</dd></dl>
+<p>前者可以使用 <tt>help [[</tt> 查询用法，后者使用 <tt>help [</tt> (bash) 或 <tt>man test</tt> 查询。下面的语句用到了这个内容：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="si">${</span><span class="nv">SHELL</span><span class="si">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"/bin/bash"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">"your login shell is the bash (bourne again shell)"</span>
+<span class="k">else</span>
+  <span class="nb">echo</span> <span class="s2">"your login shell is not bash but </span><span class="si">${</span><span class="nv">SHELL</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">fi</span>
+</pre></div>
+<p>变量 <tt>$SHELL</tt> 包含有登录shell的名称，我们拿它和 <tt>/bin/bash</tt> 进行比较以判断当前使用的shell是否为bash。你可能会问了，要是 bash 路径不是这个呢？
+</p>
+<h3><span class="mw-headline" id=".26.26_.E5.92.8C_.7C.7C_.E6.93.8D.E4.BD.9C.E7.AC.A6">&amp;&amp; 和 || 操作符</span></h3>
+<p>熟悉C语言的朋友可能会喜欢下面的表达式：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="o">[</span> -f <span class="s2">"/etc/shadow"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"This computer uses shadow passwords"</span>
+</pre></div>
+<p>这里的 &amp;&amp; 就是一个快捷操作符，如果左边的表达式为真（返回 
+0——“成功”）则执行右边的语句，你也可以把它看作逻辑运算里的与操作。上述脚本表示如果/etc/shadow文件存在，则打印“This 
+computer uses shadow passwords”。
+</p><p>同样shell编程中还可以用或操作 (||)，例如：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nv">mailfolder</span><span class="o">=</span>/var/spool/mail/james
+<span class="o">[</span> -r <span class="s2">"</span><span class="nv">$mailfolder</span><span class="s2">"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">{</span> <span class="nb">echo</span> <span class="s2">"Can not read </span><span class="nv">$mailfolder</span><span class="s2">"</span><span class="p">;</span> <span class="nb">exit </span>1<span class="p">;</span> <span class="o">}</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$mailfolder</span><span class="s2"> has mail from:"</span>
+grep <span class="s2">"^From "</span> <span class="nv">$mailfolder</span>
+</pre></div>
+<p>该脚本首先判断mailfolder是否可读，如果可读则打印该文件中以"From"开头的行。如果不可读则或操作生效，打印错误信息后脚本退出。需要注意的是，这里我们必须使用如下两个命令：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="o">{</span>
+  <span class="nb">echo</span> <span class="s2">"Can not read </span><span class="nv">$mailfolder</span><span class="s2">"</span><span class="p">;</span> <span class="c"># 打印错误信息</span>
+  <span class="nb">exit </span>1<span class="p">;</span> <span class="c"># 退出程序</span>
+<span class="o">}</span>
+</pre></div>
+<p>我们使用花括号以组合命令的形式将两个命令放到一起作为一个命令使用。即使不用与和或操作符，我们也可以用if表达式完成任何事情，但是使用与或操作符会更便利很多。
+</p><p>要注意 Shell 中的 &amp;&amp; || 程序流操作符不表现任何优先级区别，完全是先看到谁就先处理谁的关系。
+</p>
+<h3><span class="mw-headline" id="case_.E8.AF.AD.E5.8F.A5">case 语句</span></h3>
+<p>case表达式可以用来匹配一个给定的字符串，而不是数字（可别和C语言里的switch...case混淆）。
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="k">case</span> ... in
+   ...<span class="o">)</span> <span class="k">do</span> something here 
+   <span class="p">;;</span>
+<span class="k">esac</span>
+</pre></div>
+<p>file命令可以辨别出一个给定文件的文件类型，如：file lf.gz，其输出结果为：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>lf.gz: gzip compressed data, deflated, original filename,
+last modified: Mon Aug <span class="m">27</span> 23:09:18 2001, os: Unix
+</pre></div>
+<p>我们利用这点写了一个名为smartzip的脚本，该脚本可以自动解压bzip2, gzip和zip 类型的压缩文件：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nv">ftype</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>file <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span>
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$ftype</span><span class="s2">"</span> in
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">: Zip archive"</span>*<span class="o">)</span>
+   unzip <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">;;</span>
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">: gzip compressed"</span>*<span class="o">)</span>
+   gunzip <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">;;</span>
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">: bzip2 compressed"</span>*<span class="o">)</span>
+   bunzip2 <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">;;</span>
+*<span class="o">)</span>
+   <span class="nb">echo</span> <span class="s2">"File </span><span class="nv">$1</span><span class="s2"> can not be uncompressed with smartzip"</span><span class="p">;;</span>
+<span class="k">esac</span>
+</pre></div>
+<p>你可能注意到上面使用了一个特殊变量 <code style="white-space:pre; padding: 0.1em 0.2em 0.1em 0.2em; font-size: 85%; background-color: #eee; border-radius: 3px; {{{2}}}">$1</code>，该变量包含有传递给该脚本的第一个参数值。也就是说，当我们运行：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>smartzip articles.zip
+</pre></div>
+<p><code style="white-space:pre; padding: 0.1em 0.2em 0.1em 0.2em; font-size: 85%; background-color: #eee; border-radius: 3px; {{{2}}}">$1</code> 就是字符串 articles.zip。
+</p>
+<h3><span class="mw-headline" id="select_.E5.BE.AA.E7.8E.AF.E8.AF.AD.E5.8F.A5">select 循环语句</span></h3>
+<p>select 循环语句是bash的一种扩展应用，擅长于交互式场合。
+</p><p>用户可以从一组不同的值中进行选择： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nv">pocket</span><span class="o">=()</span>
+<span class="k">select</span> var in 跳跳糖 糖 很多糖 企鹅糖<span class="p">;</span> <span class="k">do</span>
+  <span class="nb">echo</span> <span class="s2">"除了 </span><span class="nv">$var</span><span class="s2"> 还要什么吗？"</span>
+  <span class="k">if</span> <span class="o">((</span>RANDOM%4 <span class="o">==</span> 0<span class="o">))</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">"呀！时间不够了，快上车！"</span>
+    <span class="nb">break</span> <span class="c"># break 还是那个 break</span>
+  <span class="k">fi</span>
+  pocket+<span class="o">=(</span><span class="s2">"</span><span class="nv">$var</span><span class="s2">"</span><span class="o">)</span>
+<span class="k">done</span>
+<span class="nb">echo</span> <span class="s2">"你最后说的那个 </span><span class="nv">$var</span><span class="s2"> 弄丢了……"</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s1">'、'</span>
+<span class="nb">echo</span> <span class="s2">"现在口袋里只有：</span><span class="si">${</span><span class="nv">pocket</span><span class="p">[*]</span><span class="si">}</span><span class="s2">。"</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s1">$' \t\n'</span>
+</pre></div>
+<p>下面是一个简单的示例： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo</span> <span class="s2">"What is your favourite OS?"</span>
+<span class="k">select</span> var in <span class="s2">"Linux"</span> <span class="s2">"Gnu Hurd"</span> <span class="s2">"Free BSD"</span> <span class="s2">"Other"</span><span class="p">;</span> <span class="k">do</span>
+  <span class="nb">break</span><span class="p">;</span>
+<span class="k">done</span>
+<span class="nb">echo</span> <span class="s2">"You have selected </span><span class="nv">$var</span><span class="s2">"</span>
+</pre></div>
+<p>该脚本的运行结果如下： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>What is your favourite OS?
+1<span class="o">)</span> Linux
+2<span class="o">)</span> Gnu Hurd
+3<span class="o">)</span> Free BSD
+4<span class="o">)</span> Other
+<span class="c">#? 1</span>
+You have selected Linux
+</pre></div>
+<h3><span class="mw-headline" id="while.2Ffor_.E5.BE.AA.E7.8E.AF">while/for 循环</span></h3>
+<p>在shell中，可以使用如下循环：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="k">while</span> ...<span class="p">;</span> <span class="k">do</span>
+   ....
+<span class="k">done</span>
+</pre></div>
+<p>只要测试表达式条件为真，则while循环将一直运行。关键字"break"用来跳出循环，而关键字”continue”则可以跳过一个循环的余下部分，直接跳到下一次循环中。
+</p><p>for循环会查看一个字符串列表（字符串用空格分隔），并将其赋给一个变量：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="k">for</span> var in ....<span class="p">;</span> <span class="k">do</span>
+   ....
+<span class="k">done</span>
+</pre></div>
+<p>下面的示例会把A B C分别打印到屏幕上：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="k">for</span> var in A B C <span class="p">;</span> <span class="k">do</span>
+   <span class="nb">echo</span> <span class="s2">"var is </span><span class="nv">$var</span><span class="s2">"</span>
+<span class="k">done</span>
+</pre></div>
+<p>下面是一个实用的脚本showrpm，其功能是打印一些RPM包的统计信息：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="c"># list a content summary of a number of RPM packages</span>
+<span class="c"># USAGE: showrpm rpmfile1 rpmfile2 ...</span>
+<span class="c"># EXAMPLE: showrpm /cdrom/RedHat/RPMS/*.rpm</span>
+<span class="k">for</span> rpmpackage in <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="p">;</span> <span class="k">do</span>
+   <span class="k">if</span> <span class="o">[</span> -r <span class="s2">"</span><span class="nv">$rpmpackage</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+      <span class="nb">echo</span> <span class="s2">"=============== </span><span class="nv">$rpmpackage</span><span class="s2"> =============="</span>
+      rpm -qi -p <span class="nv">$rpmpackage</span>
+   <span class="k">else</span>
+      <span class="nb">echo</span> <span class="s2">"ERROR: cannot read file </span><span class="nv">$rpmpackage</span><span class="s2">"</span>
+   <span class="k">fi</span>
+<span class="k">done</span>
+</pre></div>
+<p>这里出现了第二个特殊变量$@，该变量包含有输入的所有命令行参数值。如果你运行showrpm openssh.rpm w3m.rpm 
+webgrep.rpm，那么 "$@"(有引号) 就包含有 3 个字符串，即openssh.rpm, w3m.rpm和 
+webgrep.rpm。$*的意思是差不多的。但是只有一个字串。如果不加引号，带空格的参数会被截断。
+</p>
+<h2><span class="mw-headline" id="Shell.E9.87.8C.E7.9A.84.E4.B8.80.E4.BA.9B.E7.89.B9.E6.AE.8A.E7.AC.A6.E5.8F.B7">Shell里的一些特殊符号</span></h2>
+<h3><span class="mw-headline" id=".E5.BC.95.E5.8F.B7">引号</span></h3>
+<p>在向程序传递任何参数之前，程序会扩展通配符和变量。这里所谓的扩展是指程序会把通配符（比如*）替换成适当的文件名，把变量替换成变量值。我们可以使用引号来防止这种扩展，先来看一个例子，假设在当前目录下有两个jpg文件：mail.jpg和tux.jpg。
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo</span> *.jpg   <span class="c"># =&gt; mail.jpg tux.jpg</span>
+</pre></div>
+<p>引号（单引号和双引号）可以防止通配符*的扩展：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo</span> <span class="s2">"*.jpg"</span>  <span class="c"># =&gt; *.jpg</span>
+<span class="nb">echo</span> <span class="s1">'*.jpg'</span>  <span class="c"># =&gt; *.jpg</span>
+</pre></div>
+<p>其中单引号更严格一些，它可以防止任何变量扩展；而双引号可以防止通配符扩展但允许变量扩展：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo</span> <span class="nv">$SHELL</span>   <span class="c"># =&gt; /bin/bash</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$SHELL</span><span class="s2">"</span> <span class="c"># =&gt; /bin/bash</span>
+<span class="nb">echo</span> <span class="s1">'$SHELL'</span> <span class="c"># =&gt; $SHELL</span>
+</pre></div>
+<p>此外还有一种防止这种扩展的方法，即使用转义字符——反斜杠<code style="white-space:pre; padding: 0.1em 0.2em 0.1em 0.2em; font-size: 85%; background-color: #eee; border-radius: 3px; {{{2}}}">\</code>：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="nb">echo</span> <span class="se">\*</span>.jpg   <span class="c"># =&gt; *.jpg</span>
+<span class="nb">echo</span> <span class="se">\$</span>SHELL  <span class="c"># =&gt; $SHELL</span>
+</pre></div>
+<h2><span class="mw-headline" id="Here_Document">Here Document</span></h2>
+<p>当要将几行文字传递给一个命令时，用here document是一种不错的方法。对每个脚本写一段帮助性的文字是很有用的，此时如果使用here
+ document就不必用echo函数一行行输出。Here document以 &lt;&lt; 
+开头，后面接上一个字符串，这个字符串还必须出现在here 
+document的末尾。下面是一个例子，在该例子中，我们对多个文件进行重命名，并且使用here document打印帮助： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="c"># we have less than 3 arguments. Print the help text:</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-lt <span class="m">3</span> <span class="o">]</span> <span class="p">;;</span> <span class="k">then</span>
+cat <span class="s">&lt;&lt; HELP</span>
+
+<span class="s">ren -- renames a number of files using sed regular expressions USAGE: ren 'regexp' 'replacement' files...</span>
+
+<span class="s">EXAMPLE: rename all *.HTM files in *.html:</span>
+<span class="s">   ren 'HTM$' 'html' *.HTM</span>
+
+<span class="s">HELP</span>                <span class="c">#这里HELP要顶格写，前面不能有空格或者TAB制表符。如果cat一行写成cat &amp;lt;&amp;lt; -HELP，前边可以带TAB.</span>
+   <span class="nb">exit </span>0
+<span class="k">fi</span>
+<span class="nv">OLD</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+<span class="nv">NEW</span><span class="o">=</span><span class="s2">"</span><span class="nv">$2</span><span class="s2">"</span>
+<span class="c"># The shift command removes one argument from the list of</span>
+<span class="c"># command line arguments.</span>
+<span class="nb">shift</span>
+<span class="nb">shift</span>
+<span class="c"># $@ contains now all the files:</span>
+<span class="k">for</span> file in <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="p">;</span> <span class="k">do</span>
+   <span class="k">if</span> <span class="o">[</span> -f <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span> <span class="o">]</span><span class="p">&amp;</span>nbsp<span class="p">;;</span> <span class="k">then</span>
+      <span class="nv">newfile</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span> <span class="p">|</span> sed <span class="s2">"s/</span><span class="si">${</span><span class="nv">OLD</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">NEW</span><span class="si">}</span><span class="s2">/g"</span><span class="sb">`</span>
+      <span class="k">if</span> <span class="o">[</span> -f <span class="s2">"</span><span class="nv">$newfile</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+　　　　   <span class="nb">echo</span> <span class="s2">"ERROR: </span><span class="nv">$newfile</span><span class="s2"> exists already"</span>
+      <span class="k">else</span>
+         <span class="nb">echo</span> <span class="s2">"renaming </span><span class="nv">$file</span><span class="s2"> to </span><span class="nv">$newfile</span><span class="s2"> ..."</span>
+         mv <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$newfile</span><span class="s2">"</span>
+      <span class="k">fi</span>
+   <span class="k">fi</span>
+<span class="k">done</span>
+</pre></div>
+<p>示例有点复杂，我们需要多花点时间来说明一番。第一个if表达式判断输入命令行参数是否小于3个 (特殊变量$# 表示包含参数的个数) 
+。如果输入参数小于3个，则将帮助文字传递给cat命令，然后由cat命令将其打印在屏幕上。打印帮助文字后程序退出。如果输入参数等于或大于3个，我们
+就将第一个参数赋值给变量OLD，第二个参数赋值给变量NEW。下一步，我们使用shift命令将第一个和第二个参数从参数列表中删除，这样原来的第三个
+参数就成为参数列表$*的第一个参数。然后我们开始循环，命令行参数列表被一个接一个地被赋值给变量$file。接着我们判断该文件是否存在，如果存在则
+通过sed命令搜索和替换来产生新的文件名。然后将反短斜线内命令结果赋值给newfile。这样我们就达到了目的：得到了旧文件名和新文件名。然后使用
+ mv命令进行重命名
+</p>
+<h2><span class="mw-headline" id="Shell.E9.87.8C.E7.9A.84.E5.87.BD.E6.95.B0">Shell里的函数</span></h2>
+<p>如果你写过比较复杂的脚本，就会发现可能在几个地方使用了相同的代码，这时如果用上函数，会方便很多。函数的大致样子如下： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c"># 别笑，bash 里面函数名的确可以这样……</span>
+<span class="c"># (POSIX sh 函数名倒是和变量名要求差不多)</span>
+我是一个函数<span class="o">()</span> <span class="o">{</span>
+  <span class="c"># 函数里面 $1 $2 对应函数所接受到的第一、第二……个参数。</span>
+  这里有很多命令
+<span class="o">}</span>
+</pre></div>
+<p>函数没有必要声明。只要在执行之前出现定义就行
+</p><p>下面是一个名为xtitlebar的脚本，它可以改变终端窗口的名称。这里使用了一个名为help的函数，该函数在脚本中使用了两次： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+
+<span class="nb">help</span><span class="o">()</span>
+<span class="o">{</span>
+cat <span class="s">&lt;&lt; HELP</span>
+<span class="s">xtitlebar -- change the name of an xterm, gnome-terminal or kde konsole</span>
+<span class="s">USAGE: xtitlebar [-h] "string_for_titelbar"</span>
+<span class="s">OPTIONS: -h help text</span>
+<span class="s">EXAMPLE: xtitlebar "cvs"</span>
+<span class="s">HELP</span>
+<span class="nb">exit </span>0
+<span class="o">}</span>
+<span class="c"># in case of error or if -h is given we call the function help:</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">''</span> <span class="o">||</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">'-h'</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nb">help</span>
+<span class="k">fi</span>
+<span class="c"># send the escape sequence to change the xterm titelbar:</span>
+<span class="nb">echo</span> -e <span class="s2">"\033]0;</span><span class="nv">$1</span><span class="s2">\007"</span>
+<span class="c">#</span>
+</pre></div> 
+<p>在脚本中提供帮助是一种很好的编程习惯，可以方便其他用户（和自己）使用和理解脚本。
+</p>
+<h2><span class="mw-headline" id=".E5.91.BD.E4.BB.A4.E8.A1.8C.E5.8F.82.E6.95.B0">命令行参数</span></h2>
+<p>我们已经见过 <code style="white-space:pre; padding: 0.1em 0.2em 0.1em 0.2em; font-size: 85%; background-color: #eee; border-radius: 3px; {{{2}}}">$*</code> 和 <code style="white-space:pre; padding: 0.1em 0.2em 0.1em 0.2em; font-size: 85%; background-color: #eee; border-radius: 3px; {{{2}}}">$1</code>,
+ $2 ... $9 
+等特殊变量，这些特殊变量包含了用户从命令行输入的参数。迄今为止，我们仅仅了解了一些简单的命令行语法（比如一些强制性的参数和查看帮助的-h选项）。
+但是在编写更复杂的程序时，您可能会发现您需要更多的自定义的选项。通常的惯例是在所有可选的参数之前加一个减号，后面再加上参数值 (比如文件名)。 
+</p><p>有好多方法可以实现对输入参数的分析，但是下面的使用case表达式的例子无疑是一个不错的方法。 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+ 
+<span class="nb">help</span><span class="o">()</span>
+<span class="o">{</span>
+   cat <span class="p">&amp;</span>lt<span class="p">;&amp;</span>lt<span class="p">;</span> HELP
+   This is a generic <span class="nb">command </span>line parser demo.
+   USAGE EXAMPLE: cmdparser -l hello -f -- -somefile1 somefile2
+HELP
+   <span class="nb">exit </span>0
+<span class="o">}</span>
+  
+<span class="k">while</span> <span class="o">[</span> -n <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do</span>
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> in
+   -h<span class="o">)</span> <span class="nb">help</span><span class="p">;</span><span class="nb">shift </span>1<span class="p">;;</span> <span class="c"># function help is called</span>
+   -f<span class="o">)</span> <span class="nv">opt_f</span><span class="o">=</span>1<span class="p">;</span><span class="nb">shift </span>1<span class="p">;;</span> <span class="c"># variable opt_f is set</span>
+   -l<span class="o">)</span> <span class="nv">opt_l</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="nb">shift </span>2<span class="p">;;</span> <span class="c"># -l takes an argument -&amp;gt; shift by 2</span>
+   --<span class="o">)</span> <span class="nb">shift</span><span class="p">;</span><span class="nb">break</span><span class="p">;;</span> <span class="c"># end of options</span>
+   -*<span class="o">)</span> <span class="nb">echo</span> <span class="s2">"error: no such option </span><span class="nv">$1</span><span class="s2">. -h for help"</span><span class="p">;</span><span class="nb">exit </span>1<span class="p">;;</span>
+   *<span class="o">)</span> <span class="nb">break</span><span class="p">;;</span>
+<span class="k">esac</span>
+<span class="k">done</span>
+ 
+<span class="nb">echo</span> <span class="s2">"opt_f is </span><span class="nv">$opt_f</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"opt_l is </span><span class="nv">$opt_l</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"first arg is </span><span class="nv">$1</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"2nd arg is </span><span class="nv">$2</span><span class="s2">"</span>
+</pre></div>
+<p>你可以这样运行该脚本： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>cmdparser -l hello -f -- -somefile1 somefile2
+</pre></div>
+<p>返回结果如下： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>opt_f is 1
+opt_l is hello
+first arg is -somefile1
+2nd arg is somefile2
+</pre></div>
+<p>这个脚本是如何工作的呢？脚本首先在所有输入命令行参数中进行循环，将输入参数与case表达式进行比较，如果匹配则设置一个变量并且移除该参数。根据unix系统的惯例，首先输入的应该是包含减号的参数。
+</p>
+<h2><span class="mw-headline" id="Shell.E8.84.9A.E6.9C.AC.E7.A4.BA.E4.BE.8B">Shell脚本示例</span></h2>
+<h3><span class="mw-headline" id=".E4.B8.80.E8.88.AC.E7.BC.96.E7.A8.8B.E6.AD.A5.E9.AA.A4">一般编程步骤</span></h3>
+<p>现在我们来讨论编写一个脚本的一般步骤。任何优秀的脚本都应该具有帮助和输入参数。写一个框架脚本（framework.sh），该脚本包含了大多数脚本需要的框架结构，是一个非常不错的主意。这样一来，当我们开始编写新脚本时，可以先执行如下命令：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>cp framework.sh myscript
+</pre></div>
+<p>然后再插入自己的函数。
+</p><p>让我们来看看如下两个示例。
+</p>
+<h3><span class="mw-headline" id=".E4.BA.8C.E8.BF.9B.E5.88.B6.E5.88.B0.E5.8D.81.E8.BF.9B.E5.88.B6.E7.9A.84.E8.BD.AC.E6.8D.A2">二进制到十进制的转换</span></h3>
+<p>脚本 b2d 将二进制数 (比如 1101) 转换为相应的十进制数。这也是一个用expr命令进行数学运算的例子： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+<span class="c"># vim: set sw=4 ts=4 et:</span>
+<span class="nb">help</span><span class="o">()</span>
+<span class="o">{</span>
+   cat <span class="s">&lt;&lt; HELP</span>
+<span class="s">   </span>
+<span class="s">b2d -- convert binary to decimal</span>
+<span class="s"> </span>
+<span class="s">USAGE: b2d [-h] binarynum</span>
+<span class="s"> </span>
+<span class="s">OPTIONS: -h help text</span>
+<span class="s"> </span>
+<span class="s">EXAMPLE: b2d 111010</span>
+<span class="s">will return 58</span>
+<span class="s">HELP</span>
+   <span class="nb">exit </span>0
+<span class="o">}</span>
+ 
+error<span class="o">()</span>
+<span class="o">{</span>
+   <span class="c"># print an error and exit</span>
+   <span class="nb">echo</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+   <span class="nb">exit </span>1
+<span class="o">}</span>
+ 
+lastchar<span class="o">()</span>
+<span class="o">{</span>
+   <span class="c"># return the last character of a string in $rval</span>
+   <span class="k">if</span> <span class="o">[</span> -z <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+      <span class="c"># empty string</span>
+      <span class="nv">rval</span><span class="o">=</span><span class="s2">""</span>
+      <span class="k">return</span>
+   <span class="k">fi</span>
+   <span class="c"># wc puts some space behind the output this is why we need sed:</span>
+   <span class="nv">numofchar</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -n <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">|</span> sed <span class="s1">'s/ //g'</span> <span class="p">|</span> wc -c <span class="sb">`</span> 
+   <span class="c">#sed 's/ //g'  所有空白去掉  sed 's/ /\t/g' 所有空白用t代替</span>
+   <span class="c"># now cut out the last char  抓取第numofchar个字节</span>
+   <span class="nv">rval</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -n <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">|</span> cut -b <span class="nv">$numofchar</span><span class="sb">`</span>
+<span class="o">}</span>
+ 
+chop<span class="o">()</span>
+<span class="o">{</span>
+   <span class="c"># remove the last character in string and return it in $rval</span>
+   <span class="k">if</span> <span class="o">[</span> -z <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+      <span class="c"># empty string</span>
+      <span class="nv">rval</span><span class="o">=</span><span class="s2">""</span>
+      <span class="k">return</span>
+   <span class="k">fi</span>
+   <span class="c"># wc puts some space behind the output this is why we need sed:</span>
+   <span class="nv">numofchar</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -n <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">|</span> wc -c <span class="p">|</span> sed <span class="s1">'s/ //g'</span> <span class="sb">`</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$numofchar</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"1"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+      <span class="c"># only one char in string</span>
+      <span class="nv">rval</span><span class="o">=</span><span class="s2">""</span>
+      <span class="k">return</span>
+   <span class="k">fi</span>
+   <span class="nv">numofcharminus1</span><span class="o">=</span><span class="sb">`</span>expr <span class="nv">$numofchar</span> <span class="s2">"-"</span> 1<span class="sb">`</span>
+   <span class="c"># now cut all but the last char:</span>
+   <span class="nv">rval</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -n <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">|</span> cut -b -<span class="nv">$numofcharminus1</span><span class="sb">`</span> 
+   <span class="c">#原来的 rval=`echo -n "$1" | cut -b 0-${numofcharminus1}`运行时出错.</span>
+   <span class="c">#原因是cut从1开始计数，应该是cut -b 1-${numofcharminus1}</span>
+<span class="o">}</span>
+ 
+<span class="k">while</span> <span class="o">[</span> -n <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do</span>
+<span class="k">case</span> <span class="nv">$1</span> in
+   -h<span class="o">)</span> <span class="nb">help</span><span class="p">;</span><span class="nb">shift </span>1<span class="p">;;</span> <span class="c"># function help is called</span>
+   --<span class="o">)</span> <span class="nb">shift</span><span class="p">;</span><span class="nb">break</span><span class="p">;;</span> <span class="c"># end of options</span>
+   -*<span class="o">)</span> error <span class="s2">"error: no such option </span><span class="nv">$1</span><span class="s2">. -h for help"</span><span class="p">;;</span>
+   *<span class="o">)</span> <span class="nb">break</span><span class="p">;;</span>
+<span class="k">esac</span>
+<span class="k">done</span>
+
+<span class="c"># The main program</span>
+<span class="nv">sum</span><span class="o">=</span>0
+<span class="nv">weight</span><span class="o">=</span>1
+<span class="c"># one arg must be given:</span>
+<span class="o">[</span> -z <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span> <span class="p">&amp;</span>amp<span class="p">;&amp;</span>amp<span class="p">;</span> <span class="nb">help</span>
+<span class="nv">binnum</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+<span class="nv">binnumorig</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+ 
+<span class="k">while</span> <span class="o">[</span> -n <span class="s2">"</span><span class="nv">$binnum</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do</span>
+   lastchar <span class="s2">"</span><span class="nv">$binnum</span><span class="s2">"</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$rval</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"1"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+      <span class="nv">sum</span><span class="o">=</span><span class="sb">`</span>expr <span class="s2">"</span><span class="nv">$weight</span><span class="s2">"</span> <span class="s2">"+"</span> <span class="s2">"</span><span class="nv">$sum</span><span class="s2">"</span><span class="sb">`</span> 
+      <span class="c"># $expr 10 + 10    20 expr提示是计算操作</span>
+   <span class="k">fi</span>
+   <span class="c"># remove the last position in $binnum</span>
+   chop <span class="s2">"</span><span class="nv">$binnum</span><span class="s2">"</span>
+   <span class="nv">binnum</span><span class="o">=</span><span class="s2">"</span><span class="nv">$rval</span><span class="s2">"</span>
+   <span class="nv">weight</span><span class="o">=</span><span class="sb">`</span>expr <span class="s2">"</span><span class="nv">$weight</span><span class="s2">"</span> <span class="s2">"*"</span> 2<span class="sb">`</span>
+<span class="k">done</span>
+ 
+<span class="nb">echo</span> <span class="s2">"binary </span><span class="nv">$binnumorig</span><span class="s2"> is decimal </span><span class="nv">$sum</span><span class="s2">"</span>
+<span class="c">#</span>
+</pre></div>
+<p>该脚本使用的算法是利用十进制和二进制数权值 (1,2,4,8,16,..)，比如二进制"10"可以这样转换成十进制： 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="m">0</span> * <span class="m">1</span> + <span class="m">1</span> * <span class="nv">2</span> <span class="o">=</span> 2
+</pre></div>
+<p>为了得到单个的二进制数我们是用了lastchar 函数。该函数使用wc –c计算字符个数，然后使用cut命令取出末尾一个字符。Chop函数的功能则是移除最后一个字符。
+</p><p>但是还记得前面怎么说的吗？进制转换哪需要这么麻烦：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+<span class="k">while</span> <span class="nb">read</span> -p <span class="s1">'input a binary...'</span> num<span class="p">;</span> <span class="k">do</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$num</span> <span class="o">==</span> *<span class="o">[</span>!01<span class="o">]</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">"含有 0 1 之外的字符"</span>
+  <span class="k">fi</span>
+  <span class="nb">echo</span> <span class="s2">"</span><span class="k">$((</span><span class="m">0</span>x<span class="nv">$num</span><span class="k">))</span><span class="s2">"</span>      <span class="c"># 在 num 头上糊一个 0x 然后跑数学计算——就完事了！</span>
+  <span class="nb">printf</span> <span class="s2">"%d\n"</span> <span class="s2">"0x</span><span class="nv">$num</span><span class="s2">"</span>    <span class="c"># printf 也可以凑热闹啊</span>
+<span class="k">done</span>
+</pre></div>
+<p>如果你喜欢自己算的话，其实也可以从左到右来（反正数学计算不要有事没事玩 expr 啦）：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+<span class="c"># 人人皆知的 Horner 规则</span>
+<span class="nv">value</span><span class="o">=</span>0
+<span class="nb">echo</span> <span class="s2">"写一堆 1 0 完了回车"</span>
+<span class="k">while</span> <span class="nb">read</span> -n <span class="m">1</span> char<span class="p">;</span> <span class="k">do</span>
+  <span class="k">case</span> <span class="nv">$char</span> in
+    <span class="o">(</span>0<span class="p">|</span>1<span class="o">)</span> <span class="p">;;</span>      <span class="c"># 好</span>
+    <span class="o">(</span><span class="s1">''</span><span class="o">)</span>  <span class="nb">break</span><span class="p">;;</span> <span class="c"># 没了</span>
+    <span class="o">(</span>*<span class="o">)</span>   <span class="nb">echo</span> <span class="s2">"你说啥？"</span><span class="p">;</span> <span class="nb">break</span><span class="p">;;</span>
+  <span class="k">esac</span>
+  <span class="o">((</span>value *<span class="o">=</span> 2<span class="o">))</span>
+  <span class="o">((</span>value +<span class="o">=</span> char<span class="o">))</span>
+<span class="k">done</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$value</span><span class="s2">"</span>
+</pre></div>
+<h3><span class="mw-headline" id=".E6.96.87.E4.BB.B6.E5.BE.AA.E7.8E.AF.E7.A7.BB.E5.8A.A8">文件循环移动</span></h3>
+<p>你可能有这样的需求并一直都这么做：将所有发出邮件保存到一个文件中。但是过了几个月之后，这个文件可能会变得很大以至于该文件的访问速度变慢；下
+面的脚本 rotatefile 
+可以解决这个问题。这个脚本可以重命名邮件保存文件（假设为outmail）为outmail.1，而原来的outmail.1就变成了 
+outmail.2 等等... 
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="c">#!/bin/bash</span>
+<span class="c"># vim: set sw=4 ts=4 et:</span>
+ 
+<span class="nv">ver</span><span class="o">=</span><span class="s2">"0.1"</span>
+<span class="nb">help</span><span class="o">()</span>
+<span class="o">{</span>
+   cat <span class="s">&lt;&lt; HELP</span>
+<span class="s">   rotatefile -- rotate the file name</span>
+<span class="s">   USAGE: rotatefile [-h] filename</span>
+<span class="s">   OPTIONS: -h help text</span>
+<span class="s">   EXAMPLE: rotatefile out</span>
+<span class="s"> </span>
+<span class="s">   This will e.g rename out.2 to out.3, out.1 to out.2, out to out.1</span>
+<span class="s">   and create an empty out-file</span>
+<span class="s"> </span>
+
+<span class="s">   version $ver</span>
+
+<span class="s">HELP</span>
+
+   <span class="nb">exit </span>0
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">'-h'</span> <span class="o">||</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">''</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nb">help</span>
+<span class="k">fi</span>
+
+<span class="nv">filename</span><span class="o">=</span><span class="nv">$1</span>
+
+<span class="c"># 我们先找到最大的数字再说。</span>
+<span class="nv">max</span><span class="o">=</span>0
+<span class="k">while</span> <span class="o">[</span> -f <span class="s2">"</span><span class="nv">$filename</span><span class="s2">.</span><span class="k">$((</span><span class="o">++</span>max<span class="k">))</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do</span>
+  : <span class="c"># 什么都不用做，我们已经顺手用 ++max 自增了 max 了。</span>
+<span class="k">done</span>
+
+<span class="c"># 然后从最大的一路重命名下来。</span>
+<span class="k">for</span> <span class="o">((</span><span class="nv">i</span><span class="o">=</span>max<span class="p">;</span> i&gt;0<span class="p">;</span> i--<span class="o">))</span><span class="p">;</span> <span class="k">do</span>
+  <span class="c"># 数字加个 1，好给前一个让位子。</span>
+  mv <span class="s2">"</span><span class="nv">$filename</span><span class="s2">.</span><span class="nv">$i</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$filename</span><span class="s2">.</span><span class="k">$((</span>i+1<span class="k">))</span><span class="s2">"</span>
+<span class="k">done</span>
+ 
+<span class="c"># 最后我们点名要重命名的：</span>
+<span class="k">if</span> <span class="o">[</span> -f <span class="s2">"</span><span class="nv">$filename</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+   mv <span class="s2">"</span><span class="nv">$filename</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$filename</span><span class="s2">.1"</span>
+<span class="k">fi</span>
+
+<span class="c"># 重新创建一下。</span>
+: &gt; <span class="s2">"</span><span class="nv">$filename</span><span class="s2">"</span>
+</pre></div>。
+<h2><span class="mw-headline" id=".E8.84.9A.E6.9C.AC.E8.B0.83.E8.AF.95">脚本调试</span></h2>
+<p>最简单的调试方法当然是使用echo命令。你可以在任何怀疑出错的地方用echo打印变量值，这也是大部分shell程序员花费80%的时间用于调试的原因。Shell脚本的好处在于无需重新编译，而插入一个echo命令也不需要多少时间。
+</p><p>shell也有一个真正的调试模式，如果脚本"strangescript"出错，可以使用如下命令进行调试：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>sh -x strangescript
+</pre></div>
+<p>上述命令会执行该脚本，同时显示所有变量的值。
+</p><p>shell还有一个不执行脚本只检查语法的模式，命令如下：
+</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr"><pre>sh -n your_script
+</pre></div>
+<p>这个命令会返回所有语法错误。
+</p><p>我们希望你现在已经可以开始编写自己的shell脚本了，尽情享受这份乐趣吧！&nbsp;:)
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20170316012000
+Cache expiry: 86400
+Dynamic content: false
+CPU time usage: 0.228 seconds
+Real time usage: 13.394 seconds
+Preprocessor visited node count: 508/1000000
+Preprocessor generated node count: 1096/1000000
+Post‐expand include size: 709/2097152 bytes
+Template argument size: 9/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+-->
+
+<!-- 
+Transclusion expansion time report (%,ms,calls,template)
+100.00% 4172.835      1 - -total
+  0.12%    5.138      5 - 模板:Code
+-->
+
+<!-- Saved in parser cache with key ubuntuwiki:pcache:idhash:116-0!*!0!!zh-hans!*!* and timestamp 20170316011946 and revision id 153842
+ -->
+</div><div class="printfooter">
+取自“<a dir="ltr" href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;oldid=153842">http://wiki.ubuntu.org.cn/index.php?title=Shell编程基础&amp;oldid=153842</a>”</div>
+					<div id="catlinks" class="catlinks"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E9%A1%B5%E9%9D%A2%E5%88%86%E7%B1%BB" title="特殊:页面分类">分类</a>：<ul><li><a href="http://wiki.ubuntu.org.cn/%E5%88%86%E7%B1%BB:%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91" title="分类:程序开发">程序开发</a></li></ul></div></div>					<!-- end content -->
+									</div>
+			</div><!-- end of MAINCONTENT div -->	
+		</div>
+	</div><!-- end of MBODY div -->
+	<div class="visualClear"></div>
+	<div id="footer">
+		<table>
+			<tbody><tr>
+				<td rowspan="2" class="f-iconsection">
+						</td>
+				<td align="center">
+			<ul id="f-list">
+					<li id="f-credits">本页面被Ubuntu中文匿名用户<a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E8%B4%A1%E7%8C%AE/96.47.232.233" title="特殊:用户贡献/96.47.232.233">96.47.232.233</a>最后修改于2016年6月14日 (星期二) 16:49。 基于<a href="http://wiki.ubuntu.org.cn/%E7%94%A8%E6%88%B7:Arthur2e5" title="用户:Arthur2e5">arthur2e5</a>、Ubuntu中文匿名用户<a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E8%B4%A1%E7%8C%AE/192.157.249.221" title="特殊:用户贡献/192.157.249.221">192.157.249.221</a>、<a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E8%B4%A1%E7%8C%AE/192.157.242.155" title="特殊:用户贡献/192.157.242.155">192.157.242.155</a>和<a href="http://wiki.ubuntu.org.cn/%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E8%B4%A1%E7%8C%AE/49.141.194.235" title="特殊:用户贡献/49.141.194.235">49.141.194.235</a>和<a href="http://wiki.ubuntu.org.cn/index.php?title=Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80&amp;action=credits" title="Shell编程基础">其他</a>的工作。</li>
+					<li id="f-privacy"><a href="http://wiki.ubuntu.org.cn/Ubuntu%E4%B8%AD%E6%96%87:%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96" title="Ubuntu中文:隐私政策">隐私政策</a></li>
+					<li id="f-about"><a href="http://wiki.ubuntu.org.cn/Ubuntu%E4%B8%AD%E6%96%87:%E5%85%B3%E4%BA%8E" title="Ubuntu中文:关于">关于Ubuntu中文</a></li>
+					<li id="f-disclaimer"><a href="http://wiki.ubuntu.org.cn/Ubuntu%E4%B8%AD%E6%96%87:%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E" title="Ubuntu中文:免责声明">免责声明</a></li>
+</ul></td>
+				<td rowspan="2" class="f-iconsection">
+												<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%20-%20Ubuntu%E4%B8%AD%E6%96%87_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"></a></div>
+					 
+				</td>
+			</tr>
+			<tr>
+				<td><div id="skin-info">
+					Mozilla Cavendish Theme based on Cavendish style by Gabriel Wicke modified by <a href="http://www.dasch-tour.de/" title="DaSch-Tour Blog" target="_blank">DaSch</a> for the <a href="http://www.wecowi.de/" title="Web Community Wiki">Web Community Wiki</a><br>
+					<a href="https://github.com/DaSchTour/Cavendish" title="github projectpage">github Projectpage</a> – <a href="https://github.com/DaSchTour/Cavendish/issues" title="Bug reporting at github">Report Bug</a> – Skin-Version: 2.3.4				</div></td>
+			</tr>
+		</tbody></table>
+	</div><!-- end of the FOOTER div -->
+<!-- end of the CONTAINER div -->
+<!-- scripts and debugging information -->
+<script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
+mw.loader.state({"user":"ready","user.groups":"ready"});mw.loader.load(["mediawiki.toc","mediawiki.action.view.postEdit","site","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest"]);
+}
+ );</script><script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
+mw.config.set({"wgBackendResponseTime":214});
+} );</script><div style="display: none; font-size: 11.3333px;" class="suggestions"><div class="suggestions-results"></div><div class="suggestions-special"></div></div></body></html>

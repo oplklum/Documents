@@ -1,0 +1,6 @@
+if(Math.random() < 0.33333333333333){$(".text_info .random_links").before('<div style=margin-bottom:5px"><a href="https://kdt.im/nan_Br " target="_blank"><img  style="width: 100%;" src="http://static.geekbang.org/infoq/58f85c5b7cd79.png?imageView2/0/w/1228" /></a></div>')
+console.log("请关注InfoQ微信帐号:infoqchina");}
+else if(Math.random() >= 0.33333333333333&&Math.random() < 0.66666666666667){$(".text_info .random_links").before('<div style=margin-bottom:5px"><a href="http://sz2017.archsummit.com/?utm_source=infoq&utm_medium=wenzhang&utm_term=wenzilian&utm_content=8zhe" target="_blank"><img  style="width: 100%;" src="http://static.geekbang.org/infoq/58f71f0204ce0.png" /></a></div>')
+console.log("请关注InfoQ微信帐号:infoqchina");}
+else{$(".text_info .random_links").before('<div style="margin-bottom:5px"><b>  【首届以<span style="color :red;">大前端</span>为主题的技术大会】GMTC 2017全球移动技术大会将于6月9～10日在北京举行，目前Facebook、AMD、腾讯、阿里、百度、滴滴、京东、携程、360等一线技术专家均已到位，邀你共享48小时技术盛宴。这次，让我们来聊聊大前端，现在报名即享8折优惠   <a href="http://gmtc.geekbang.org/?utm_source=infoq&utm_campaign=wenzhang&utm_term=end" target="_blank">>>立即报名</a></b></div>')
+console.log("请关注InfoQ微信帐号:infoqchina");}

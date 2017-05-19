@@ -1,0 +1,20 @@
+
+/* Custom styles for Confluence (included for all themes by default) */
+
+/* Get rid of junk at the bottom */   
+.footer-body { display: none; }
+
+/* Remove child pages listing */
+#children-section { display: none; }
+
+/* Remove likes */
+#likes-section { display: none; }
+
+/* Remove useless comments */
+.quick-comment-container { display: none; }
+#comments-section { display: none; }
+
+
+/* End custom styles for Confluence */
+
+

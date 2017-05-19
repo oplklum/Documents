@@ -1,0 +1,20 @@
+<rpc-reply message-id="25" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><open-optical-device xmlns="http://com/att/device"><ports><port-id>1</port-id><port><port-name>LocalRx</port-name><port-up-los-threshold>-99.0</port-up-los-threshold><port-low-los-threshold>-99.0</port-low-los-threshold></port></ports></open-optical-device></data></rpc-reply>
+
+
+
+ERROR <rpc-reply message-id="52" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><rpc-error><error-type>application</error-type><error-tag>operation-failed</error-tag><error-severity>error</error-severity><error-message xml:lang="en">Getting items (/com-att-device:open-optical-device/ports[port-id='1']/port[port-direction='rx']/port-property//.) from sysrepo failed (Request contains unknown element).</error-message></rpc-error></rpc-reply>
+
+
+
+<open-optical-device xmlns="http://com/att/device"><ports><port-id>1</port-id><port><port-current-power/></port></ports></open-optical-device>
+
+<open-optical-device xmlns="http://com/att/device"><ports><port-id>1</port-id></ports></open-optical-device>
+
+<rpc-reply message-id="58" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><open-optical-device xmlns="http://com/att/device"><ports><port-id>1</port-id><port><port-current-power>-99.0</port-current-power></port></ports></open-optical-device></data></rpc-reply>
+
+<open-optical-device xmlns="http://com/att/device"><config><ops-config>manual-secondary</ops-config></config></open-optical-device>
+
+<rpc-reply message-id="302" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><open-optical-device xmlns="http://com/att/device"><state><ops-state>on-secondary</ops-state></state></open-optical-device></data></rpc-reply>
+
+<rpc-reply message-id="317" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><open-optical-device xmlns="http://com/att/device"><state><ops-state>on-primary</ops-state></state></open-optical-device></data></rpc-reply>
+

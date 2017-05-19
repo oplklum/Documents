@@ -1,0 +1,23 @@
+{
+  "devices":{
+    "netconf:192.168.6.66:6001":{
+      "basic":{
+        "driver": "oplink-netconf",
+        "type":"ROADM",
+        "manufacturer":"Oplink a Molex company",
+        "hwVersion":"x86-1.0",
+        "swVersion":"sdn-1.0"
+      }
+    }
+  },
+  "apps":{
+    "org.onosproject.netconf":{
+      "devices":[{
+        "username":"root",
+        "password":"root",
+        "ip":"192.168.6.66",
+        "port":6001
+      }]
+    }
+  }
+}

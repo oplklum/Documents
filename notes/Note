@@ -1,0 +1,51 @@
+Usefull tools for process communication:
+GPB-->google protocol buf
+sysrepo
+
+~/03-01/shasta/apps/of-hal/openflow/of_agent
+
+sudo mn --topo tree,depth=2,fanout=2 --controller=remote,ip=192.168.4.46,port=6633 --switch ovsk,protocols=OpenFlow13
+
+$ONOS_ROOT/tools/build/onos-buck build onos --show-output
+$ONOS_ROOT/tools/build/onos-buck test
+$ONOS_ROOT/tools/build/onos-buck run onos-local -- clean debug
+
+
+BATCH_OPERATION_REQUESTED
+
+curl -X POST -H "content-type:application/json" http://localhost:8181/onos/v1/network/configuration -d @file --user onos:rocks
+
+/home/chuny/master/shasta$ sudo ./build.sh debug ops|edfa|...
+/home/chuny/master/shasta/yang-model/oplink/Device-Model$ sudo ./install.sh
+/home/chuny/shasta/apps/sysrepo/build/src$ sudo ./sysrepod -d
+[sudo sysrepod -d]
+/home/chuny/shasta/apps/sysrepo/build/examples/CSM$ sudo ./csm
+[sudo csm]
+/home/chuny/shasta/apps/Netopeer2/server/build$ sudo ./netopeer2-server -d
+[sudo netopeer2-server -d]
+/home/chuny/shasta/apps/Netopeer2/cli/build$ sudo ./netopeer2-cli
+[netopeer2-cli]
+
+library dependency cmd: ldd [exe]
+pkill -9 [name]
+
+
+GPB
+protoc -I=$SRC_DIR --cpp_out=$DST_DIR $SRC_DIR/addressbook.proto
+
+
+git remote add --fetch official ssh://MaoLu@gerrit.onosproject.org:29418/onos
+git checkout -b official-onos official/master
+git merge -s ours official-onos 
+
+git checkout branch_new
+git merge -s ours branch_old
+git checkout branch_old
+git merge branch_new
+
+
+
+
+
+
+

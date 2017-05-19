@@ -1,0 +1,4 @@
+<open-optical-device xmlns="http://com/att/device"><ports><port-id>3</port-id><port><port-current-power></port-current-power></port></ports></open-optical-device>
+
+
+<open-optical-device xmlns="http://com/att/device"><ports><port-id>6</port-id><port><port-direction>tx</port-direction><port-property></port-property></port></ports></open-optical-device>

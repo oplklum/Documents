@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)https://www.ibm.com/developerworks/cn/java/j-jtp05236.html -->
+<html lang="zh-CN" class="applicationcache geolocation history postmessage svg websockets localstorage sessionstorage websqldatabase webworkers hashchange pointerevents canvas audio canvastext video webgl cssgradients multiplebgs opacity rgba inlinesvg hsla supports svgclippaths smil no-touchevents fontface generatedcontent textshadow cssanimations backgroundsize borderimage borderradius boxshadow csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox flexboxlegacy cssreflections csstransforms csstransforms3d csstransitions indexeddb indexeddb-deletedatabase no-hires js linux chrome chrome5 webkit webkit5 ibm-grid-large greater-china-imt"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+<meta name="viewport" content="width=device-width, initial-scale=1">      
+<link rel="icon" href="https://www.ibm.com/favicon.ico">
+<link rel="canonical" href="http://www.ibm.com/developerworks/cn/java/j-jtp05236.html">
+<meta name="geo.country" content="CN">
+<meta name="dcterms.rights" content="© Copyright IBM Corporation 2006">
+<meta name="dcterms.date" content="2006-06-15">
+<meta name="description" content="Java 语言的很多方法，例如 Thread.sleep() 和 Object.wait()，都可以抛出 InterruptedException。这个异常是不能忽略的，因为它是一个检查异常（checked exception）。但是应该如何处理它呢？在本月的 “Java 理论与实践” 中，并发专家 Brian Goetz 将解释 InterruptedException 的含义，为什么抛出 InterruptedException，以及在捕捉到该异常时应该怎么做。">	
+<meta name="keywords" content="Brian Goetz, Java Theory and Practice, interruption, cancellation, cancelable, InterruptedException, Java 5.0, blocking, Java 理论与实践, 中断, 取消, 可取消的, 阻塞, tttjca">
+<meta name="robots" content="index,follow">
+<title>Java 理论与实践: 处理 InterruptedException</title>
+    
+<script type="text/javascript" async="" charset="utf-8" id="ebOneTagUrlId" src="./Java 理论与实践_ 处理 InterruptedException_files/ebOneTag.js"></script><script type="text/javascript" async="" charset="utf-8" id="utag_27" src="./Java 理论与实践_ 处理 InterruptedException_files/up_loader.1.1.0.js"></script><script type="text/javascript" async="" charset="utf-8" id="utag_53" src="./Java 理论与实践_ 处理 InterruptedException_files/js"></script><script type="text/javascript" async="" charset="utf-8" id="tealium_cormetrics2" src="./Java 理论与实践_ 处理 InterruptedException_files/eluminate.js"></script><script type="text/javascript" async="" charset="utf-8" id="dle_api_d4d28a67b8a99b25fc0cad3fef8367b6b1bf7676d2c3ad5023f4fe518bdde55a" src="./Java 理论与实践_ 处理 InterruptedException_files/p_d4d28a67b8a99b25fc0cad3fef8367b6b1bf7676d2c3ad5023f4fe518bdde55a.js"></script><script type="text/javascript" async="" defer="" src="./Java 理论与实践_ 处理 InterruptedException_files/piwik.js"></script><script src="./Java 理论与实践_ 处理 InterruptedException_files/utag.js" type="text/javascript" async=""></script><script> 
+    digitalData = {
+        "page":{
+            "category":{
+                "primaryCategory":"SOFDCJVACN"
+            },
+            "pageInfo":{
+                "effectiveDate":"2006-06-15",
+                "language":"zh-CN",
+                "publishDate":"2006-06-15",
+                "publisher":"IBM Corporation",
+                "version":"v18",
+                "ibm":{ 
+                    "contentDelivery":"IBM developerWorks template",
+                    "contentProducer":"IBM developerWorks",
+                    "country":"CN",
+                    "owner":"developerWorks/China/IBM",
+                    "subject":"TT300",
+                    "type":"CT316",
+                    "topic":"J2SE (Java 2 Standard Edition),多线程",
+                    "topicId":"695,24",
+                    "contentArea":"java",
+                    "contentAreaId":"1",
+                    "contentType":"article",
+                    "contentId":"127791",
+                },
+                "keywords":"Brian Goetz, Java Theory and Practice, interruption, cancellation, cancelable, InterruptedException, Java 5.0, blocking, Java 理论与实践, 中断, 取消, 可取消的, 阻塞, tttjca",
+                "description":"Java 语言的很多方法，例如 Thread.sleep() 和 Object.wait()，都可以抛出 InterruptedException。这个异常是不能忽略的，因为它是一个检查异常（checked exception）。但是应该如何处理它呢？在本月的 “Java 理论与实践” 中，并发专家 Brian Goetz 将解释 InterruptedException 的含义，为什么抛出 InterruptedException，以及在捕捉到该异常时应该怎么做。"
+            }
+        }
+    };
+    window._analytics = {
+        "segment_key":'W5lGVW0o9UEiDz260URusVXC39CN4Pu6'
+    };
+</script>
+	
+    <meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@developerworks">
+<meta property="og:title" content="处理 InterruptedException">
+<meta property="og:description" content="Java 语言的很多方法，例如 Thread.sleep() 和 Object.wait()，都可以抛出 InterruptedException。这个异常是不能忽略的，因为它是一个检查异常（checked exception）。但是应该如何处理它呢？在本月的 “Java 理论与实践” 中，并发专家 Brian Goetz 将解释 InterruptedException 的含义，为什么抛出 InterruptedException，以及在捕捉到该异常时应该怎么做。">
+    <meta property="og:image" content="http://www.ibm.com/developerworks/i/dw-social-201508.png">
+<!-- SITE MON : START (DO NOT DELETE) -->
+<!-- developerWorks monitoring token -->
+<!-- SITE MON : END (DO NOT DELETE) -->
+
+<!-- HEADER_SCRIPTS_AND_CSS_INCLUDE -->
+<!-- <script src="//cdn.optimizely.com/js/5399420604.js"></script> -->
+<!-- BEGIN: Use this section to set page specific variables for the Page Tag -->
+<script language="JavaScript">var NTPT_PGEXTRA="ibmSkillLevel=1&ibmCmaId=127791&ibmContentAreas=java";</script>
+<!--END -->
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/ida_stats.js"></script>
+<link href="./Java 理论与实践_ 处理 InterruptedException_files/www.css" rel="stylesheet">
+<link href="./Java 理论与实践_ 处理 InterruptedException_files/syntaxhighlighter.css" rel="stylesheet">
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/www.js"></script><style></style>
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/syntaxhighlighter.js"></script>    
+<link href="./Java 理论与实践_ 处理 InterruptedException_files/tables.css" rel="stylesheet">
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/tables.js"></script>   
+<!--  Masthead/footer  -->
+<link href="./Java 理论与实践_ 处理 InterruptedException_files/dw-mf-v18.css" rel="stylesheet">
+<!-- <link href="//dw1.s81c.com/developerworks/css/dw-mf/v18/alt-signedin-ux.css" rel="stylesheet" /> -->   
+<!--[if lt IE 9]>
+    <link href="//dw1.s81c.com/developerworks/css/dw-mf/v18/dw-mf-ie8fix.css?v=022216" rel="stylesheet" />
+<![endif]-->
+<link href="./Java 理论与实践_ 处理 InterruptedException_files/dw-article.css" rel="stylesheet">
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/dw-auth-properties.js"></script>
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/dw-auth.js"></script>
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/dw-mf.js"></script>
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/dw-auto-links.js"></script> 
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/dw-include.js"></script>     
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/dw-article.js"></script>
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/tactic.js"></script>
+<script src="./Java 理论与实践_ 处理 InterruptedException_files/tacticbindlinks.js"></script>
+
+<!-- 
+<PageMap>
+    <DataObject type="document">
+        <Attribute name="topic">J2SE (Java 2 Standard Edition),多线程</Attribute>
+        <Attribute name="topicId">695,24</Attribute>
+        <Attribute name="contentArea">java</Attribute>
+        <Attribute name="contentAreaId">1</Attribute>
+        <Attribute name="abstract">Java 语言的很多方法，例如 Thread.sleep() 和 Object.wait()，都可以抛出 InterruptedException。这个异常是不能忽略的，因为它是一个检查异常（checked exception）。但是应该如何处理它呢？在本月的 “Java 理论与实践” 中，并发专家 Brian
+Goetz 将解释 InterruptedException 的含义，为什么抛出 InterruptedException，以及在捕捉到该异常时应该怎么做。
+</Attribute>
+        <Attribute name="pub.date">2006-06-15</Attribute>
+        <Attribute name="contentType">article</Attribute>
+    </DataObject>
+</PageMap>
+-->        
+
+<script type="text/javascript" async="" charset="utf-8" id="utag_ibm.web_53" src="./Java 理论与实践_ 处理 InterruptedException_files/utag.53.js"></script><script type="text/javascript" async="" charset="utf-8" id="utag_ibm.web_44" src="./Java 理论与实践_ 处理 InterruptedException_files/utag.44.js"></script><script type="text/javascript" async="" charset="utf-8" id="utag_ibm.web_46" src="./Java 理论与实践_ 处理 InterruptedException_files/utag.46.js"></script><style id="ibm-sitenav-menu-hidelinks">@media screen and (max-width: 602px) { .ibm-sitenav-menu-list{display:none} } @media screen and (min-width: 603px) { .ibm-mobilemenu-sitenavmenu {display:none} }</style><style id="ibm-masthead-hidelinks">@media screen and (max-width: 599px) { .ibm-masthead-categories,#ibm-megamenu-sections{display:none} }@media screen and (max-width: 599px) { .ibm-mh-marketplace-link{display:none} }</style><script type="text/javascript" async="" charset="utf-8" id="tiqapp" src="./Java 理论与实践_ 处理 InterruptedException_files/utag.v.js"></script><script type="text/javascript" async="" charset="utf-8" id="utag_ibm.web_27" src="./Java 理论与实践_ 处理 InterruptedException_files/utag.27.js"></script><script type="text/javascript" async="" charset="utf-8" id="LOTCC_10026" src="./Java 理论与实践_ 处理 InterruptedException_files/cc.js"></script><script type="text/javascript" async="" charset="utf-8" id="utag_ibm.web_52" src="./Java 理论与实践_ 处理 InterruptedException_files/utag.52.js"></script><style type="text/css" class="jquery-comments-css">.jquery-comments ul.navigation li.active:after {background: #2793e6 !important;</style><style type="text/css" class="jquery-comments-css">.jquery-comments ul.navigation ul.dropdown li.active {background: #2793e6 !important;</style><style type="text/css" class="jquery-comments-css">.jquery-comments .highlight-background {background: #2793e6 !important;</style><style type="text/css" class="jquery-comments-css">.jquery-comments .highlight-font {color: #2793e6 !important;}</style><style type="text/css" class="jquery-comments-css">.jquery-comments .highlight-font-bold {color: #2793e6 !important;font-weight: bold;}</style><script language="javascript" type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/50200000.js"></script><link type="text/css" rel="stylesheet" href="./Java 理论与实践_ 处理 InterruptedException_files/1.css"><script language="javascript" type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/rules_50200000.js"></script><script language="javascript" type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/dispatcher-v3.js"></script><script type="text/javascript" async="" charset="utf-8" id="tealium_setTTDid" src="./Java 理论与实践_ 处理 InterruptedException_files/i.js"></script><script src="./Java 理论与实践_ 处理 InterruptedException_files/yahoo-min.js" type="text/javascript"></script><script src="./Java 理论与实践_ 处理 InterruptedException_files/cp-v3.js" type="text/javascript"></script><script src="./Java 理论与实践_ 处理 InterruptedException_files/json-min.js" type="text/javascript"></script></head>
+<body id="ibm-com" class="ibm-type ibm-sitenav-menu ibm-sitenav-menu-sticky ibm-masthead-sticky">
+	
+<div id="ibm-top" class="ibm-landing-page dw-sitenav">
+
+<!-- MASTHEAD_BEGIN -->
+<div id="ibm-masthead" role="banner" aria-label="IBM" class="ibm-mhtype-minimal hastransition">
+    <div id="ibm-universal-nav" class="">    
+  
+        <nav role="navigation" aria-label="IBM">
+            <div id="ibm-home"><a href="https://www.ibm.com/cn/zh/?lnk=m">IBM®</a></div>
+            <ul id="ibm-menu-links" role="toolbar" aria-label="Site map" class="ibm-hide">
+                <li><a href="https://www.ibm.com/sitemap/cn/zh/">站点地图</a></li>
+            </ul><div class="ibm-masthead-rightside"><p class="ibm-mh-marketplace-link ibm-button-link ibm-fleft ibm-padding-bottom-0"><a class="ibm-btn-small ibm-btn-sec ibm-btn-blue-50" href="http://www.ibm.com/marketplace/?lnk=mp">市场 （英文）</a></p><div id="ibm-search-module" role="search" aria-labelledby="ibm-masthead" class="ibm-has-scope">
+            <div class="ibm-masthead-search-close"><p class="ibm-ind-link ibm-icononly ibm-padding-bottom-0"><a href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html#" class="ibm-close-link ibm-nospacing">关闭</a></p></div><form id="ibm-search-form" action="https://www.ibm.com/Search/" method="get">
+                <p>
+                    <label for="q">IBM</label>
+                    <input type="text" maxlength="100" value="" placeholder="搜索" name="q" id="q" aria-label="搜索 developerWorks" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-owns="ibm-search-typeahead-container"><input name="lnk" type="hidden" value="mhsrch">
+                    <input type="hidden" value="18" name="v">
+                    <input type="hidden" value="utf" name="en">
+                    <input type="hidden" value="zh" name="lang">
+                    <input type="hidden" value="cn" name="cc">
+                    <input type="hidden" name="sn" value="dw">
+                    <input type="hidden" name="dws" value="cndw">
+                    <input type="hidden" name="hpp" value="20">
+                    <span class="ibm-search-scope ibm-fadeout"><input class="ibm-styled-checkbox" data-init="false" type="checkbox" name="sn" value="" id="ibm-mh-scopeoption"> <label for="ibm-mh-scopeoption">In Marketplace</label></span><button role="button" type="submit" id="ibm-search" class="ibm-search-link" value="提交"><span class="ibm-access">提交</span></button>
+                </p>
+            </form><form class="ibm-hide" id="ibm-default-scope-form" action="https://www.ibm.com/marketplace/search/cn/zh-cn/" method="get"><input name="terms" type="text"><input name="lnk" type="hidden" value="mhmpsrch"></form>
+        </div><div id="ibm-search-typeahead-container" class="ibm-search-typeahead-container ibm-fadeout"></div><ul aria-label="Tools" role="menubar" class="ibm-masthead-iconsonly"><li role="presentation" class="ibm-masthead-item-signin"><button role="menubutton" class="ibm-profile-link">我的 IBM</button><ul id="ibm-signin-minimenu-container" role="menu" aria-label="Profile" class="ibm-dropdown-menu">		<li class="ibm-dropdown-menu-primary" role="presentation" data-linktype="notifications"> 			<a class="" href="https://myibm.ibm.com/dashboard/?lnk=mmi" tabindex="0">我的 IBM</a> 		</li>		<li class="ibm-dropdown-menu-primary menu-heading" role="presentation">				<span tabindex="0">developerWorks</span>			</li>		<li class="ibm-dropdown-menu-primary ibm-signin-alt" role="presentation">			<a href="https://www.ibm.com/developerworks/dwwi/jsp/ssologin.jsp?d=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Fjava%2Fj-jtp05236.html&amp;lang=zh&amp;a=dwmav" role="menuitem">登录</a>		</li>		<li class="ibm-dropdown-menu-primary dw-register-alt" role="presentation">			<a href="https://www.ibm.com/developerworks/dwwi/jsp/ssoregister.jsp?d=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Fjava%2Fj-jtp05236.html&amp;lang=zh&amp;a=dwmav" role="menuitem">注册</a>		</li></ul></li><li role="presentation" class="ibm-masthead-item-menu"><button role="menubutton" class="ibm-menu-link">站点导航</button></li></ul></div> 
+        </nav>
+  
+        
+       
+    </div>
+</div><div class="ibm-mobilemenu ibm-hide" aria-labelledby="ibm-burgermenu-a11y" role="dialog" tabindex="0"><p class="ibm-hide" id="ibm-burgermenu-a11y">站点导航</p><div class="ibm-mobilemenu-close"><p class="ibm-icononly ibm-fright ibm-ind-link ibm-nospacing"><a class="ibm-close-link" href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html?lnk=hm#">关闭</a></p></div><div class="ibm-mobilemenu-section ibm-mobilemenu-sitenavmenu"><ul role="menubar"><li class="ibm-mobile-section-heading ibm-mobile-sitename">
+        <a href="https://www.ibm.com/developerworks/cn/?lnk=hm">
+            <img width="186" height="24" alt="developerWorks®" src="./Java 理论与实践_ 处理 InterruptedException_files/dw-mf-wordmark.svg">
+        </a>
+    </li>
+                            <li class="dw-navpage-learn" role="presentation">
+                    <a href="https://www.ibm.com/developerworks/cn/topics/?lnk=hm" role="menuitem" tabindex="0">学习</a>
+                </li>
+                    
+                <li class="dw-navpage-develop" role="presentation">
+                    <a href="https://www.ibm.com/developerworks/cn/downloads/?lnk=hm" role="menuitem" tabindex="-1">开发</a>
+                </li>                    
+
+                <li class="dw-navpage-connect" role="presentation">
+                    <a href="https://developer.ibm.com/cn/community/?lnk=hm" role="menuitem" tabindex="-1">社区</a>
+                </li>  
+        </ul></div><div class="ibm-mobilemenu-section"><ul class="ibm-mobilemenu-mhlinks" aria-label="发现 IBM"><li><a href="http://www.ibm.com/marketplace/?lnk=hmmp">市场 （英文）</a></li><li><div data-widget="showhide" data-type="panel" class="ibm-show-hide ibm-widget-processed"><h2><a href="javascript:void();">产品</a></h2><div class="ibm-container-body" style="display: none;"><ul><li><a href="https://www.ibm.com/products/cn/zh/?lnk=hmhmpr_cnzh"><span>所有产品</span></a></li><li><a href="https://www.ibm.com/analytics/cn/zh/?lnk=hmmpr_bua_cnzh&amp;lnk2=learn"><span>大数据与分析</span></a></li><li><a href="https://www.ibm.com/cloud-computing/cn/zh?lnk=hmmpr_bucl_cnzh&amp;lnk2=learn"><span>云计算</span></a></li><li><a href="https://www.ibm.com/ibm/cn/cognitive/outthink/?lnk=hmmpr_buce_cnzh&amp;lnk2=learn"><span>认知</span></a></li><li><a href="https://www.ibm.com/commerce/cn-zh/?lnk=hmmpr_bucom_cnzh&amp;lnk2=learn"><span>商务</span></a></li><li><a href="https://www.ibm.com/internet-of-things/cn-zh/?lnk=hmmpr_iot_cnzh&amp;lnk2=learn"><span>物联网</span></a></li><li><a href="https://www.ibm.com/solutions/cn/zh/index.html?lnk=hm"><span>行业解决方案</span></a></li><li><a href="https://www.ibm.com/it-infrastructure/cn-zh/?lnk=hmmpr_buit_cnzh&amp;lnk2=learn"><span>IT 基础架构</span></a></li><li><a href="https://www.ibm.com/mobilefirst/cn/zh/?lnk=hmmpr_bumf_cnzh&amp;lnk2=learn"><span>移动</span></a></li><li><a href="https://www.ibm.com/security/cn-zh/?lnk=hmmpr_buse_cnzh&amp;lnk2=learn"><span>安全</span></a></li><li><a href="https://www.ibm.com/social-business/cn-zh/?lnk=hm"><span>社交协作与人才管理</span></a></li><li><a href="https://www.ibm.com/services/cn/zh/watson/explorer.html?lnk=hm"><span>Watson</span></a></li></ul></div></div></li><li><div data-widget="showhide" data-type="panel" class="ibm-show-hide ibm-widget-processed"><h2><a href="javascript:void();">服务</a></h2><div class="ibm-container-body" style="display: none;"><ul><li><a href="https://www.ibm.com/services/cn/gbs/consulting/?lnk=hmmse_bc_cnzh&amp;lnk2=learn"><span>业务咨询</span></a></li><li><a href="https://www.ibm.com/technologyservices/cn/zh/?lnk=hmmse_ts_cnzh&amp;lnk2=learn"><span>技术服务</span></a></li><li><a href="https://www.ibm.com/financing/cn/zh/index.html?lnk=hmmse_fin_cnzh&amp;lnk2=learn"><span>融资</span></a></li><li><a href="https://www.ibm.com/solutions/cn/zh/index.html?lnk=hm"><span>行业解决方案</span></a></li><li><a href="https://www.ibm.com/training/?lnk=hm"><span>培训与技能 (US)</span></a></li></ul></div></div></li><li><div data-widget="showhide" data-type="panel" class="ibm-show-hide ibm-widget-processed"><h2><a href="javascript:void();">开发人员</a></h2><div class="ibm-container-body" style="display: none;"><ul><li><a href="https://www.ibm.com/developerworks/cn/?lnk=hmmdev_dw_cnzh&amp;lnk2=learn"><span>developerWorks</span></a></li><li><a href="https://www.ibm.com/partnerworld?lnk=hmmdev_pw_cnzh&amp;lnk2=learn"><span>PartnerWorld</span></a></li></ul></div></div></li><li><a href="https://www.ibm.com/support/cn/zh/?lnk=hmmsu_cnzh">支持</a></li><li><a href="https://www.ibm.com/employment/cn/?lnk=hmmca_cnzh">工作机会</a></li></ul></div></div><div class="ibm-mhplaceholder"></div><!-- MASTHEAD_END -->
+	    
+<!-- LAYOUT -->
+<div id="ibm-content-wrapper">
+    <!-- LEADSPACE_BEGIN -->
+    <header role="banner" aria-labelledby="ibm-pagetitle-h1">
+        
+        <!-- MASTHEAD_SITENAV_BEGIN -->
+        <div class="ibm-sitenav-menu-container" data-widgetprocessed="true">
+    <div class="ibm-sitenav-menu-name">
+        <a href="https://www.ibm.com/developerworks/cn/">
+            <img width="186" height="24" alt="developerWorks®" src="./Java 理论与实践_ 处理 InterruptedException_files/dw-mf-wordmark.svg">
+        </a>
+    </div>
+    <div class="ibm-sitenav-menu-list">
+        <ul role="menubar">
+                            <li class="dw-navpage-learn" role="presentation">
+                    <a href="https://www.ibm.com/developerworks/cn/topics/" role="menuitem" tabindex="0">学习</a>
+                </li>
+                    
+                <li class="dw-navpage-develop" role="presentation">
+                    <a href="https://www.ibm.com/developerworks/cn/downloads/" role="menuitem" tabindex="-1">开发</a>
+                </li>                    
+
+                <li class="dw-navpage-connect" role="presentation">
+                    <a href="https://developer.ibm.com/cn/community/" role="menuitem" tabindex="-1">社区</a>
+                </li>  
+        </ul>
+    </div>
+</div>        <!-- MASTHEAD_SITENAV_END -->
+        
+        <!-- NAVIGATION_TRAIL_BEGIN -->
+        <div id="ibm-leadspace-head" class="ibm-alternate">
+            <div id="ibm-leadspace-body">
+                <nav aria-label="Breadcrumb" role="navigation">                     
+                            <ul id="dw-navigation-trail" itemscope="" itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><a itemprop="item" href="http://www.ibm.com/developerworks/cn/topics/"><span itemprop="name">学习</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem"><a itemprop="item" href="http://www.ibm.com/developerworks/cn/java/"><span itemprop="name">Java technology</span></a><meta itemprop="position" content="2"></li></ul>
+                </nav>
+            </div>
+        </div>
+        <!-- NAVIGATION_TRAIL_END -->
+        
+    </header>
+    <!-- LEADSPACE_END -->
+    
+    <!-- MAIN_CONTENT_BEGIN -->
+    <main role="main" aria-label=""> 
+        <div id="ibm-pcon">
+            <!-- BEGIN_IBM-CONTENT -->
+            <div id="ibm-content">
+                <!-- BEGIN_IBM-CONTENT-BODY -->
+                <div id="ibm-content-body">
+                    <!-- BEGIN_IBM-CONTENT-MAIN -->
+                    <div id="ibm-content-main" class="dw-article">                        
+                        <!-- BEGIN_INTERIOR-COLUMNS -->
+                                <div class="ibm-columns dw-article-toc">
+                                    <!-- LEFT_6_2_CONTENT_COLUMN_BEGIN -->  
+                                    <div id="dw-article-toc-container" class="ibm-col-6-2">
+                                        <div id="dw-article-toc-body" data-widget="scrollable" data-height="722" style="width: 300px; height: 722px;" class=""><div class="nano-content" tabindex="-1" style="right: -15px;">
+                                            <h2>内容</h2><div class="ibm-alternate-rule"><hr></div><ul role="directory" aria-label="内容" class="ibm-plain-list"><li class=""><a onclick="tocLink(&#39;#ibm-pagetitle-h1&#39;)" role="link" tabindex="0">概览</a></li><li class=""><a onclick="tocLink(&#39;#10&#39;)" role="link" tabindex="0">阻塞方法</a></li><li class=""><a onclick="tocLink(&#39;#20&#39;)" role="link" tabindex="0">处理 InterruptedException</a></li><li class="dw-highlight"><a onclick="tocLink(&#39;#30&#39;)" role="link" tabindex="0">实现可取消任务</a></li><li><a onclick="tocLink(&#39;#40&#39;)" role="link" tabindex="0">结束语</a></li><li><a onclick="tocLink(&#39;#artrelatedtopics&#39;)" role="link" tabindex="0">相关主题</a></li><li><a onclick="tocLink(&#39;#icomments&#39;)" role="link" tabindex="0">评论</a></li></ul>
+                                        </div><div class="nano-pane" style="display: none; opacity: 1; visibility: visible;"><div class="nano-slider" style="height: 707px; transform: translate(0px, 0px);"></div></div></div>
+                                    </div>
+                                    <!-- LEFT_6_2_CONTENT_COLUMN_END -->
+                                    
+                                    <!-- CENTER_6_4_CONTENT_COLUMN_BEGIN -->
+                                    <div class="ibm-col-6-4">
+                                            <p class="dw-article-series-head">Java 理论与实践</p>
+                                        <h1 id="ibm-pagetitle-h1" class="ibm-h1">处理 InterruptedException</h1><p class="dw-article-subhead">捕捉到它，然后怎么处理它？</p>
+                                        <!-- Article Top Bar -->
+                                                <div class="ibm-columns dw-article-topbar">
+                                                    <!-- Author and article info. -->
+                                                    <div class="ibm-col-6-2 ibm-col-medium-6-4 dw-article-metadata">
+                                                        <div class="dw-article-avatar"><img width="42" height="42" src="./Java 理论与实践_ 处理 InterruptedException_files/dw-author.png" alt=""></div><div class="dw-article-authordate">Brian Goetz<br><span class="dw-article-pubdate">2006 年 6 月 15 日发布</span></div>
+                                                    </div>
+                                                    <!-- Social -->
+                                                    <div class="ibm-col-6-2 ibm-col-medium-6-4 ibm-col-small-6-2 dw-article-social">
+                                                        <!-- Sharing links -->
+                                                        <div id="dw-article-share-inline">
+                                                            <div class="dw-article-sharelink-inline">
+                                                                <div class="ibm-sharethispage"><h4 class="ibm-bold">分享此页面</h4><p class="ibm-icononly"><a class="ibm-weibo-encircled-link" href="http://service.weibo.com/share/share.php?url=http%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Fjava%2Fj-jtp05236.html%&amp;title=Java%20%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%3A%20%E5%A4%84%E7%90%86%20InterruptedException&amp;language=zh_cn" data-id="weibo" onclick="return IBMCore.common.module.sharethispage.gotoUrl(window.open(), this);">Weibo</a><a class="ibm-googleplus-encircled-link" href="https://plus.google.com/share?url=http%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Fjava%2Fj-jtp05236.html&amp;t=Java%20%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%3A%20%E5%A4%84%E7%90%86%20InterruptedException" data-id="googleplus" onclick="return IBMCore.common.module.sharethispage.gotoUrl(window.open(), this);">Google+</a><a class="ibm-email-encircled-link" href="mailto:?subject=Java%20%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%3A%20%E5%A4%84%E7%90%86%20InterruptedException&amp;body=http%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Fjava%2Fj-jtp05236.html" data-id="email" onclick="">用电子邮件发送本页面</a></p></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Number of comments and link to comments -->
+                                                        <div id="dw-article-cmts">
+                                                            <div class="dw-article-cmtslink">
+                                                                <a onclick="tocLink(&#39;#icomments&#39;)" href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html#icomments" role="link" tabindex="0" aria-label="Comments">
+                                                                    <img src="./Java 理论与实践_ 处理 InterruptedException_files/dw-article-cmt-icon.png" width="29" height="29" alt="Comments">
+                                                                </a>
+                                                            </div>
+                                                            <div class="dw-article-cmtslink">
+                                                                <a onclick="tocLink(&#39;#icomments&#39;)" href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html#icomments" role="link" tabindex="0">
+                                                                    <div id="nCmts">1</div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+<div id="dw-series-container" style="display: block;"><h3 class="ibm-h3" id="dw-series-heading">系列内容：</h3><div data-widget="showhide" data-type="panel" class="ibm-show-hide ibm-widget-processed"><h2 id="dw-series-show-hide"><a href="javascript:void();">此内容是该系列的一部分：<span id="dw-series-title-alt">Java 理论与实践</span></a></h2><div class="ibm-container-body" id="dw-series-links" style="display: none;"><ul id="dw-series-list"><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp10264/index.html?ca=drs-" class="dw-series-article-link"> JDK 5.0 中更灵活、更具可伸缩性的锁定机制</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp11253/index.html?ca=drs-" class="dw-series-article-link"> JVM 1.4.1 中的垃圾收集</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp07294/index.html?ca=drs-" class="dw-series-article-link"> Web 层的状态复制</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp02216.html?ca=drs-" class="dw-series-article-link"> 伪 typedef 反模式</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp04298.html?ca=drs-" class="dw-series-article-link"> 使用通配符简化泛型使用</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp03304/index.html?ca=drs-" class="dw-series-article-link"> 修复 Java 内存模型，第 2 部分</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp07265/index.html?ca=drs-" class="dw-series-article-link"> 做个好的（事件）侦听器</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp05254/index.html?ca=drs-" class="dw-series-article-link"> 关于异常的争论</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp09275.html?ca=drs-" class="dw-series-article-link"> 再谈 Urban 性能传言</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp12214/index.html?ca=drs-" class="dw-series-article-link"> 动态编译与性能测量</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp02183/index.html?ca=drs-" class="dw-series-article-link"> 变还是不变？</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp05273/index.html?ca=drs-" class="dw-series-article-link"> 哈希</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp0924/index.html?ca=drs-" class="dw-series-article-link"> 嗨，我的线程到哪里去了？</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp02277.html?ca=drs-" class="dw-series-article-link"> 在 JDK 早期版本中使用 Java 5 的语言特性</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp10283/index.html?ca=drs-" class="dw-series-article-link"> 垃圾收集简史</a></li><li class="dw-series-item"> 处理 InterruptedException</li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp06206.html?ca=drs-" class="dw-series-article-link"> 平衡测试，第 1 部分</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp1126/index.html?ca=drs-" class="dw-series-article-link"> 并发在一定程度上使一切变得简单</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp07233/index.html?ca=drs-" class="dw-series-article-link"> 并发集合类</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp11137.html?ca=drs-" class="dw-series-article-link"> 应用 fork-join 框架</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp/part1/index.html?ca=drs-" class="dw-series-article-link"> 应该在下一个企业应用程序中使用 JMS 吗？</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp0114/index.html?ca=drs-" class="dw-series-article-link"> 您的小数点到哪里去了？</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp09263/index.html?ca=drs-" class="dw-series-article-link"> 描绘线程安全性</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp08223/index.html?ca=drs-" class="dw-series-article-link"> 构建一个更好的 HashMap</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp06197.html?ca=drs-" class="dw-series-article-link"> 正确使用 Volatile 变量</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp11234/index.html?ca=drs-" class="dw-series-article-link"> 流行的原子</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp06294/index.html?ca=drs-" class="dw-series-article-link"> 消除 bug</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp0305.html?ca=drs-" class="dw-series-article-link"> 理解 JTS —— 事务简介</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp09196/index.html?ca=drs-" class="dw-series-article-link"> 用 JMX 检测应用程序</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp08305.html?ca=drs-" class="dw-series-article-link"> 用动态代理进行修饰</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp11225/index.html?ca=drs-" class="dw-series-article-link"> 用弱引用堵住内存泄漏</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp0730/index.html?ca=drs-" class="dw-series-article-link"> 线程池与工作队列</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp03216.html?ca=drs-" class="dw-series-article-link"> 良好的内务处理实践</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp04247.html?ca=drs-" class="dw-series-article-link"> 闭包之争</a></li><li class="dw-series-item"><a href="http://www.ibm.com/developerworks/cn/java/j-jtp04186/index.html?ca=drs-" class="dw-series-article-link"> 非阻塞算法简介</a></li></ul></div></div></div>
+                                        <!-- Article Body -->
+                                        
+                                        <p>
+这样的情景您也许并不陌生：您在编写一个测试程序，程序需要暂停一段时间，于是调用
+<code>Thread.sleep()</code>。但是编译器或 IDE 报错说没有处理检查到的 <code>InterruptedException</code>。<code>InterruptedException</code> 是什么呢，为什么必须处理它？
+</p><p>
+对于 <code>InterruptedException</code>，一种常见的处理方式是 “生吞（swallow）” 它 —— 捕捉它，然后什么也不做（或者记录下它，不过这也好不到哪去）—— 就像后面的 <a href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html#code4">清单 4</a> 一样。不幸的是，这种方法忽略了这样一个事实：这期间可能发生中断，而中断可能导致应用程序丧失及时取消活动或关闭的能力。
+</p><h2 id="10" class="ibm-h2">阻塞方法</h2><p>
+当一个方法抛出 <code>InterruptedException</code> 时，它不仅告诉您它可以抛出一个特定的检查异常，而且还告诉您其他一些事情。例如，它告诉您它是一个<em>阻塞（blocking）</em>方法，如果您响应得当的话，它将尝试消除阻塞并尽早返回。
+</p><p>
+
+阻塞方法不同于一般的要运行较长时间的方法。一般方法的完成只取决于它所要做的事情，以及是否有足够多可用的计算资源（CPU 周期和内存）。而阻塞方法的完成还取决于一些外部的事件，例如计时器到期，I/O 完成，或者另一个线程的动作（释放一个锁，设置一个标志，或者将一个任务放在一个工作队列中）。一般方法在它们的工作做完后即可结束，而阻塞方法较难于预测，因为它们取决于外部事件。阻塞方法可能影响响应能力，因为难于预测它们何时会结束。
+
+</p><p>
+阻塞方法可能因为等不到所等的事件而无法终止，因此令阻塞方法<em>可取消</em> 就非常有用（如果长时间运行的非阻塞方法是可取消的，那么通常也非常有用）。可取消操作是指能从外部使之在正常完成之前终止的操作。由 <code>Thread</code> 提供并受 <code>Thread.sleep()</code> 和 <code>Object.wait()</code> 支持的中断机制就是一种取消机制；它允许一个线程请求另一个线程停止它正在做的事情。当一个方法抛出 <code>InterruptedException</code> 时，它是在告诉您，如果执行该方法的线程被中断，它将尝试停止它正在做的事情而提前返回，并通过抛出 <code>InterruptedException</code> 表明它提前返回。
+行为良好的阻塞库方法应该能对中断作出响应并抛出 <code>InterruptedException</code>，以便能够用于可取消活动中，而不至于影响响应。
+</p><h3 id="1.1" class="ibm-h3">线程中断</h3><p>
+每个线程都有一个与之相关联的 Boolean 属性，用于表示线程的<em>中断状态（interrupted status）</em>。中断状态初始时为 false；当另一个线程通过调用 <code>Thread.interrupt()</code> 中断一个线程时，会出现以下两种情况之一。如果那个线程在执行一个低级可中断阻塞方法，例如
+<code>Thread.sleep()</code>、 <code>Thread.join()</code> 或
+<code>Object.wait()</code>，那么它将取消阻塞并抛出 
+<code>InterruptedException</code>。否则，
+<code>interrupt()</code> 只是设置线程的中断状态。
+在被中断线程中运行的代码以后可以轮询中断状态，看看它是否被请求停止正在做的事情。中断状态可以通过
+<code>Thread.isInterrupted()</code> 来读取，并且可以通过一个名为 <code>Thread.interrupted()</code> 的操作读取和清除。
+</p><p>
+中断是一种协作机制。当一个线程中断另一个线程时，被中断的线程不一定要立即停止正在做的事情。相反，中断是礼貌地请求另一个线程在它愿意并且方便的时候停止它正在做的事情。有些方法，例如 <code>Thread.sleep()</code>，很认真地对待这样的请求，但每个方法不是一定要对中断作出响应。对于中断请求，不阻塞但是仍然要花较长时间执行的方法可以轮询中断状态，并在被中断的时候提前返回。
+您可以随意忽略中断请求，但是这样做的话会影响响应。
+</p><p>
+中断的协作特性所带来的一个好处是，它为安全地构造可取消活动提供更大的灵活性。我们很少希望一个活动立即停止；如果活动在正在进行更新的时候被取消，那么程序数据结构可能处于不一致状态。中断允许一个可取消活动来清理正在进行的工作，恢复不变量，通知其他活动它要被取消，然后才终止。
+</p><h2 id="20" class="ibm-h2">处理 InterruptedException</h2><p>
+如果抛出 <code>InterruptedException</code> 意味着一个方法是阻塞方法，那么调用一个阻塞方法则意味着您的方法也是一个阻塞方法，而且您应该有某种策略来处理
+<code>InterruptedException</code>。通常最容易的策略是自己抛出
+<code>InterruptedException</code>，如清单 1 中
+<code>putTask()</code> 和 <code>getTask()</code> 方法中的代码所示。
+这样做可以使方法对中断作出响应，并且只需将
+<code>InterruptedException</code> 添加到 throws 子句。
+</p><h5 id="code1" class="ibm-h5">清单 1. 不捕捉 InterruptedException，将它传播给调用者</h5><span class="dw-code-nohighlight"><div class="ibm-syntax-container"><div><div id="highlighter_233696" class="syntaxhighlighter  htmlscript"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="htmlscript plain">public class TaskQueue {</code></div><div class="line number2 index1 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">private static final int MAX_TASKS = 1000;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div class="line number4 index3 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">private BlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt; queue </code></div><div class="line number5 index4 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">= new LinkedBlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt;(MAX_TASKS);</code></div><div class="line number6 index5 alt1">&nbsp;</div><div class="line number7 index6 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public void putTask(Task r) throws InterruptedException { </code></div><div class="line number8 index7 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">queue.put(r);</code></div><div class="line number9 index8 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number10 index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public Task getTask() throws InterruptedException { </code></div><div class="line number12 index11 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">return queue.take();</code></div><div class="line number13 index12 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number14 index13 alt1"><code class="htmlscript plain">}</code></div></div></td></tr></tbody></table></div></div></div></span><p>
+有时候需要在传播异常之前进行一些清理工作。在这种情况下，可以捕捉
+<code>InterruptedException</code>，执行清理，然后抛出异常。清单 2 演示了这种技术，该代码是用于匹配在线游戏服务中的玩家的一种机制。
+<code>matchPlayers()</code> 方法等待两个玩家到来，然后开始一个新游戏。如果在一个玩家已到来，但是另一个玩家仍未到来之际该方法被中断，那么它会将那个玩家放回队列中，然后重新抛出 <code>InterruptedException</code>，这样那个玩家对游戏的请求就不至于丢失。
+</p><h5 id="code2" class="ibm-h5">清单 2. 在重新抛出 InterruptedException 之前执行特定于任务的清理工作</h5><span class="dw-code-nohighlight"><div class="ibm-syntax-container"><div><div id="highlighter_717093" class="syntaxhighlighter  htmlscript"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="htmlscript plain">public class PlayerMatcher {</code></div><div class="line number2 index1 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">private PlayerSource players;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div class="line number4 index3 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public PlayerMatcher(PlayerSource players) { </code></div><div class="line number5 index4 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">this.players = players; </code></div><div class="line number6 index5 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public void matchPlayers() throws InterruptedException { </code></div><div class="line number9 index8 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">try {</code></div><div class="line number10 index9 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">Player playerOne, playerTwo;</code></div><div class="line number11 index10 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">while (true) {</code></div><div class="line number12 index11 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">playerOne = playerTwo = null;</code></div><div class="line number13 index12 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">// Wait for two players to arrive and start a new game</code></div><div class="line number14 index13 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">playerOne = players.waitForPlayer(); // could throw IE</code></div><div class="line number15 index14 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">playerTwo = players.waitForPlayer(); // could throw IE</code></div><div class="line number16 index15 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">startNewGame(playerOne, playerTwo);</code></div><div class="line number17 index16 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number18 index17 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number19 index18 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">catch (InterruptedException e) {&nbsp; </code></div><div class="line number20 index19 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">// If we got one player and were interrupted, put that player back</code></div><div class="line number21 index20 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">if (playerOne != null)</code></div><div class="line number22 index21 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">players.addFirst(playerOne);</code></div><div class="line number23 index22 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">// Then propagate the exception</code></div><div class="line number24 index23 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">throw e;</code></div><div class="line number25 index24 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number26 index25 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number27 index26 alt2"><code class="htmlscript plain">}</code></div></div></td></tr></tbody></table></div></div></div></span><h3 id="2.1" class="ibm-h3">不要生吞中断</h3><p>
+有时候抛出 <code>InterruptedException</code> 并不合适，例如当由 <code>Runnable</code> 定义的任务调用一个可中断的方法时，就是如此。在这种情况下，不能重新抛出
+<code>InterruptedException</code>，但是您也不想什么都不做。当一个阻塞方法检测到中断并抛出
+<code>InterruptedException</code> 时，它清除中断状态。如果捕捉到 <code>InterruptedException</code> 但是不能重新抛出它，那么应该保留中断发生的证据，以便调用栈中更高层的代码能知道中断，并对中断作出响应。该任务可以通过调用 
+<code>interrupt()</code> 以 “重新中断” 当前线程来完成，如清单 3 所示。至少，每当捕捉到
+<code>InterruptedException</code> 并且不重新抛出它时，就在返回之前重新中断当前线程。
+</p><h5 id="code3" class="ibm-h5">清单 3. 捕捉 InterruptedException 后恢复中断状态</h5><span class="dw-code-nohighlight"><div class="ibm-syntax-container"><div><div id="highlighter_157672" class="syntaxhighlighter  htmlscript"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="htmlscript plain">public class TaskRunner implements Runnable {</code></div><div class="line number2 index1 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">private BlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt; queue;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div class="line number4 index3 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public TaskRunner(BlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt; queue) { </code></div><div class="line number5 index4 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">this.queue = queue; </code></div><div class="line number6 index5 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public void run() { </code></div><div class="line number9 index8 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">try {</code></div><div class="line number10 index9 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">while (true) {</code></div><div class="line number11 index10 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">Task task = queue.take(10, TimeUnit.SECONDS);</code></div><div class="line number12 index11 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">task.execute();</code></div><div class="line number13 index12 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number14 index13 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number15 index14 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">catch (InterruptedException e) { </code></div><div class="line number16 index15 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">// Restore the interrupted status</code></div><div class="line number17 index16 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">Thread.currentThread().interrupt();</code></div><div class="line number18 index17 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number19 index18 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number20 index19 alt1"><code class="htmlscript plain">}</code></div></div></td></tr></tbody></table></div></div></div></span><p>
+处理 <code>InterruptedException</code> 时采取的最糟糕的做法是生吞它
+—— 捕捉它，然后既不重新抛出它，也不重新断言线程的中断状态。对于不知如何处理的异常，最标准的处理方法是捕捉它，然后记录下它，但是这种方法仍然无异于生吞中断，因为调用栈中更高层的代码还是无法获得关于该异常的信息。（仅仅记录
+<code>InterruptedException</code> 也不是明智的做法，因为等到人来读取日志的时候，再来对它作出处理就为时已晚了。）
+清单 4 展示了一种使用得很广泛的模式，这也是生吞中断的一种模式：
+</p><h5 id="code4" class="ibm-h5">清单 4. 生吞中断 —— 不要这么做</h5><span class="dw-code-nohighlight"><div class="ibm-syntax-container"><div><div id="highlighter_765701" class="syntaxhighlighter  htmlscript"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="htmlscript plain">// Don't do this </code></div><div class="line number2 index1 alt1"><code class="htmlscript plain">public class TaskRunner implements Runnable {</code></div><div class="line number3 index2 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">private BlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt; queue;</code></div><div class="line number4 index3 alt1">&nbsp;</div><div class="line number5 index4 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public TaskRunner(BlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt; queue) { </code></div><div class="line number6 index5 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">this.queue = queue; </code></div><div class="line number7 index6 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number8 index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public void run() { </code></div><div class="line number10 index9 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">try {</code></div><div class="line number11 index10 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">while (true) {</code></div><div class="line number12 index11 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">Task task = queue.take(10, TimeUnit.SECONDS);</code></div><div class="line number13 index12 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">task.execute();</code></div><div class="line number14 index13 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number15 index14 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number16 index15 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">catch (InterruptedException swallowed) { </code></div><div class="line number17 index16 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">/* DON'T DO THIS - RESTORE THE INTERRUPTED STATUS INSTEAD */</code></div><div class="line number18 index17 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number19 index18 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number20 index19 alt1"><code class="htmlscript plain">}</code></div></div></td></tr></tbody></table></div></div></div></span><p>
+如果不能重新抛出 <code>InterruptedException</code>，不管您是否计划处理中断请求，仍然需要重新中断当前线程，因为一个中断请求可能有多个 “接收者”。标准线程池
+（<code>ThreadPoolExecutor</code>）worker 线程实现负责中断，因此中断一个运行在线程池中的任务可以起到双重效果，一是取消任务，二是通知执行线程线程池正要关闭。如果任务生吞中断请求，则 worker 线程将不知道有一个被请求的中断，从而耽误应用程序或服务的关闭。
+</p><h2 id="30" class="ibm-h2">实现可取消任务</h2><p>
+语言规范中并没有为中断提供特定的语义，但是在较大的程序中，难于维护除取消外的任何中断语义。取决于是什么活动，用户可以通过一个 GUI 或通过网络机制，例如 JMX 或 Web 服务来请求取消。程序逻辑也可以请求取消。例如，一个 Web 爬行器（crawler）如果检测到磁盘已满，它会自动关闭自己，否则一个并行算法会启动多个线程来搜索解决方案空间的不同区域，一旦其中一个线程找到一个解决方案，就取消那些线程。
+</p><p>
+仅仅因为一个任务是可取消的，并不意味着需要<em>立即</em> 对中断请求作出响应。对于执行一个循环中的代码的任务，通常只需为每一个循环迭代检查一次中断。取决于循环执行的时间有多长，任何代码可能要花一些时间才能注意到线程已经被中断（或者是通过调用 <code>Thread.isInterrupted()</code> 方法轮询中断状态，或者是调用一个阻塞方法）。
+如果任务需要提高响应能力，那么它可以更频繁地轮询中断状态。阻塞方法通常在入口就立即轮询中断状态，并且，如果它被设置来改善响应能力，那么还会抛出
+<code>InterruptedException</code>。
+</p><p>
+惟一可以生吞中断的时候是您知道线程正要退出。只有当调用可中断方法的类是 <code>Thread</code> 的一部分，而不是
+<code>Runnable</code> 或通用库代码的情况下，才会发生这样的场景，清单 5 演示了这种情况。清单 5 创建一个线程，该线程列举素数，直到被中断，这里还允许该线程在被中断时退出。用于搜索素数的循环在两个地方检查是否有中断：一处是在 while 循环的头部轮询 <code>isInterrupted()</code> 方法，另一处是调用阻塞方法
+<code>BlockingQueue.put()</code>。
+</p><h5 id="code5" class="ibm-h5">清单 5. 如果知道线程正要退出的话，则可以生吞中断</h5><span class="dw-code-nohighlight"><div class="ibm-syntax-container"><div><div id="highlighter_872763" class="syntaxhighlighter  htmlscript"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="htmlscript plain">public class PrimeProducer extends Thread {</code></div><div class="line number2 index1 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">private final BlockingQueue&lt;</code><code class="htmlscript plain">BigInteger</code><code class="htmlscript plain">&gt; queue;</code></div><div class="line number3 index2 alt2">&nbsp;</div><div class="line number4 index3 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">PrimeProducer(BlockingQueue&lt;</code><code class="htmlscript plain">BigInteger</code><code class="htmlscript plain">&gt; queue) {</code></div><div class="line number5 index4 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">this.queue = queue;</code></div><div class="line number6 index5 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public void run() {</code></div><div class="line number9 index8 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">try {</code></div><div class="line number10 index9 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">BigInteger p = BigInteger.ONE;</code></div><div class="line number11 index10 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">while (!Thread.currentThread().isInterrupted())</code></div><div class="line number12 index11 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">queue.put(p = p.nextProbablePrime());</code></div><div class="line number13 index12 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">} catch (InterruptedException consumed) {</code></div><div class="line number14 index13 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">/* Allow thread to exit */</code></div><div class="line number15 index14 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number16 index15 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number17 index16 alt2">&nbsp;</div><div class="line number18 index17 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">public void cancel() { interrupt(); }</code></div><div class="line number19 index18 alt2"><code class="htmlscript plain">}</code></div></div></td></tr></tbody></table></div></div></div></span><h3 id="3.1" class="ibm-h3">不可中断的阻塞方法</h3><p>
+并非所有的阻塞方法都抛出 <code>InterruptedException</code>。输入和输出流类会阻塞等待 I/O 完成，但是它们不抛出 <code>InterruptedException</code>，而且在被中断的情况下也不会提前返回。然而，对于套接字 I/O，如果一个线程关闭套接字，则那个套接字上的阻塞 I/O 操作将提前结束，并抛出一个
+<code>SocketException</code>。<code>java.nio</code> 中的非阻塞 I/O 类也不支持可中断 I/O，但是同样可以通过关闭通道或者请求 <code>Selector</code> 上的唤醒来取消阻塞操作。类似地，尝试获取一个内部锁的操作（进入一个
+<code>synchronized</code> 块）是不能被中断的，但是
+<code>ReentrantLock</code> 支持可中断的获取模式。
+</p><h3 id="N10172" class="ibm-h3">不可取消的任务</h3><p>
+有些任务拒绝被中断，这使得它们是不可取消的。但是，即使是不可取消的任务也应该尝试保留中断状态，以防在不可取消的任务结束之后，调用栈上更高层的代码需要对中断进行处理。清单 6 展示了一个方法，该方法等待一个阻塞队列，直到队列中出现一个可用项目，而不管它是否被中断。为了方便他人，它在结束后在一个
+ finally 块中恢复中断状态，以免剥夺中断请求的调用者的权利。（它不能在更早的时候恢复中断状态，因为那将导致无限循环 ——
+<code>BlockingQueue.take()</code> 将在入口处立即轮询中断状态，并且，如果发现中断状态集，就会抛出 <code>InterruptedException</code>。）
+</p><h5 id="code6" class="ibm-h5">清单 6. 在返回前恢复中断状态的不可取消任务</h5><span class="dw-code-nohighlight"><div class="ibm-syntax-container"><div><div id="highlighter_395506" class="syntaxhighlighter  htmlscript"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="htmlscript plain">public Task getNextTask(BlockingQueue&lt;</code><code class="htmlscript plain">Task</code><code class="htmlscript plain">&gt; queue) {</code></div><div class="line number2 index1 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">boolean interrupted = false;</code></div><div class="line number3 index2 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">try {</code></div><div class="line number4 index3 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">while (true) {</code></div><div class="line number5 index4 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">try {</code></div><div class="line number6 index5 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">return queue.take();</code></div><div class="line number7 index6 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">} catch (InterruptedException e) {</code></div><div class="line number8 index7 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">interrupted = true;</code></div><div class="line number9 index8 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">// fall through and retry</code></div><div class="line number10 index9 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number11 index10 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number12 index11 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">} finally {</code></div><div class="line number13 index12 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">if (interrupted)</code></div><div class="line number14 index13 alt1"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">Thread.currentThread().interrupt();</code></div><div class="line number15 index14 alt2"><code class="htmlscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="htmlscript plain">}</code></div><div class="line number16 index15 alt1"><code class="htmlscript plain">}</code></div></div></td></tr></tbody></table></div></div></div></span><h2 id="40" class="ibm-h2">结束语</h2><p>
+您可以用 Java 平台提供的协作中断机制来构造灵活的取消策略。各活动可以自行决定它们是可取消的还是不可取消的，以及如何对中断作出响应，如果立即返回会危害应用程序完整性的话，它们还可以推迟中断。即使您想在代码中完全忽略中断，也应该确保在捕捉到 <code>InterruptedException</code> 但是没有重新抛出它的情况下，恢复中断状态，以免调用它的代码无法获知中断的发生。
+</p><!--CMA ID: 127791--><!--Site ID: 10--><!--XSLT stylesheet used to transform this file: dw-document-html-8.0.xsl--> 
+                                        <!-- Article Resources -->
+                                        <div class="ibm-alternate-rule"><hr></div><h4 id="artrelatedtopics" class="ibm-h4">相关主题</h4><ul><li>您可以参阅本文在 developerWorks 全球站点上的 <a href="http://www.ibm.com/developerworks/java/library/j-jtp05236.html" target="_blank">英文原文</a>。</li><li><a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/InterruptedException.html">Java 2 Platform API Specifications</a>：用于 Java 2 Platform, Standard Edition, version 1.4.2 的 API 规范。
+</li><li><a href="http://www.amazon.com/exec/obidos/ASIN/0321349601/ref=nosim/none0b69"><em>Java
+Concurrency in Practice</em></a>（Addison-Wesley Professional，作者 Brian Goetz、Tim Peierls、Joshua Bloch、Joseph Bowbeer、David Holmes 和 Doug Lea，2006 年 6 月）：这个关于用 Java 语言开发并发程序的入门手册的第 7 章更深入地谈到了中断和取消的细节。
+</li><li><a href="https://sdlc6c.sun.com/ECom/EComActionServlet;jsessionid=95CA01D236820D9485B04BBE23B695E7">JDK 5.0 Update 6</a>：获得最新的 JDK 5.0 更新。
+</li><li><a href="http://www.ibm.com/developerworks/java/jdk/">The IBM implementation of Java technology</a>：下载 SDKs for AIX, Linux, and z/OS，同时还可以从该页面下载 Java 技术的其他 IBM 开发人员工具包。</li><li><a href="http://www.ibm.com/developerworks/cn/java/">Java 技术专区</a>：这里有数百篇关于 Java 编程各方面的文章。</li></ul>
+                                        <!-- Commenting -->
+<!-- INLINE_COMMENTS_BEGIN: -->
+<div class="ibm-alternate-rule"><hr></div>
+<div id="dw-article-cmts-top" class="ibm-columns">
+    <div class="ibm-col-6-2">
+        <h4 id="icomments" class="ibm-h4">评论</h4>
+        <div id="dw-article-cmts-login">
+            <p>添加或订阅评论，请先<a onclick="window.location=userLinks[0].url;" tabindex="0" role="link">登录</a>或<a onclick="window.location=userLinks[1].url;" tabindex="0" role="link">注册</a>。</p>
+        </div>
+    </div>    
+    <div class="ibm-col-6-2" id="dw-notify"> 
+        <input type="checkbox" value="1" name="comment_notification" id="comment_notification" disabled="">
+        <label for="comment_notification" style="color: rgb(204, 204, 204);">有新评论时提醒我</label>	   
+    </div>
+</div>
+
+<div class="dw-article-cmts-container">       
+    <div class="ibm-no-print jquery-comments read-only" id="dw-icomments-container"><div class="commenting-field main"><img src="./Java 理论与实践_ 处理 InterruptedException_files/user-icon.png" alt="" class="profile-picture round by-current-user"><div class="textarea-wrapper"><span class="close" style="display: none;"><span class="left"></span><span class="right"></span></span><div class="textarea" data-placeholder="添加评论" contenteditable="true" style="height: 3.65em;"></div><div class="control-row" style="display: none;"><span class="send save highlight-background">提交</span></div></div></div><ul class="navigation"><div class="navigation-wrapper"><li data-sort-key="newest" data-container-name="comments" class="active">最新的</li><li data-sort-key="oldest" data-container-name="comments">历史</li><li data-sort-key="popularity" data-container-name="comments">热门</li></div><div class="navigation-wrapper responsive"><li class="title active"><header>最新的</header></li><ul class="dropdown"><li data-sort-key="newest" data-container-name="comments" class="active">最新的</li><li data-sort-key="oldest" data-container-name="comments">历史</li><li data-sort-key="popularity" data-container-name="comments">热门</li></ul></div></ul><div class="data-container" data-container="comments"><ul id="comment-list" class="main"><li data-id="26412" class="comment"><div class="comment-wrapper"><img src="./Java 理论与实践_ 处理 InterruptedException_files/user-icon.png" alt="" class="profile-picture round"><time data-original="1488875774275">2017 年 03 月 07 日</time><div class="name"><a href="https://www.ibm.com/developerworks/community/profiles/user/taomk">taomk</a></div><div class="wrapper"><div class="content">&lt;h1&gt;hahah&lt;h1&gt;</div><span class="actions"><button class="action reply" type="button">回复</button><span class="separator">·</span><button class="action upvote"><span class="upvote-count">0</span><i class="fa fa-thumbs-up"></i></button><span class="separator">·</span><a class="action reply" href="https://www.ibm.com/developerworks/community/report?lang=cn&amp;referingURL=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Fjava%2Fj-jtp05236.html&amp;mymessage=%E8%AF%84%E8%AE%BA%3A%20%3Ch1%3Ehahah%3Ch1%3E%0D%E7%94%B1%20taomk%20%20%E4%BA%8E%202017%20%E5%B9%B4%2003%20%E6%9C%88%2007%20%E6%97%A5%20%0D%0D---%20%E5%9C%A8%E4%B8%8B%E6%96%B9%E6%B7%BB%E5%8A%A0%E8%AF%84%E8%AE%BA%20---" target="_blank">报告滥用<i class="fa image" style="background-image: url(&quot;/developerworks/maverick/image/report-abuse.png&quot;);"></i></a></span></div></div><ul class="child-comments"></ul></li></ul><div class="no-comments no-data"><i class="fa fa-comments fa-2x"></i><br>第一个评论</div></div></div>
+</div>
+<!-- INLINE_COMMENTS_END -->                                        <!-- CENTER_6_4_CONTENT_COLUMN_END -->
+                                    </div>   
+                                </div>
+                        <!--Rating_Meta_BEGIN--><div class="metavalue">static.content.url=http://www.ibm.com/developerworks/js/artrating/</div><div class="metavalue">SITE_ID=10</div><div class="metavalue">Zone=Java technology</div><div class="metavalue">ArticleID=127791</div><div class="metavalue">ArticleTitle=Java 理论与实践: 处理 InterruptedException</div><div class="metavalue">publish-date=06152006</div><script language="javascript" type="text/javascript">document.write('<div class="metavalue">url='+location.href.replace(/</g,  '%3C')+'</div>');</script><div class="metavalue">url=https://www.ibm.com/developerworks/cn/java/j-jtp05236.html</div><!--Rating_Meta_END-->
+                    <p class="ibm-ind-link ibm-nospacing ibm-icononly ibm-btt-auto ibm-hidden-small ibm-active"><a class="ibm-nospacing ibm-chevron-up-link" href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html#top" tabindex="0">回页首</a></p></div>
+                    <!-- END_IBM-CONTENT-MAIN -->
+                </div>
+                <!-- END_IBM-CONTENT-BODY -->
+            </div>
+            <!-- END_IBM-CONTENT -->
+        </div>
+        <!-- END_IBM-PCON -->
+    </main>
+    <!-- MAIN_CONTENT_END -->
+    
+    <!-- END_CONTENT-WRAPPER -->	
+</div>
+<!-- FOOTER_BEGIN -->
+<footer role="contentinfo" aria-label="IBM developerWorks">
+    <div id="dw-footer-module">
+        <section aria-label="参考资料" role="contentinfo">
+            <div class="ibm-columns">
+                <div class="ibm-col-6-1 dw-footer-col-1">
+                    <ul class="dw-footer-site-links">
+                        <li class="dw-footer-heading" aria-label="developerWorks">developerWorks</li>
+                        <li><a href="https://www.ibm.com/developerworks/secure/feedback.jsp?domain=dwchina">帮助</a></li>
+                        <li class="dw-footer-newline"><a href="https://www.ibm.com/developerworks/secure/myideas2.jsp?domain=dwchina">提交投稿意向</a></li>
+                        <li class="dw-footer-newline"><a href="https://www.ibm.com/developerworks/community/report?lang=zh">报告滥用</a></li>
+                        <li class="dw-footer-newline"><a href="https://www.ibm.com/developerworks/cn/community/terms/thirdparty/">第三方提示</a></li>
+                    </ul>
+                    <ul class="dw-footer-site-links">
+                        <li class="dw-footer-newline"><a href="https://weibo.com/ibmdw/">关注微博</a></li>
+                    </ul>
+                </div>
+                <div class="ibm-col-6-1 dw-footer-col-2">
+                    <ul>
+                        <li class="dw-footer-heading" aria-label="加入">加入</li>
+                        <li class="dw-footer-newline"><a href="https://www.ibm.com/developerworks/cn/academic/">IBM 教育学院教育培养计划</a></li>
+                        <li class="dw-footer-newline"><a href="https://www.ibm.com/partnerworld/isv/">ISV 资源 (英语)</a></li>
+                    </ul>
+                    <ul class="dw-footer-lang" aria-label="选择语言">
+                        <li class="dw-footer-heading">选择语言</li>
+                        <li><a href="https://www.ibm.com/developerworks/">English</a></li>
+                        <li><a href="https://www.ibm.com/developerworks/cn/" lang="zh">中文</a></li>
+                        <li><a href="https://www.ibm.com/developerworks/jp/" lang="ja">日本語</a></li>
+                        <li><a href="https://www.ibm.com/developerworks/ru/" lang="ru">Русский</a></li>
+                        <li class="dw-footer-newline"><a href="https://www.ibm.com/developerworks/br/" lang="pt">Português (Brasil)</a></li>
+                        <li><a href="https://www.ibm.com/developerworks/ssa/" lang="es">Español</a></li>
+                        <li><a href="https://developer.ibm.com/kr/" lang="kr">한글</a></li>
+                    </ul>
+                </div>
+                <div class="ibm-col-6-1 dw-footer-col-3"> </div>
+                <div class="ibm-col-6-1 dw-footer-col-4">
+                    <ul class="dw-footer-categories">
+                        <li class="dw-footer-category">
+                            <a href="https://www.ibm.com/developerworks/cn/rss/">
+                                <div class="dw-footer-content-icon">
+                                    <img width="40" height="40" aria-hidden="true" alt="" src="./Java 理论与实践_ 处理 InterruptedException_files/dw-footer-icon-feeds.png">
+                                </div>
+                                <p>订阅源</p>
+                            </a>  
+                        </li>
+                    </ul>
+                </div>
+                <div class="ibm-col-6-1 dw-footer-col-5">
+                    <ul class="dw-footer-categories">
+                        <li class="dw-footer-category">
+                            <a href="http://ibmdeveloperworks.mkt6741.com/developerWorksChina-NewsletterSubscriptionPage/">
+                                <div class="dw-footer-content-icon">
+                                    <img width="33" height="50" aria-hidden="true" alt="" src="./Java 理论与实践_ 处理 InterruptedException_files/dw-footer-icon-newsletters.png">
+                                </div>
+                                <p>dW 中国时事通讯</p>
+                            </a>  
+                        </li>
+                    </ul>
+                </div>
+                <div class="ibm-col-6-1 dw-footer-col-6">
+                    <ul class="dw-footer-categories">
+                        <li class="dw-footer-category">
+                            <a href="https://www.ibm.com/developerworks/cn/downloads/">
+                                <div class="dw-footer-content-icon">
+                                    <img width="44" height="43" aria-hidden="true" alt="" src="./Java 理论与实践_ 处理 InterruptedException_files/dw-footer-icon-downloads.png">
+                                </div>
+                                <p>软件下载</p>
+                            </a>  
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div id="dw-footer" class="ibm-padding-normal ibm-alternate">
+        <div class="ibm-columns">
+            <div class="ibm-col-1-1">
+                <div class="dw-footer-corporate-links">
+                <ul>
+                    <li><a href="https://www.ibm.com/contact/cn/zh/">联系 IBM</a></li>
+                    <li><a href="https://www.ibm.com/privacy/cn/zh/">隐私条约</a></li>
+                    <li><a href="https://www.ibm.com/developerworks/community/terms?lang=zh">使用条款</a></li>
+                    <li><a href="https://www.ibm.com/accessibility/cn/zh/">信息无障碍选项</a></li>
+                    <li class="ibm-feedbacklink"><a href="https://www.ibm.com/developerworks/cn/java/j-jtp05236.html#">反馈</a></li>
+                </ul>                 
+                </div>    
+            </div>
+        </div>
+    </div>        
+</footer> <!-- FOOTER_END -->
+
+<!-- END_IBM-TOP -->
+</div>
+
+<!-- SCRIPTS_INCLUDE_BEGIN -->
+<!-- Styles -->
+<link rel="stylesheet" type="text/css" href="./Java 理论与实践_ 处理 InterruptedException_files/jquery-comments.css">
+<link rel="stylesheet" href="./Java 理论与实践_ 处理 InterruptedException_files/font-awesome.min.css">
+
+<!-- Libraries -->
+<script type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/jquery-comments.min.js"></script>
+<script type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/moment-with-locales.js"></script>
+<script type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/ContentComments.js"></script>
+<script type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/ContentCommentsFormatter.js"></script>
+<script type="text/javascript" language="JavaScript">
+
+	IBMCore.common.module.masthead.subscribe("ready", "customjs", setupCommentsPlugin).runAsap(setupCommentsPlugin);
+
+	function setupCommentsPlugin(){
+		//debugger;
+			//alert(userLinks);
+			var commentsInitInfo = {
+				contentId : $("div[class=metavalue]:contains('ArticleID=')").text().split("=")[1],
+				siteId :  $("div[class=metavalue]:contains('SITE_ID=')").text().split("=")[1],
+				pluginDivId : '#dw-icomments-container',
+				notifyElementId : "#comment_notification",
+				loginMessageDivId : "#dw-article-cmts-login",
+				totalCommentsDivId : "#nCmts"
+			};				
+								
+			ContentComments.Setup(commentsInitInfo);
+	}
+</script>
+<!-- Piwik -->
+<script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(["setDomains", ["*.www.ibm.com/developerworks","*.www.ibm.com/developerworks"]]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+    var u="//developer.ibm.com/piwik/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 7]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+<noscript>&lt;p&gt;&lt;img src="//developer.ibm.com/piwik/piwik.php?idsite=7" style="border:0;" alt="" /&gt;&lt;/p&gt;</noscript>
+<!-- End Piwik Code -->
+<!-- SCRIPTS_INCLUDE_END -->
+
+
+
+<div id="ibm-overlay-backdrop"></div><div id="ibm-mobilemenu-screen"></div><script src="./Java 理论与实践_ 处理 InterruptedException_files/js(1)" id="mm_pp_background"></script><div id="ttdUniversalPixelTag14a49df88763436db0795df4fc90e6a7" style="display:none"><iframe id="universal_pixel" allowtransparency="true" height="0" width="0" style="visibility:hidden;" src="./Java 理论与实践_ 处理 InterruptedException_files/up.html"></iframe></div><div id="ttdUniversalPixelTagaf477d928c164ae0b8f3e1717b910617" style="display:none"><iframe id="universal_pixel" allowtransparency="true" height="0" width="0" style="visibility:hidden;" src="./Java 理论与实践_ 处理 InterruptedException_files/up(1).html"></iframe></div><script async="async" type="text/javascript" crossorigin="" src="./Java 理论与实践_ 处理 InterruptedException_files/get"></script><script type="text/javascript" src="./Java 理论与实践_ 处理 InterruptedException_files/Serving" async=""></script></body></html>

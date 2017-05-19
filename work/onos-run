@@ -1,0 +1,36 @@
+#!/bin/bash
+
+echo "Starting to compile ONOS..."
+
+export ONOS_ROOT=~/onos
+export ONOS_APPS="drivers,openflow,fwd,proxyarp,mobility,drivers.optical,roadm"
+
+if [-d $ONOS_ROOT]; then
+  echo "Updating ONOS source file..."
+  cd $ONOS_ROOT
+  git pull
+else
+  echo "Downloading ONOS source file..."
+  git clone https://gerrit.onosproject.org/onos
+fi
+
+source $ONOS_ROOT/tools/dev/bash_profile
+
+cacheFile = "/tmp/onos-*-SNAPSHOT"
+if [-d cacheFile]; then
+  echo "welcome" | sudo rm -rf cacheFile
+fi
+
+cacheFile = "/tmp/onos.pid"
+if [-f cacheFile]; then
+  echo "welcome" | sudo rm cacheFile
+fi
+
+echo "Compiling..."
+$ONOS_ROOT/tools/build/onos-buck build onos --show-output
+echo "Junit testing..."
+$ONOS_ROOT/tools/build/onos-buck test
+echo "Starting up..."
+$ONOS_ROOT/tools/build/onos-buck run onos-local -- clean
+
+

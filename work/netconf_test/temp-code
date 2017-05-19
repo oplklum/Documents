@@ -1,0 +1,17 @@
+    /**
+     * Test notification subscription.
+     *
+     * @param handler parent driver handler
+     */
+    public static void subscription(DriverHandler handler) {
+        try {
+            NetconfSession session = handler.get(NetconfController.class).getDevicesMap().
+                    get(handler.data().deviceId()).getSession();
+            session.startSubscription();
+        } catch (IOException e) {
+            throw new RuntimeException(new NetconfException("Failed to subscript notification.", e));
+        }
+        return;
+    }
+
+        //subscription(handler());

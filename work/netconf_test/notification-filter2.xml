@@ -1,0 +1,20 @@
+<netconf:rpc netconf:message-id="101"
+xmlns:netconf="urn:ietf:params:xml:ns:netconf:base:1.0">
+<create-subscription
+xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+<filter netconf:type="subtree">
+<event xmlns="http://example.com/event/1.0">
+<eventClass>fault</eventClass>
+<severity>critical</severity>
+</event>
+<event xmlns="http://example.com/event/1.0">
+<eventClass>fault</eventClass>
+<severity>major</severity>
+</event>
+<event xmlns="http://example.com/event/1.0">
+<eventClass>fault</eventClass>
+<severity>minor</severity>
+</event>
+</filter>
+</create-subscription>
+</netconf:rpc>

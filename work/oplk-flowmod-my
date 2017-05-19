@@ -1,0 +1,32 @@
+{
+    "priority": 88,
+    "isPermanent": true,
+    "selector": {
+        "criteria": [
+            {
+                "type": "IN_PORT",
+                "port": 14
+            },
+            {
+                "type": "OCH_SIGTYPE",
+                "ochSignalType": "FIXED_GRID"
+            },
+            {
+                "type": "OCH_SIGID",
+                "ochSignalId": {
+                    "gridType": "DWDM",
+                    "channelSpacing": "CHL_50GHZ",
+                    "spacingMultiplier": 1,
+                    "slotGranularity": 1
+                }
+            }]
+    },
+    "treatment": {
+        "instructions": [
+            {
+                "type": "OUTPUT",
+                "port": 2
+            }]
+    }
+}
+~

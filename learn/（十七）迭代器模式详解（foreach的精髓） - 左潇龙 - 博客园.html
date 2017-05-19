@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)http://www.cnblogs.com/zuoxiaolong/p/pattern18.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/blog-common.css">
+<link type="text/css" rel="stylesheet" href="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/160491.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/bundle-SimpleBlue-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/zuoxiaolong/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/zuoxiaolong/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/zuoxiaolong/wlwmanifest.xml">
+<script async="" src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/encoder.js"></script><script src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'zuoxiaolong', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+		
+<!--done-->
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/zuoxiaolong/">Java paradise</a></div>
+<div class="subtitle">Always on the way of programming.</div>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li id="nav_myhome"><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/zuoxiaolong/">首页</a></li>
+<li id="nav_newpost"></li>
+<li id="nav_contact"><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E5%B7%A6%E6%BD%87%E9%BE%99">联系</a></li>
+<li id="nav_rss"><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/zuoxiaolong/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/zuoxiaolong/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li id="nav_admin"><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔-227&nbsp;
+文章-0&nbsp;
+评论-3336&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/zuoxiaolong/p/pattern18.html">（十七）迭代器模式详解（foreach的精髓）</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span style="color: #ff0000;">作者：zuoxiaolong8810（左潇龙），转载请注明出处，特别说明：本博文来自博主原博客，为保证新博客中博文的完整性，特复制到此留存，如需转载请注明新博客地址即可。</span></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 各位好，很久没以LZ的身份和各位对话了，前段时间为了更加逼真的解释设计模式，LZ费尽心思给设计模式加入了故事情节，本意是为了让各位在看小说的过程中就可以接触到设计模式，不过写到现在，LZ最深的感触就是，构思故事的时间远远超过了LZ对设计模式本身的研究。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 本章介绍迭代器模式，不再采用故事嵌入的讲解方式，主要原因是因为迭代器模式本身有更多需要介绍的东西，如果嵌入到小说当中，会不太方便去阐述这些内容。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 另外，由于LZ的大部分设计模式文章主要针对的人群是对设计模式已经有一定了解，希望更加深入理解的程序猿们。所以LZ希望各位在看本篇文章时，可以打开一个初步介绍迭代器模式的文章，对比观看。下面进入正题，我们先来看看百度百科或者说GOF对迭代器模式的定义。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong> 定义：提供一种方法顺序访问一个聚合对象中各个元素，而又不需暴露该对象的内部表示。</strong></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 从定义中可以看出，迭代器模式是为了在不暴露该对象内部表示的情况下，提供一种顺序访问聚合对象中元素的方法。这种思想在JAVA集合框架中已经体现的淋漓尽致，而且LZ相信每一个接触JAVA的同学都难免要去触碰。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 所以LZ这次先不给出迭代器的类图与标准实现，我们先来看看迭代器模式解决了JAVA集合框架中的哪些问题。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 为了更加清晰，LZ斗胆写了几个简单的集合类（向JDK类库的缔造者致敬），我们从这几个简单的集合类出发，去仔细体会下定义的意思，下面是LZ分别写的缩小版的ArrayList、LinkedList和HashSet。</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ArrayList&lt;E&gt;<span style="color: #000000;"> {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> INCREMENT = 10<span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">private</span> E[] array = (E[]) <span style="color: #0000ff;">new</span> Object[10<span style="color: #000000;">];
+    
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> add(E e){
+        </span><span style="color: #0000ff;">if</span> (size &lt;<span style="color: #000000;"> array.length) {
+            array[size</span>++] =<span style="color: #000000;"> e;
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            E[] copy </span>= (E[]) <span style="color: #0000ff;">new</span> Object[array.length +<span style="color: #000000;"> INCREMENT];
+            System.arraycopy(array, </span>0, copy, 0<span style="color: #000000;">, size);
+            copy[size</span>++] =<span style="color: #000000;"> e;
+            array </span>=<span style="color: #000000;"> copy;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Object[] toArray(){
+        Object[] copy </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[size];
+        System.arraycopy(array, </span>0, copy, 0<span style="color: #000000;">, size);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> copy;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> size;
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> LinkedList&lt;E&gt;<span style="color: #000000;"> {
+
+    </span><span style="color: #0000ff;">private</span> Entry&lt;E&gt; header = <span style="color: #0000ff;">new</span> Entry&lt;E&gt;(<span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> LinkedList() {
+        header.next </span>= header.previous =<span style="color: #000000;"> header;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> add(E e){
+        Entry</span>&lt;E&gt; newEntry = <span style="color: #0000ff;">new</span> Entry&lt;E&gt;<span style="color: #000000;">(e, header, header.next);
+        newEntry.previous.next </span>=<span style="color: #000000;"> newEntry;
+        newEntry.next.previous </span>=<span style="color: #000000;"> newEntry;
+        size</span>++<span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> size;
+    }
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Object[] toArray(){
+        Object[] result </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[size];
+        </span><span style="color: #0000ff;">int</span> i = size - 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (Entry&lt;E&gt; e = header.next; e != header; e =<span style="color: #000000;"> e.next)
+            result[i</span>--] =<span style="color: #000000;"> e.value;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+    
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">class</span> Entry&lt;E&gt;<span style="color: #000000;">{
+        E value;
+        Entry</span>&lt;E&gt;<span style="color: #000000;"> previous;
+        Entry</span>&lt;E&gt;<span style="color: #000000;"> next;
+        </span><span style="color: #0000ff;">public</span> Entry(E value, Entry&lt;E&gt; previous, Entry&lt;E&gt;<span style="color: #000000;"> next) {
+            </span><span style="color: #0000ff;">super</span><span style="color: #000000;">();
+            </span><span style="color: #0000ff;">this</span>.value =<span style="color: #000000;"> value;
+            </span><span style="color: #0000ff;">this</span>.previous =<span style="color: #000000;"> previous;
+            </span><span style="color: #0000ff;">this</span>.next =<span style="color: #000000;"> next;
+        }
+    }
+    
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.HashMap;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Map;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> HashSet&lt;E&gt;<span style="color: #000000;"> {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Object NULL = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Object();
+    
+    </span><span style="color: #0000ff;">private</span> Map&lt;E, Object&gt; map = <span style="color: #0000ff;">new</span> HashMap&lt;E, Object&gt;<span style="color: #000000;">();
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> add(E e){
+        map.put(e, NULL);
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> map.size();
+    }
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Object[] toArray(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> map.keySet().toArray();
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 下面我们看看三个类的遍历方式。</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ArrayList</span>&lt;Integer&gt; arrayList = <span style="color: #0000ff;">new</span> ArrayList&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            arrayList.add(i);
+        }
+        System.out.println(</span>"arrayList size:" +<span style="color: #000000;"> arrayList.size());
+        Object[] arrayListArray </span>=<span style="color: #000000;"> arrayList.toArray();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; arrayListArray.length; i++<span style="color: #000000;">) {
+            System.out.println(arrayListArray[i]);
+        }
+        
+        System.out.println(</span>"----------------------------------------------"<span style="color: #000000;">);
+        
+        HashSet</span>&lt;Integer&gt; hashSet = <span style="color: #0000ff;">new</span> HashSet&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            hashSet.add(i);
+        }
+        System.out.println(</span>"hashSet size:" +<span style="color: #000000;"> hashSet.size());
+        Object[] setArray </span>=<span style="color: #000000;"> hashSet.toArray();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; setArray.length; i++<span style="color: #000000;">) {
+            System.out.println(setArray[i]);
+        }
+        
+        System.out.println(</span>"----------------------------------------------"<span style="color: #000000;">);
+        
+        LinkedList</span>&lt;Integer&gt; linkedList = <span style="color: #0000ff;">new</span> LinkedList&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            linkedList.add(i);
+        }
+        System.out.println(</span>"linkedList size:" +<span style="color: #000000;"> linkedList.size());
+        Object[] linkedListArray </span>=<span style="color: #000000;"> linkedList.toArray();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; linkedListArray.length; i++<span style="color: #000000;">) {
+            System.out.println(linkedListArray[i]);
+        }
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 结果在这里LZ就不贴了，只是简单的输出三次1到11。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 各位思考一下，我们这里的遍历是如何做到的。很明显，我们是通过一个通用的方法，toArray做到的。当然，为了迎合面向接口的思想，你可以添加一个接口规定toArray的行为，让三个类去实现它。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>但是在这里有一个很大的弊端，不知道各位注意到没有，那就是不论我们的集合类是如何实现的（比如链表，数组，散列），在使用数组遍历集合类的时候，我们其实遍历了两次。</strong></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 在这三个类中，由于System的arraycopy和set的toArray方法是黑箱子，所以最明显的便是LinkedList的实现，它是先遍历了一遍链表，做出来一个数组，然后当客户端获得到这个数组的时候，则需要再来一次循环，去遍历每一个元素。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 为何会是这种情况呢？</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 很简单，因为我们的集合类本身就不是一个数组，所以自然要多一步从集合类到数组的过渡。哪怕是本身由数组实现的ArrayList，也避免不了多这一步，各位可以试一下在ArrayList中直接返回array属性，结果中会出现一堆null值，而且这样做的话，对于array的改变会直接影响到ArrayList本身，这并不是我们所希望看到的，所以我们返回的只是一个拷贝。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 当然，为了解决这个问题，我们并不是没有办法，比如给LinkedList和ArrayList加入get方法，而这个方法有一个参数index，这是我们常用的遍历方法。如此一来，便解决了二次遍历的问题。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>但是问题又来了，那就是我们无法给HashSet提供一个根据索引获取元素的方法，由于散列特性的缘故，set中的元素是无序的，或者说顺序是不被保证的。那么这个get方法，在HashSet中便无法提供，因为这里没有我们通俗意义上的索引的概念。</strong></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 可以看到，上面LZ粗浅的分析，得出一个结论。<strong>三个集合类，如果统一提供数组给客户端遍历，那么在遍历过程中会出现重复遍历的现象。而如果消除这种重复遍历，则由于内部数据结构的不同，三个集合类无法做到像提供数组一样，给客户端提供统一的遍历方式。</strong></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 为了解决上面的问题，迭代器模式就随之出现了。我们先来看看迭代器模式在百度百科中的类图，稍后各位可以自己体会下，迭代器模式是否解决了上面的问题，以及是否提供了额外的一些好处。</span></p>
+<p><span style="font-size: 14px;"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/20130720153644390" alt=""></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;看着上面的类图，我们可以分析出来，上面我们所写的ArrayList等三个类都属于ConcreteAggregate的位置。如果我们刚才设计一个数组接口让三个类去实现的话，其实已经和迭代器模式十分相似了。他们的类图会是下面这样的。</span></p>
+<p><span style="font-size: 14px;"> <img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/20130720154837890" alt=""></span><br>
+	
+</p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 在上述类图中，我们从面向对象的角度思考，将Object[]当做一个对象对待，我们对比下两个类图，他们其实是非常相似的，其中最大的区别在于，第二个类图当中，没有抽象数组接口这个概念，而在迭代器模式的类图中，是有迭代器接口这个概念的。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 上述区别最终所造成的结果就是，由于数组是以固定的排列方式存在的，即数组必须是一组连续的内存区域（逻辑上连续），故而以数组为基础的遍历方式只能是按照索引遍历。而迭代器则不限制，我们注意到，在迭代器模式的类图中，具体的迭代器是有一条到具体聚合对象的关联线的，这就意味着迭代器的实现是与具体的聚合对象息息相关的，也就是说迭代器满足了多种迭代方式。</strong></span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 好了，截止到目前，我们前面所讨论的都是为何要使用迭代器模式，或者说迭代器模式解决了哪些问题。我们来稍微总结一下。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>1、迭代器模式可以提供统一的迭代方式，这个要归功于Iterator接口。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2、迭代器模式可以在对客户透明的前提下，做出各种不同的迭代方式。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3、在迭代的时候不需要暴露聚合对象的内部表示，我们只需要认识Iterator即可。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 4、在第1条的前提下，解决了基于数组的迭代方式中重复遍历的问题。</strong></span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 这里LZ就不再给出迭代器模式的标准代码实现了，如果各位看过LZ的前十几篇设计模式，会发现，LZ其实很多时候是不写标准实现的，一个是因为网上的这种资料很多，很容易找到，LZ不想重复造轮子。还有一个重要的原因是，标准实现总难免给人死板硬套的感觉，很难让人理解，至少LZ个人当时是这种感觉。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 这里LZ直接使用迭代器模式，将我们上面的三个集合类稍微优化一下，首先我们应该写一个迭代器接口，它大概会有类图中的那几个方法。为了简单起见，我们直接利用JDK提供的Iterator接口，源码如下。</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span> Iterator&lt;E&gt;<span style="color: #000000;"> {
+
+    </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> hasNext();
+
+    E next();
+
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> remove();
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 这里迭代器接口已经有了，我们还需要一个可迭代的类接口，在JDK中相当于Iterable接口，它规定了返回一个迭代器的行为，与我们的类图中Array接口类似，只不过那里是toArray方法。下面我们引用JDK中的Iterable接口，非常简单，源码如下。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span> Iterable&lt;T&gt;<span style="color: #000000;"> {
+
+    Iterator</span>&lt;T&gt;<span style="color: #000000;"> iterator();
+}</span></pre>
+</div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 下面我们就让三个集合类全部提供一个方法，可以返回一个Iterator实例，并且实现Iterable接口。</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Iterator;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ArrayList&lt;E&gt; <span style="color: #0000ff;">implements</span> Iterable&lt;E&gt;<span style="color: #000000;">{
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> INCREMENT = 10<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> E[] array = (E[]) <span style="color: #0000ff;">new</span> Object[10<span style="color: #000000;">];
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> add(E e) {
+        </span><span style="color: #0000ff;">if</span> (size &lt;<span style="color: #000000;"> array.length) {
+            array[size</span>++] =<span style="color: #000000;"> e;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            E[] copy </span>= (E[]) <span style="color: #0000ff;">new</span> Object[array.length +<span style="color: #000000;"> INCREMENT];
+            System.arraycopy(array, </span>0, copy, 0<span style="color: #000000;">, size);
+            copy[size</span>++] =<span style="color: #000000;"> e;
+            array </span>=<span style="color: #000000;"> copy;
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Object[] toArray() {
+        Object[] copy </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[size];
+        System.arraycopy(array, </span>0, copy, 0<span style="color: #000000;">, size);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> copy;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> size;
+    }
+
+    </span><span style="color: #0000ff;">public</span> Iterator&lt;E&gt;<span style="color: #000000;"> iterator() {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> Itr();
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> Itr <span style="color: #0000ff;">implements</span> Iterator&lt;E&gt;<span style="color: #000000;"> {
+
+        </span><span style="color: #0000ff;">int</span> cursor = 0<span style="color: #000000;">;
+
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> hasNext() {
+            </span><span style="color: #0000ff;">return</span> cursor !=<span style="color: #000000;"> size();
+        }
+
+        </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> E next() {
+            </span><span style="color: #0000ff;">return</span> array[cursor++<span style="color: #000000;">];
+        }
+
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> remove() {
+            
+        }
+
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Iterator;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> LinkedList&lt;E&gt; <span style="color: #0000ff;">implements</span> Iterable&lt;E&gt;<span style="color: #000000;">{
+
+    </span><span style="color: #0000ff;">private</span> Entry&lt;E&gt; header = <span style="color: #0000ff;">new</span> Entry&lt;E&gt;(<span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> LinkedList() {
+        header.next </span>= header.previous =<span style="color: #000000;"> header;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> add(E e){
+        Entry</span>&lt;E&gt; newEntry = <span style="color: #0000ff;">new</span> Entry&lt;E&gt;<span style="color: #000000;">(e, header, header.next);
+        newEntry.previous.next </span>=<span style="color: #000000;"> newEntry;
+        newEntry.next.previous </span>=<span style="color: #000000;"> newEntry;
+        size</span>++<span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> size;
+    }
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Object[] toArray(){
+        Object[] result </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[size];
+        </span><span style="color: #0000ff;">int</span> i = size - 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (Entry&lt;E&gt; e = header.next; e != header; e =<span style="color: #000000;"> e.next)
+            result[i</span>--] =<span style="color: #000000;"> e.value;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+    
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">class</span> Entry&lt;E&gt;<span style="color: #000000;">{
+        E value;
+        Entry</span>&lt;E&gt;<span style="color: #000000;"> previous;
+        Entry</span>&lt;E&gt;<span style="color: #000000;"> next;
+        </span><span style="color: #0000ff;">public</span> Entry(E value, Entry&lt;E&gt; previous, Entry&lt;E&gt;<span style="color: #000000;"> next) {
+            </span><span style="color: #0000ff;">super</span><span style="color: #000000;">();
+            </span><span style="color: #0000ff;">this</span>.value =<span style="color: #000000;"> value;
+            </span><span style="color: #0000ff;">this</span>.previous =<span style="color: #000000;"> previous;
+            </span><span style="color: #0000ff;">this</span>.next =<span style="color: #000000;"> next;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">public</span> Iterator&lt;E&gt;<span style="color: #000000;"> iterator() {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> Itr();
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> Itr <span style="color: #0000ff;">implements</span> Iterator&lt;E&gt;<span style="color: #000000;"> {
+
+        Entry</span>&lt;E&gt; current =<span style="color: #000000;"> header;
+
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> hasNext() {
+            </span><span style="color: #0000ff;">return</span> current.previous !=<span style="color: #000000;"> header;
+        }
+
+        </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> E next() {
+            E e </span>=<span style="color: #000000;"> current.previous.value;
+            current </span>=<span style="color: #000000;"> current.previous;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> e;
+        }
+
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> remove() {
+            
+        }
+
+    }
+    
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.HashMap;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Iterator;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Map;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> HashSet&lt;E&gt; <span style="color: #0000ff;">implements</span> Iterable&lt;E&gt;<span style="color: #000000;">{
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Object NULL = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Object();
+    
+    </span><span style="color: #0000ff;">private</span> Map&lt;E, Object&gt; map = <span style="color: #0000ff;">new</span> HashMap&lt;E, Object&gt;(7,1<span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> add(E e){
+        map.put(e, NULL);
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> map.size();
+    }
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Object[] toArray(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> map.keySet().toArray();
+    }
+    
+    </span><span style="color: #0000ff;">public</span> Iterator&lt;E&gt;<span style="color: #000000;"> iterator() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> map.keySet().iterator();
+    }
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 这下我们已经将迭代器模式应用到了我们上面的例子当中，至于remove方法，我们为了简短清晰，就不做实现了，而且它并不影响我们理解迭代器模式。现在我们客户端的迭代方式就可以改变一下了。可以像下面这样迭代。</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Iterator;
+
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ArrayList</span>&lt;Integer&gt; arrayList = <span style="color: #0000ff;">new</span> ArrayList&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            arrayList.add(i);
+        }
+        System.out.println(</span>"arrayList size:" +<span style="color: #000000;"> arrayList.size());
+        Iterator</span>&lt;Integer&gt; arrayListIterator =<span style="color: #000000;"> arrayList.iterator();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(arrayListIterator.hasNext()) {
+            System.out.println(arrayListIterator.next());
+        }
+        
+        System.out.println(</span>"----------------------------------------------"<span style="color: #000000;">);
+        
+        HashSet</span>&lt;Integer&gt; hashSet = <span style="color: #0000ff;">new</span> HashSet&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            hashSet.add(i);
+        }
+        System.out.println(</span>"hashSet size:" +<span style="color: #000000;"> hashSet.size());
+        Iterator</span>&lt;Integer&gt; hashSetIterator =<span style="color: #000000;"> hashSet.iterator();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(hashSetIterator.hasNext()) {
+            System.out.println(hashSetIterator.next());
+        }
+        
+        System.out.println(</span>"----------------------------------------------"<span style="color: #000000;">);
+        
+        LinkedList</span>&lt;Integer&gt; linkedList = <span style="color: #0000ff;">new</span> LinkedList&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            linkedList.add(i);
+        }
+        System.out.println(</span>"linkedList size:" +<span style="color: #000000;"> linkedList.size());
+        Iterator</span>&lt;Integer&gt; LinkedListIterator =<span style="color: #000000;"> linkedList.iterator();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(LinkedListIterator.hasNext()) {
+            System.out.println(LinkedListIterator.next());
+        }
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 其中输出的结果与第一例是一样的，都是将1到11输出三遍，可以明显的看出，我们刚才的重复遍历问题不见了，而且三个集合类的迭代方法是一样的，而有了这个特点，JAVA在此基础上，给我们提供了foreach语法，所以我们可以写成下面这样。</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.iterator;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ArrayList</span>&lt;Integer&gt; arrayList = <span style="color: #0000ff;">new</span> ArrayList&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            arrayList.add(i);
+        }
+        System.out.println(</span>"arrayList size:" +<span style="color: #000000;"> arrayList.size());
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Integer i : arrayList) {
+            System.out.println(i);
+        }
+        
+        System.out.println(</span>"----------------------------------------------"<span style="color: #000000;">);
+        
+        HashSet</span>&lt;Integer&gt; hashSet = <span style="color: #0000ff;">new</span> HashSet&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            hashSet.add(i);
+        }
+        System.out.println(</span>"hashSet size:" +<span style="color: #000000;"> hashSet.size());
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Integer i : hashSet) {
+            System.out.println(i);
+        }
+        
+        System.out.println(</span>"----------------------------------------------"<span style="color: #000000;">);
+        
+        LinkedList</span>&lt;Integer&gt; linkedList = <span style="color: #0000ff;">new</span> LinkedList&lt;Integer&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 11; i++<span style="color: #000000;">) {
+            linkedList.add(i);
+        }
+        System.out.println(</span>"linkedList size:" +<span style="color: #000000;"> linkedList.size());
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Integer i : linkedList) {
+            System.out.println(i);
+        }
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 这样一来，我们不管你是基于何种数据结构提供的集合类，我们只管foreach遍历，迭代器模式对JAVA集合框架做出的贡献不可谓不大。下面LZ带各位看看现在的类图是如何。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;"> <img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/20130720175106390" alt=""></span><br>
+	
+</p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 从类图中可以清楚的看出，与迭代器模式的类图是一模一样的，当然，客户端与Iterable的依赖关系有待商议，之前我们已经提到过，JAVA集合框架的工厂方法模式是非透明的处理方式，所以我们很多时候不会使用Iterable，不过这并不影响我们对迭代器模式的理解。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 然而迭代器模式所带来的好处已经不言而喻，上面分析的过程中已经提到过，LZ这里不再赘述。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>值得注意的是，LZ全部采用的内部类作为各个集合类迭代器的实现，这在LZ之前的文章中已经提到过，当时的解释是说内部类是为了完全杜绝客户端对迭代器实现类的依赖，而进行到现在，我们可以更深一步讨论。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 这里我们的理解是，内部类在这里目的是为了隐藏实现细节，并且如此一来，迭代器的实现类可以自由的使用集合类的各个属性，而不需要集合类提供自己属性访问的接口以及建立二者的关联关系，这种感觉十分像C/C++中的友元类。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 不过缺点也接踵而至，由于具体的集合类与具体的迭代器是绑定的关系，所以这种实现方式在复用的过程中会有很大的限制甚至是不能复用，这个缺点对于C/C++中的友元类来说，是不存在的。</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong><br>
+	</strong>
+</span></p>
+<p><span style="font-size: 14px;">
+	<strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </strong>到此，迭代器模式的介绍就基本结束了，希望各位可以从LZ的分析当中得到一点益处，LZ便十分知足了。下面是对于foreach语法的深入讨论，新手或者已经了解的同学们可以忽略，当然，如果新手们有耐心，也可以继续看下去。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; JAVA的foreach语法中，冒号后面的变量可以是两种，一个是数组，一个便是实现了Iterable接口的任何类，数组的迭代方式本次不在讨论之列，我们主要关注实现了Iterable接口的类，是如何使用foreach遍历的。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 我们使用JDK中自带的一个工具javap，去获得刚才Main类的class文件描述，去看看遍历的过程。我们在命令行模式下，进入到Main类class文件的目录中，然后执行下面的命令，为了更加清晰，我们只保留ArrayList的代码片段，将其余两部分删掉或者注释掉。
+</span></p>
+<p><span style="font-size: 14px;">
+	<img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/20130720214031953" alt=""></span><br>
+	
+</p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 执行这个命令，我们可以看到在main函数中有关foreach的JVM指令，我们来看下JVM是怎么执行foreach的，生成的有关内容如下。
+</span></p>
+<p><span style="font-size: 14px;">
+	<img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/20130720214240593" alt=""></span><br>
+	
+</p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;各位的行数不一定会和LZ一样，不过总能找到和LZ一样的JVM指令片段，下面LZ直接按照上面的行号去解释每一行都做了什么事情。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;56：执行arrayList的iterator方法。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;59：将返回值从值栈赋给第四个引用变量，这个是在解释执行过程中自动加入的临时变量。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;60：跳到80行。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;80：将第四个引用变量压入值栈，这个引用变量是个迭代器，也就是iterator方法的返回值。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;81：执行接口方法hasNext。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;86：当hasNext方法返回的值不等于0时，也就是不为false时，跳到63行。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;63：将第四个引用变量压入值栈。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;64：执行接口方法next。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;69：检查强转，不成功将ClassCastException。</span><br>
+	
+</p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;72：将next返回的值强转后赋给第三个引用变量，在代码里相当于i。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;73：获取out输出流静态属性，压入值栈。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;76：将i压入值栈。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;77：执行println方法，打印i。
+</span></p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;80：同上面的80行。
+</span></p>
+<p>
+	<br>
+	
+</p>
+<p><span style="font-size: 14px;">
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;到这里，可以看到，JVM对于foreach的执行过程，其实相当于下面的代码。</span></p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #008000;">//</span><span style="color: #008000;">其中iterator这个变量就是第四个引用变量，i是第三个。</span>
+        <span style="color: #0000ff;">for</span> (Iterator iterator =<span style="color: #000000;"> arrayList.iterator(); iterator.hasNext();) {
+            Integer i </span>=<span style="color: #000000;"> (Integer) iterator.next();
+            System.out.println(i);
+        }</span></pre>
+</div>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这么做的前提自然是建立在iterable接口和iterator接口的基础之上，由于这两者规定了集合类的行为，所以JAVA才得以利用这一特性，提供给开发者foreach的语法。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;对于foreach的语法就分析到这里了，最后我们再对迭代器模式进行一下总结。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;迭代器模式是为了在隐藏聚合对象的内部表示的前提下，提供一种遍历聚合对象元素的方法。这在之前的例子当中已经有体现，我们给三个集合类提供了统一的遍历方式，消除了重复遍历，最终还使用内部类将细节包装在集合类内部隐藏起来，使得外部无法访问集合类的任何一个属性。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这当中还使用到了工厂方法模式，这个在工厂方法模式一章中，LZ已经提到过，对于迭代器的产生，是工厂方法模式处理的。两个设计模式互相结合，让JAVA的集合框架更加优美、健壮。</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;LZ如此诠释迭代器模式，希望对大家有帮助，好了，咱们下期再见吧。</span></p>
+<p> <br>
+	
+</p>
+<p>
+	<br>
+	<br>
+	<br>
+	
+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p></div><div id="MySignature" style="display: block;"><br>
+<fieldset style="padding:10px;margin:10px;bolder:#06C dashed 1px;background-color: #708090;width:850px;">
+<p><span style="color: #fff;">版权声明</span></p><p>
+</p><hr style="color: #fff;">
+<p><span style="color: #fff;">作者：</span><span style="color: #fff;">zuoxiaolong（左潇龙）</span></p>
+<p><span style="color: #fff;">出处：</span><a href="http://www.cnblogs.com/zuoxiaolong" target="_blank" style="color: #fff;">博客园左潇龙的技术博客--http://www.cnblogs.com/zuoxiaolong</a> </p>
+<p><span style="color: #fff;">您的支持是对博主最大的鼓励，感谢您的认真阅读。</span></p>
+<p><span style="color: #fff;">本文版权归作者所有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</span></p>
+</fieldset></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/zuoxiaolong/category/509144.html" target="_blank">设计模式</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/zuoxiaolong/tag/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>, <a href="http://www.cnblogs.com/zuoxiaolong/tag/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/">迭代器模式</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(3263702,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;8834a931-b305-e311-8d02-90b11c0b17d6&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/zuoxiaolong/" target="_blank"><img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/20130820130011.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/zuoxiaolong/">左潇龙</a><br>
+            <a href="http://home.cnblogs.com/u/zuoxiaolong/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/zuoxiaolong/followers">粉丝 - 2089</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor">荣誉：<a href="http://www.cnblogs.com/expert/" target="_blank">推荐博客</a></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;8834a931-b305-e311-8d02-90b11c0b17d6&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(3263702,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(3263702,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern17.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/zuoxiaolong/p/pattern17.html" title="发布于2013-08-16 23:35">（十六）备忘录模式详解（都市异能版）</a><br><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern19.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/zuoxiaolong/p/pattern19.html" title="发布于2013-08-16 23:47">（十八）享元模式详解（都市异能版）</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2013-08-16 23:44</span> <a href="http://www.cnblogs.com/zuoxiaolong/">左潇龙</a> 阅读(<span id="post_view_count">1080</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=3263702" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/zuoxiaolong/p/pattern18.html#" onclick="AddToWz(3263702);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=160491,cb_entryId=3263702,cb_blogApp=currentBlogApp,cb_blogUserGuid='8834a931-b305-e311-8d02-90b11c0b17d6',cb_entryCreatedDate='2013/8/16 23:44:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern18.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern18.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://cn.udacity.com/android/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=AND02" target="_blank">【推荐】Google+滴滴联手打造Android开发工程师课程</a><br><a href="http://cloud.qy.com.cn/68?a=cnblog" target="_blank">【推荐】群英云服务器性价王，2核4G5M BGP带宽 68元首月！</a><br><a href="http://click.aliyun.com/m/17714/" target="_blank">【福利】阿里云免费套餐升级，更多产品，更久时长</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.grapecity.com.cn/enterprise-solutions/huozige/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=huozige&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/24442-20170418140643727-710809625.png" alt="Huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/567540/" target="_blank">eBay复兴举措未取得实效 与亚马逊差距越拉越大</a><br> ·  <a href="http://news.cnblogs.com/n/567539/" target="_blank">微软要帮助用户扔掉密码：用手机应用来验证登录</a><br> ·  <a href="http://news.cnblogs.com/n/567538/" target="_blank">Facebook首个VR社交应用试用报告：很酷，但也存在问题</a><br> ·  <a href="http://news.cnblogs.com/n/567536/" target="_blank">苹果将搭配3D摄像头：传感器供应商站上“风口”？</a><br> ·  <a href="http://news.cnblogs.com/n/567529/" target="_blank">骁龙835性能怪兽 小米6首发评测</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/15483/" target="_blank"><img width="468" height="60" src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/24442-20170331150421570-489464769.jpg" alt="阿里云C2"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br> ·  <a href="http://kb.cnblogs.com/page/566528/" target="_blank">怎么轻松学习JavaScript</a><br> ·  <a href="http://kb.cnblogs.com/page/509431/" target="_blank">如何打好前端游击战</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><p><a style="color: #333399" href="http://www.douyu.com/zuoxiaolong" target="_blank">LZ的斗鱼直播地址</a></p>
+<hr>
+<p><a style="color: #333399" href="http://www.zuoxiaolong.com/" target="_blank">LZ的个人网站</a></p>
+<hr>
+<p><a style="color: #333399" href="http://t.qq.com/zuoxiaolong1988" target="_blank">LZ的腾讯微博</a><br></p>
+<hr>
+<p><a style="color: #333399" href="https://github.com/xiaolongzuo" target="_blank">LZ的Github</a></p>
+<hr>
+<p>
+<b style="color: #FF3030">欢迎关注LZ的微信公众号，LZ所有的文章，包括小说《一个屌丝程序猿的人生》都将在那里第一时间推送，搜索”左潇龙“即可关注。</b><br>
+<b style="color: #FF3030">也可移步到LZ的个人网站【地址在上方】查看所有文章。</b><br>
+<img src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/o_2016060978249857.jpg"></p><hr>
+交流一群：300638185【已满】<br>
+交流二群：475044650【已满】<br>
+交流三群：367659782【已满】<br>
+交流四群：575993105【已满】<br>
+交流五群：547743770【新开】<br>
+交流六群：629598531【新开】<br>
+交流七群：620968684【新开】<br>
+交流八群：542470923【新开】<br>
+交流九群：629602305【新开】<br>
+交流群用于技术探讨和交流，请不要重复加入多个交流群。<br>
+进群请注明：“来自左潇龙博客园博客”。<br>
+加群需知：群名片统一格式为：<br>
+【城市-姓名或昵称-语言】<br>
+示例：<br>
+【北京-左潇龙-Java】<br>
+进交流群请务必立即改名，否则可能会被误踢哦。<br>
+<p></p><hr>
+<p>LZ的Github项目介绍<br><br>名称：xxoo<br>简介：致力于简单的、功能完善的xml与object转换<br><br>名称：deerlet-redis-client<br>简介：一款简单易用的redis for java客户端，支持集群<br><br>名称：niubi-job<br>简介：一款开源的，高可靠的分布式任务调度框架。<br><br></p>
+<hr>
+<p><span>博主简介：<br>09年毕业于某二流二本院校非计算机专业，经历一番波折，后于11年4月进入某培训机构学习J2EE开发，从此走上程序猿之路。<br>11年10月份入职一家小型互联网公司，任职Java工程师。<br>12年9月份进入一家大型金融公司从事公司IT建设，任职Java工程师。14年正式成为项目组项目经理兼研发经理，管理一个将近20人的团队。15年1月转部门带领一个6人的小团队，负责公司的权限管理系统。<br>15年4月份进入到一家极具激情的互联网金融公司，暂时放弃管理之路，继续自己的技术沉淀，任职Java工程师。<br>16年3月份进入到一家大型互联网公司，从事Java中间件的开发工作。<br>本人较为擅长的领域涉及Java语言、设计模式、Java虚拟机、SSH、SSI等开源框架。作为一名开源的爱好者，本人也曾为spring-framework提供过源码，并被spring采纳。</span></p><hr>
+<div align="left" valign="middle"><span style="font-size: 18px" valign="middle">您是第</span><a href="http://www.amazingcounters.com/"><img border="0" src="./（十七）迭代器模式详解（foreach的精髓） - 左潇龙 - 博客园_files/counter.php" alt="webpage visitor statistics" height="19px" valign="top"></a><span style="font-size: 18px" valign="middle">位访客，欢迎您！</span></div><hr><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/zuoxiaolong/">左潇龙</a><br>园龄：<a href="http://home.cnblogs.com/u/zuoxiaolong/" title="入园时间：2013-08-15">3年8个月</a><br>荣誉：<a href="http://www.cnblogs.com/expert/">推荐博客</a><br>粉丝：<a href="http://home.cnblogs.com/u/zuoxiaolong/followers/">2089</a><br>关注：<a href="http://home.cnblogs.com/u/zuoxiaolong/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;8834a931-b305-e311-8d02-90b11c0b17d6&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block"></div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类<span style="font-size:11px;font-weight:normal">(172)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/zuoxiaolong/category/531926.html">github（开源）(10)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/zuoxiaolong/category/536148.html">JAVA并发编程(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/zuoxiaolong/category/805257.html">Java教程</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/zuoxiaolong/category/509254.html">JNI探秘(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/zuoxiaolong/category/509142.html">Jquery相关(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/zuoxiaolong/category/508918.html">JVM内存管理(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/zuoxiaolong/category/515406.html">JVM源码(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/zuoxiaolong/category/813988.html">niubi-job(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/zuoxiaolong/category/509143.html">spring相关(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/zuoxiaolong/category/521541.html">编程语言(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/zuoxiaolong/category/509707.html">编程之路(65)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/zuoxiaolong/category/509253.html">编译原理(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/zuoxiaolong/category/518480.html">计算机系统原理(24)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/zuoxiaolong/category/527951.html">浅谈系列(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/zuoxiaolong/category/509144.html">设计模式(27)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/zuoxiaolong/category/518299.html">数据结构与算法(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_16" href="http://www.cnblogs.com/zuoxiaolong/category/701274.html">数据库</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案<span style="font-size:11px;font-weight:normal">(227)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/zuoxiaolong/archive/2017/04.html">2017年4月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/zuoxiaolong/archive/2017/03.html">2017年3月 (10)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/zuoxiaolong/archive/2017/02.html">2017年2月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/zuoxiaolong/archive/2017/01.html">2017年1月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/12.html">2016年12月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/11.html">2016年11月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/10.html">2016年10月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/09.html">2016年9月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/08.html">2016年8月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/07.html">2016年7月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/06.html">2016年6月 (10)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/05.html">2016年5月 (22)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/04.html">2016年4月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/03.html">2016年3月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/02.html">2016年2月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_15" href="http://www.cnblogs.com/zuoxiaolong/archive/2016/01.html">2016年1月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_16" href="http://www.cnblogs.com/zuoxiaolong/archive/2015/07.html">2015年7月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_17" href="http://www.cnblogs.com/zuoxiaolong/archive/2015/05.html">2015年5月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_18" href="http://www.cnblogs.com/zuoxiaolong/archive/2015/04.html">2015年4月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_19" href="http://www.cnblogs.com/zuoxiaolong/archive/2015/03.html">2015年3月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_20" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/12.html">2014年12月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_21" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/11.html">2014年11月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_22" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/09.html">2014年9月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_23" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/08.html">2014年8月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_24" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/07.html">2014年7月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_25" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/06.html">2014年6月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_26" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/05.html">2014年5月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_27" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/04.html">2014年4月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_28" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/03.html">2014年3月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_29" href="http://www.cnblogs.com/zuoxiaolong/archive/2014/02.html">2014年2月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_30" href="http://www.cnblogs.com/zuoxiaolong/archive/2013/12.html">2013年12月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_31" href="http://www.cnblogs.com/zuoxiaolong/archive/2013/11.html">2013年11月 (8)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_32" href="http://www.cnblogs.com/zuoxiaolong/archive/2013/10.html">2013年10月 (15)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_33" href="http://www.cnblogs.com/zuoxiaolong/archive/2013/09.html">2013年9月 (23)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_34" href="http://www.cnblogs.com/zuoxiaolong/archive/2013/08.html">2013年8月 (50)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern11.html#3671068">1. Re:（十）装饰器模式详解（与IO不解的情缘）</a></li>
+        <li class="recent_comment_body">为什么抽象装饰器父类 protected Component component; 是protected，而不是public？？请楼主答疑</li>
+        <li class="recent_comment_author">--七个小毛驴</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/life51.html#3668962">2. Re:回答阿里社招面试如何准备，顺便谈谈对于Java程序猿学习当中各个阶段的建议</a></li>
+        <li class="recent_comment_body">从大二开始就学习java，毕业后进入了一家跨国的外包软件公司，不过运气比较差，没有做过什么好项目，也没有大牛带，现在毕业快一年了，准备跳槽，迷茫。</li>
+        <li class="recent_comment_author">--GumpDai</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/life51.html#3666001">3. Re:回答阿里社招面试如何准备，顺便谈谈对于Java程序猿学习当中各个阶段的建议</a></li>
+        <li class="recent_comment_body">非计算机专业，现在大三在一个小公司实习，刚来一个月看了点基础，就直接让我做一个web项目，好懵逼。</li>
+        <li class="recent_comment_author">--伪Java工程师</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern13.html#3665549">4. Re:（十二）命令模式详解（故事版）</a></li>
+        <li class="recent_comment_body">命令模式为什么没有写撤销操作？后来把所有的代码都打了一遍，感觉又些地方不能理解希望有空看到的话可以回复下1.在分配任务的时候，产品经理是用轮询的方式分配给程序员的，但是具体工作的时候每天工作量又是写死......</li>
+        <li class="recent_comment_author">--arthur王</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/diaosi1.html#3665467">5. Re:一个屌丝程序猿的人生（一）</a></li>
+        <li class="recent_comment_body">支持</li>
+        <li class="recent_comment_author">--爛轲</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern21.html#3661462">6. Re:（二十）职责链模式详解（都市异能版）</a></li>
+        <li class="recent_comment_body">感觉有点像装饰器模式...</li>
+        <li class="recent_comment_author">--麦浪无垠</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/algorithm1.html#3659935">7. Re:算法（JAVA）----两道小小课后题</a></li>
+        <li class="recent_comment_body">5重循环，天啊</li>
+        <li class="recent_comment_author">--accfcx</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/life51.html#3659643">8. Re:回答阿里社招面试如何准备，顺便谈谈对于Java程序猿学习当中各个阶段的建议</a></li>
+        <li class="recent_comment_body">感谢博主的分享。</li>
+        <li class="recent_comment_author">--一枝花算不算浪漫</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/con1.html#3658347">9. Re:高并发下的九死一生，一个不小心就掉入万丈深渊</a></li>
+        <li class="recent_comment_body">楼主再解释下为什么高并发下该函数就会出现exception就好了？</li>
+        <li class="recent_comment_author">--ismallboy</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern16.html#3657729">10. Re:（十五）建造者模式详解（都市异能版）</a></li>
+        <li class="recent_comment_body">@赫连勃勃大王引用Doppelgenger和具体的Builder类之间的关系不是聚合吗,应该是实线+箭头Soul类和DoppelgangerBuilder之间的关系是依赖啊,应该是虚线+箭头看了半天怎......</li>
+        <li class="recent_comment_author">--麦浪无垠</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life51.html">1. 回答阿里社招面试如何准备，顺便谈谈对于Java程序猿学习当中各个阶段的建议(19069)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/pattern26.html">2. 设计模式大杂烩（24种设计模式的总结以及学习设计模式的几点建议）(18881)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life41.html">3. 记录2015年年初跳槽的经历！(15095)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/java1.html">4. 六种流行的语言大餐---C、C++、python、Java、php、C#你更喜欢哪一个呢？(12895)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/5173393.html">5. 如果你已经这样了，那你必须要跳槽了。(12327)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life22.html">6. 杂谈---第一次真正的高并发编程体验(12240)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life54.html">7. 万能的林萧说：我来告诉你，一个草根程序员如何进入BAT。(12143)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life46.html">8. 一个最新发现，原来程序员的最终归宿在这里。(11923)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life6.html">9. 勤快的程序猿都没啥前途的，赶紧改掉你的坏毛病吧！(11515)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life48.html">10. 程序员面经：面试前到底该不该刷题以及面试前该如何准备(10484)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life46.html">1. 一个最新发现，原来程序员的最终归宿在这里。(184)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/4629035.html">2. ［异能程序员］第一章 酒后事发（第一更）(139)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life41.html">3. 记录2015年年初跳槽的经历！(129)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life6.html">4. 勤快的程序猿都没啥前途的，赶紧改掉你的坏毛病吧！(119)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life50.html">5. 程序猿的骄傲，以及骄傲背后真实的原因。(95)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life47.html">6. 送给即将毕业的同学，谈谈毕业后第一份工作和追女生的问题。(82)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life57.html">7. 程序员们，再不行动就来不及了！(82)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life22.html">8. 杂谈---第一次真正的高并发编程体验(80)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/java1.html">9. 六种流行的语言大餐---C、C++、python、Java、php、C#你更喜欢哪一个呢？(79)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/5469265.html">10. 共同打造中国最受欢迎的Java博客网站，快来参加吧。(76)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life51.html">1. 回答阿里社招面试如何准备，顺便谈谈对于Java程序猿学习当中各个阶段的建议(117)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life54.html">2. 万能的林萧说：我来告诉你，一个草根程序员如何进入BAT。(77)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/4629035.html">3. ［异能程序员］第一章 酒后事发（第一更）(68)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life41.html">4. 记录2015年年初跳槽的经历！(64)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life58.html">5. 你首先是一个人，然后你才是程序员。(63)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life45.html">6. 五年北京，这个改变我命运的城市，终于要离开了(63)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life49.html">7. 误人子弟的网络，谈谈HTTP协议中的短轮询、长轮询、长连接和短连接(61)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life55.html">8. 2016——注定不平凡的一年(60)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life53.html">9. 万能的林萧说：一篇文章教会你，如何做到招聘要求中的“要有扎实的Java基础”。(59)</a></li><li><a href="http://www.cnblogs.com/zuoxiaolong/p/life15.html">10. 浅谈程序猿的职业规划，看你如何决定自己的未来吧。(59)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 左潇龙
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://example.com/event/1.0"
+xmlns="http://example.com/event/1.0"
+elementFormDefault="qualified"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:ncEvent="urn:ietf:params:xml:ns:netconf:notification:1.0">
+<xs:import namespace=
+"urn:ietf:params:xml:ns:netconf:notification:1.0"
+schemaLocation="notification.xsd"/>
+<xs:complexType name="eventType">
+<xs:complexContent>
+<xs:extension base="ncEvent:NotificationContentType">
+<xs:sequence>
+<xs:element name="eventClass" />
+<xs:element name="reportingEntity">
+<xs:complexType>
+<xs:sequence>
+<xs:any namespace="##any"
+processContents="lax"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:choice>
+<xs:element name="severity"/>
+<xs:element name="operState"/>
+</xs:choice>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:element name="event"
+type="eventType"
+substitutionGroup="ncEvent:notificationContent"/>
+</xs:schema>

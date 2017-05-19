@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)http://discuss.tail-f.com/t/subscription-to-notification/167/10 -->
+<html lang="en" class="desktop-view not-mobile-device  anon js no-touch discourse-no-touch"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Subscription to Notification - YANG - ConfD User Community</title>
+    <meta name="description" content="I am trying to create a subscription to a change in database. i want the server to send a notification to the client when ever there is a change in a particular variable value.  I am trying to follow the netconf_notifica&amp;hellip;">
+    <meta name="author" content="">
+<meta name="generator" content="Discourse 1.6.0.beta7 - https://github.com/discourse/discourse version d4b6aaaf711ef5d72cb5f137403552ababb2b17f">
+<link rel="icon" type="image/png" href="http://www.tail-f.com/wordpress/wp-content/uploads/2013/02/favicon.ico">
+<link rel="apple-touch-icon" type="image/png" href="http://discuss.tail-f.com/images/default-apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<link rel="canonical" href="http://discuss.tail-f.com/t/subscription-to-notification/167">
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"http://discuss.tail-f.com","potentialAction":{"@type":"SearchAction","target":"http://discuss.tail-f.com/search?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<link rel="search" type="application/opensearchdescription+xml" href="http://discuss.tail-f.com/opensearch.xml">
+
+    
+
+<style>
+  @font-face {
+    font-family: 'FontAwesome';
+    src: url('/assets/fontawesome-webfont-ff82aeed6b9bb6701696c84d1b223d2e682eb78c89117a438ce6cfea8c498995.woff2?http://discuss.tail-f.com&amp;2&v=4.5.0') format('woff2'),
+         url('/assets/fontawesome-webfont-c812ddc9e475d3e65d68a6b3b589ce598a2a5babb7afc55477d59215c4a38a40.woff?http://discuss.tail-f.com&amp;2&v=4.5.0') format('woff');
+  }
+</style>
+
+      <link href="./Subscription to Notification - YANG - ConfD User Community_files/desktop_e07ceaef7ef56cdb189468188b7413e3a800ce58.css" media="all" rel="stylesheet">
+
+
+  <link class="custom-css" rel="stylesheet" href="./Subscription to Notification - YANG - ConfD User Community_files/7e202ef2-56d7-47d5-98d8-a9c8d15e57dd.css" type="text/css" media="all">
+
+    
+
+      <meta name="fragment" content="!">
+
+
+    <script>
+      window.EmberENV = window.EmberENV || {};
+      window.EmberENV['FORCE_JQUERY'] = true;
+    </script>
+
+    <script src="./Subscription to Notification - YANG - ConfD User Community_files/preload_store-e6d9d40dcb82fae992669f9866b566360d1d4756ab3b066ac35c766eb1b86c77.js"></script>
+    <script src="./Subscription to Notification - YANG - ConfD User Community_files/en-4bf7e812df1ae4c0cd3bdd873f4605f0c95bd2c2e48511b67183ae0a6245e5f4.js"></script>
+    <script src="./Subscription to Notification - YANG - ConfD User Community_files/ember_jquery-9c4852b4384fc211bf22de79cc4f7c4188ac0e9465ae13a4d07873dfcd97fd51.js"></script>
+    <script src="./Subscription to Notification - YANG - ConfD User Community_files/vendor-6c83cefb781b3fa325bff76e9ba637bf719260cc7353ee0179cd706e79535999.js"></script>
+    <script src="./Subscription to Notification - YANG - ConfD User Community_files/application-62b54d32bb16b3d886b7e26bfc540a2df7d446ea910c2a3a0285adfc4795bb5a.js"></script>
+
+      
+
+    
+    <link rel="manifest" href="http://discuss.tail-f.com/manifest.json">
+
+      <link rel="alternate" type="application/rss+xml" title="RSS feed of &#39;Subscription to Notification&#39;" href="http://discuss.tail-f.com/t/subscription-to-notification/167.rss">
+  <meta property="og:site_name" content="ConfD User Community">
+<meta name="twitter:card" content="summary">
+<meta property="og:url" content="http://discuss.tail-f.com/t/subscription-to-notification/167">
+<meta name="twitter:url" content="http://discuss.tail-f.com/t/subscription-to-notification/167">
+<meta property="og:title" content="Subscription to Notification">
+<meta name="twitter:title" content="Subscription to Notification">
+<meta property="og:description" content="I am trying to create a subscription to a change in database. i want the server to send a notification to the client when ever there is a change in a particular variable value.  I am trying to follow the netconf_notification example and the RFC-5277 doc but i cant get it to work.   i have added this in the Yang model notification alarm{     leaf alarm{         type leafref {         path &quot; /xxxx/xxxx/alarm&quot;         } }   create a stream and try to create a subscription for this using  create-sub...">
+<meta name="twitter:description" content="I am trying to create a subscription to a change in database. i want the server to send a notification to the client when ever there is a change in a particular variable value.  I am trying to follow the netconf_notification example and the RFC-5277 doc but i cant get it to work.   i have added this in the Yang model notification alarm{     leaf alarm{         type leafref {         path &quot; /xxxx/xxxx/alarm&quot;         } }   create a stream and try to create a subscription for this using  create-sub...">
+<meta name="twitter:label1" value="Reading time">
+<meta name="twitter:data1" value="2 mins 🕑">
+<meta name="twitter:label2" value="Likes">
+<meta name="twitter:data2" value="1 ❤">
+
+  <style id="image-sizing-hack">#reply-control .d-editor-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {max-width:690px;max-height:500px;}</style></head>
+
+  <body class="category-yang docked">
+    
+
+      <link rel="stylesheet" href="./Subscription to Notification - YANG - ConfD User Community_files/style.css" type="text/css" media="screen">
+<!--Begin: Cisco Header-->
+
+<div id="cisco">
+	<div class="c16">
+  		<div class="g7 alpha" style="float:left"><a href="http://www.cisco.com/" target="_blank"><img src="./Subscription to Notification - YANG - ConfD User Community_files/cisco_logo.png"></a></div>
+  		<div class="g2" style="padding-top:10px;float:left;padding-left:3em;"><a href="http://www.cisco.com/web/about/ac49/ac0/ac1/ac259/tail-f.html" target="_blank">
+<img src="./Subscription to Notification - YANG - ConfD User Community_files/learn_more.png"></a></div>
+  		<div class="g2 prefix_5" style="padding-top:11px; text-align:right;"><a href="http://www.cisco.com/web/about/index.html" target="_blank"><img src="./Subscription to Notification - YANG - ConfD User Community_files/about_us.png"></a></div>
+	</div>
+</div>
+
+<!--End: Cisco Header-->
+<div id="container">
+    	<div id="top">
+        	<a id="contactUsLink" href="http://www.tail-f.com/contact/">contact us</a>
+            <div id="search-label">search</div>                
+                <div id="search-form">               
+					<form method="get" id="searchform" action="http://www.tail-f.com/">
+						<input type="text" value="" name="s" id="searchinput">
+					</form>
+				</div> <!-- end #search-form -->
+        </div>
+		<div id="header" class="clearfix">
+			<div id="header-inner">
+			<a href="http://www.tail-f.com/">
+								<img src="./Subscription to Notification - YANG - ConfD User Community_files/tail-f-logo.png" alt="Tail-f Systems" id="logo">
+			</a>
+			<a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10#" id="mobile_nav" class="closed">Navigation<span></span></a>
+			<ul id="top-menu" class="nav">
+<li id="menu-item-13" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10#">products</a></li>
+<li id="menu-item-11" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10#" class="">tail-f insights</a></li>
+<li id="menu-item-12" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10#">about us</a></li>
+<li id="menu-item-14" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-14"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10#">news</a></li>
+<li id="menu-item-15" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15"><a href="http://discuss.tail-f.com/contact">contact us</a></li>
+</ul>			</div>
+		</div> <!-- end #header -->
+        
+<div id="dropdown" class="Products" style="display: none;">
+	<div id="dropdownInner2">
+		<table width="1260" border="0" cellspacing="0" cellpadding="0" class="dropdownTable2">
+            <tbody><tr>
+                <td align="center" valign="middle">
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+					<a href="http://www.tail-f.com/management-agent" id="confdDropdown">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/confd-dropdown.png" class="dropdownSeparator">
+                        <h3>ConfD Premium</h3>
+                    </a> 
+					<img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/confd-basic" id="ncsDropdown">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/confd-dropdown.png" class="dropdownSeparator">
+                        <h3>ConfD Basic</h3>
+                    </a> 
+					<img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">                  
+				</td>
+            </tr>
+        </tbody></table>
+	</div>
+</div>
+
+<div id="dropdown" class="Insights" style="display: none;">
+	<div id="dropdownInner2">
+		<table width="1260" border="0" cellspacing="0" cellpadding="0" class="dropdownTable2">
+            <tbody><tr>
+                <td align="center" valign="middle">
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/blogs" id="insightsBlogs" style="width: 200px;">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/insights-blog.png" class="dropdownSeparator">
+                        <h3>Blogs</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://discuss.tail-f.com/" id="insightsStandards" style="width: 200px;">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/insights-forum.png" class="dropdownSeparator">
+                        <h3>Forum</h3>
+                    </a>
+					<img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/standards" id="insightsStandards" style="width: 200px;">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/insights-standards.png" class="dropdownSeparator">
+                        <h3>Standards</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/training" id="insightsTraining" style="width: 200px;">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/insights-training.png" class="dropdownSeparator">
+                        <h3>Training</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/education" id="insightsEducation" style="width: 200px;">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/insights-education.png" class="dropdownSeparator">
+                        <h3>Education</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+				</td>
+            </tr>
+        </tbody></table>
+	</div>
+</div>
+
+<div id="dropdown" class="About" style="display: none;">
+	<div id="dropdownInner2">
+		<table width="1260" border="0" cellspacing="0" cellpadding="0" class="dropdownTable2">
+            <tbody><tr>
+                <td align="center" valign="middle">
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/company-story" id="aboutOurStory">
+                        <h3>Our Story</h3>
+                    </a>
+                <!--<img src="http://www.tail-f.com/wordpress/wp-content/themes/Chameleon/images/dropdown-separator.png" class="dropdownSeparator" />
+                    <a href="http://www.tail-f.com/awards" id="aboutAwards">
+                        <h3>Awards</h3>
+                    </a>-->
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/partners" id="aboutPartners">
+                        <h3>Partners</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/customers" id="aboutCustomers">
+                        <h3>Customers</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/careers" id="aboutCareers">
+                        <h3>Careers</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+				</td>
+            </tr>
+        </tbody></table>
+	</div>
+</div>
+
+<div id="dropdown" class="News" style="display: none;">
+	<div id="dropdownInner2">
+		<table width="1260" border="0" cellspacing="0" cellpadding="0" class="dropdownTable2">
+            <tbody><tr>
+                <td align="center" valign="middle">
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/events" id="newsEvents">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/news-pr.png" class="dropdownSeparator">
+                        <h3>Events</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+                    <a href="http://www.tail-f.com/news" id="newsNews">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/news-events.png" class="dropdownSeparator">
+                        <h3>Latest News</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+					<a href="http://www.tail-f.com/newsletters" id="newsPressReleases">
+                    	<img src="./Subscription to Notification - YANG - ConfD User Community_files/news-news.png" class="dropdownSeparator">
+                        <h3>Newsletters</h3>
+                    </a>
+                    <img src="./Subscription to Notification - YANG - ConfD User Community_files/dropdown-separator.png" class="dropdownSeparator">
+				</td>
+            </tr>
+        </tbody></table>
+	</div>
+</div>
+
+<script>
+$(document).ready(function(){
+		$("div#dropdown.Products").hide();
+		$("div#dropdown.Insights").hide();
+		$("div#dropdown.About").hide();
+		$("div#dropdown.News").hide();
+		$("div#dropdown.Contact").hide();
+	});
+	
+	$("li#menu-item-13 a").hover(
+		function () {
+			$("div#dropdown.Products").show();
+		},
+		function () {
+			$("div#dropdown.Products").hide();
+		}
+	);
+	$("div#dropdown.Products").hover(
+		function () {
+			$("div#dropdown.Products").show();
+			$("li#menu-item-13 a").addClass("menuActive");
+		},
+		function () {
+			$("div#dropdown.Products").hide();
+			$("li#menu-item-13 a").removeClass("menuActive");
+		}
+	);
+	
+	$("li#menu-item-11 a").hover(
+		function () {
+			$("div#dropdown.Insights").show();
+		},
+		function () {
+			$("div#dropdown.Insights").hide();
+		}
+	);
+	$("div#dropdown.Insights").hover(
+		function () {
+			$("div#dropdown.Insights").show();
+			$("li#menu-item-11 a").addClass("menuActive");
+		},
+		function () {
+			$("div#dropdown.Insights").hide();
+			$("li#menu-item-11 a").removeClass("menuActive");
+		}
+	);
+	
+	$("li#menu-item-12 a").hover(
+		function () {
+			$("div#dropdown.About").show();
+		},
+		function () {
+			$("div#dropdown.About").hide();
+		}
+	);
+	$("div#dropdown.About").hover(
+		function () {
+			$("div#dropdown.About").show();
+			$("li#menu-item-12 a").addClass("menuActive");
+		},
+		function () {
+			$("div#dropdown.About").hide();
+			$("li#menu-item-12 a").removeClass("menuActive");
+		}
+	);
+	
+	$("li#menu-item-14 a").hover(
+		function () {
+			$("div#dropdown.News").show();
+		},
+		function () {
+			$("div#dropdown.News").hide();
+		}
+	);
+	$("div#dropdown.News").hover(
+		function () {
+			$("div#dropdown.News").show();
+			$("li#menu-item-14 a").addClass("menuActive");
+		},
+		function () {
+			$("div#dropdown.News").hide();
+			$("li#menu-item-14 a").removeClass("menuActive");
+		}
+	);
+</script>
+
+</div>
+
+    <section id="main" class="ember-application">
+    <div id="ember757" class="ember-view"><div id="ember810" class="ember-view"><!----><header class="d-header clearfix"><div class="wrap"><div class="contents clearfix"><div class="title"><a href="http://discuss.tail-f.com/" data-auto-route="true"><i class="fa fa-home" aria-hidden="true"></i></a></div><div class="panel clearfix"><span><button class="widget-button btn-primary btn-small login-button" aria-label="Log In" title="Log In"><i class="fa fa-user" aria-hidden="true"></i>Log In</button></span><ul role="navigation" class="icons clearfix"><li class="header-dropdown-toggle"><a href="http://discuss.tail-f.com/search" data-auto-route="true" title="search topics, posts, users, or categories" aria-label="search topics, posts, users, or categories" id="search-button" class="icon"><i class="fa fa-search" aria-hidden="true"></i></a></li><li class="header-dropdown-toggle"><a data-auto-route="true" title="go to another topic list or category" aria-label="go to another topic list or category" id="toggle-hamburger-menu" class="icon"><i class="fa fa-bars" aria-hidden="true"></i></a></li></ul></div><div class="extra-info-wrapper"><div class="extra-info two-rows"><div class="title-wrapper"><h1><div class="topic-statuses"></div><a class="widget-link topic-link" href="http://discuss.tail-f.com/t/subscription-to-notification/167" title=""><span>Subscription to Notification</span></a></h1><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a></div></div></div></div></div></header></div>
+
+<div id="main-outlet" class="wrap" style="padding-bottom: 0px;">
+  <div class="container">
+      <!---->
+    <div id="ember826" class="ember-view"></div>
+    <div id="ember837" class="ember-view hidden create-topics-notice"><!----></div>
+  </div>
+  <div id="ember846" class="ember-view regular category-yang">  <div class="container">
+    <div id="ember937" class="ember-view"><div class="row">
+  <div id="banner" class="true">
+    <div id="banner-content">
+      <div class="close" data-ember-action="938"><i class="fa fa-times" title="Dismiss this banner."></i></div>
+      <h2>Tail-f – ConfD Developer Days 2016 - Oct 4th &amp; 5th at the Sheraton San Jose Hotel</h2>
+
+<p>We are excited to once again provide the perfect forum to provide developers an opportunity to improve and expand their ConfD, NETCONF and YANG knowledge and skill set. Attendees will benefit from direct engagement with members of the ConfD product development team and the many longtime users attending. Topics this year will focus on:</p>
+
+<p>NETCONF and YANG Done Right<br>Application debugging tips and tricks<br>NETCONF-driven application testing<br>ConfD AAA &amp; NACM tutorial</p>
+
+<p>Attend this year’s event to learn the new capabilities of ConfD, NETCONF and YANG.</p>
+
+<p>This year's event will be held Oct 4 &amp; 5 at the Sheraton San Jose hotel.<br><a href="https://www.eventbrite.com/e/tail-f-confd-developer-days-2016-october-4-5-tickets-26545264601" rel="nofollow"><br>For more information and to register.</a></p>
+<!---->    </div>
+  </div>
+</div>
+</div>
+  </div>
+
+<!---->
+
+    <div id="topic-title">
+      <div class="container">
+
+        <div class="title-wrapper">
+            <h1>
+                <a>
+                  <span class="private-message-glyph"><i class="fa fa-envelope"></i></span>
+                </a>
+
+                <div id="ember977" class="ember-view topic-statuses"></div>
+                <a class="fancy-title" data-ember-action="978" href="http://discuss.tail-f.com/t/subscription-to-notification/167">
+                  Subscription to Notification
+                </a>
+
+<!---->            </h1>
+
+              <div id="ember984" class="ember-view"><!----><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a>
+<!---->
+<!---->
+</div>
+        </div>
+        <!---->
+      </div>
+    </div>
+
+  <div class="container posts">
+    <div class="selected-posts hidden">
+      <p><span id="ember948" class="ember-view">You have selected <b>0</b> posts.</span></p>
+
+  <p><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" data-ember-action="986">select all</a></p>
+
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<p class="cancel"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" data-ember-action="949">cancel selecting</a></p>
+
+    </div>
+
+    <div class="row">
+      <section class="topic-area" id="topic" data-topic-id="167">
+        <div class="posts-wrapper">
+
+          <div id="topic-progress-wrapper" class="ember-view docked"><!----><nav id="topic-progress" title="topic progress" class="">
+  <div class="nums">
+    <h4>9</h4><span class=""> <span>/</span> <h4>9</h4></span>
+  </div>
+  <i class="fa fa-sort"></i>
+  <div class="bg" style="border-right-width: 0px; width: 147px;">&nbsp;</div>
+</nav>
+</div>
+
+          <div id="ember967" class="ember-view"><!----></div>
+
+          <!---->
+
+            <div id="ember997" class="ember-view"><!----><div class="post-stream"><div class="cloaked-post" id="post_1" style="height: 643px"></div><div class="cloaked-post" id="post_2" style="height: 232px"></div><div class="cloaked-post" id="post_3" style="height: 542px"></div><div class="topic-post clearfix topic-owner regular"><article id="post_4" data-post-id="337" data-user-id="81" class="boxed onscreen-post"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="tabLoc"></a><div class="row"><div class="topic-avatar"><a class="trigger-user-card main-avatar" href="http://discuss.tail-f.com/users/pavanfds" data-user-card="pavanfds"><img alt="" width="45" height="45" src="./Subscription to Notification - YANG - ConfD User Community_files/45.png" title="pavanfds" class="avatar"></a><div class="poster-avatar-extra"></div></div><div class="topic-body"><div class="topic-meta-data"><div class="names trigger-user-card"><span class="username"><a href="http://discuss.tail-f.com/users/pavanfds" data-auto-route="true" data-user-card="pavanfds">pavanfds</a></span></div><div class="post-info"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/4" data-share-url="/t/subscription-to-notification/167/4" data-post-number="4" class="post-date"><span title="August 10, 2015 6:58am" data-time="1439215118925" data-format="tiny" class="relative-date">Aug '15</span></a></div><a class="reply-to-tab"><i class="fa fa-mail-forward" aria-hidden="true"></i> <img alt="" width="25" height="25" src="./Subscription to Notification - YANG - ConfD User Community_files/25.png" title="waitai" class="avatar"> <span>waitai</span></a><div class="read-state read" title="Post is unread"><i class="fa fa-circle" aria-hidden="true"></i></div></div><div class="regular contents avoid-tab"><div class="cooked"><p>Hi, <br>I looking to this in a standard way without using the confd lib.<br>we have the confd library on one machine and the northbound API on another machine. the notrhbound API is creating a subscription to the default NETCONF stream using</p>
+
+<p>create-subscriptionon<br>           xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;<br>    stream&gt;NETCONF /stream&gt;<br> /create-subscription&gt;</p>
+
+<p>and i want the Northbound API to be notified whenever there is any change in the Confd Server database.</p>
+
+<p>As of now when i change some value in the confd server i get a netconf-session-start and immediately netconf-session-end at the client but no information about any data change.</p>
+
+<p>I would like to know if this feature is supported, if yes what are the functions i need to call to trigger this.</p>
+
+<p>Thank You</p></div><section class="post-menu-area clearfix"><nav class="post-controls clearfix"><div class="actions"><button aria-label="share a link to this post" title="share a link to this post" data-share-url="/t/subscription-to-notification/167/4" data-post-number="4" class="widget-button"><i class="fa fa-link" aria-hidden="true"></i></button></div></nav></section></div><section class="post-actions"></section></div><div class="gutter"><ul class="post-links"></ul></div></div></article></div><div class="topic-post clearfix regular"><article id="post_6" data-post-id="339" data-user-id="4" class="boxed onscreen-post"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="tabLoc"></a><div class="row"><div class="topic-avatar"><a class="trigger-user-card main-avatar" href="http://discuss.tail-f.com/users/waitai" data-user-card="waitai"><img alt="" width="45" height="45" src="./Subscription to Notification - YANG - ConfD User Community_files/45(1).png" title="waitai" class="avatar"></a><div class="poster-avatar-extra"></div></div><div class="topic-body"><div class="topic-meta-data"><div class="names trigger-user-card"><span class="username staff admin moderator"><a href="http://discuss.tail-f.com/users/waitai" data-auto-route="true" data-user-card="waitai">waitai</a><i class="fa fa-shield" aria-hidden="true" title="This user is a moderator"></i></span></div><div class="post-info"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/6" data-share-url="/t/subscription-to-notification/167/6" data-post-number="6" class="post-date"><span title="August 10, 2015 10:56am" data-time="1439229363453" data-format="tiny" class="relative-date">Aug '15</span></a></div><div class="post-info edits"><a title="post last edited on December 22, 2015 6:29pm">2 <i class="fa fa-pencil" aria-hidden="true"></i></a></div><div class="read-state read" title="Post is unread"><i class="fa fa-circle" aria-hidden="true"></i></div></div><div class="regular contents"><div class="cooked"><p>Perhaps the following will help.</p>
+
+<p>I have modified the standard netconf-notifications example in confd-basic-6 as follows:</p>
+
+<p>Added the following to notif.yang at the top level:</p>
+
+<pre><code>leaf test {
+  type string;
+}</code></pre>
+
+<p>This allows me to make configuration changes to the example project at runtime.</p>
+
+<p>I have then created a XML file for creating my NETCONF stream as follows:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;capabilities&gt;
+    &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+  &lt;/capabilities&gt;
+&lt;/hello&gt;
+]]&gt;]]&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;create-subscription xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;
+    &lt;stream&gt;NETCONF&lt;/stream&gt;
+  &lt;/create-subscription&gt;
+&lt;/rpc&gt;
+]]&gt;]]&gt;</code></pre>
+
+<p>I have modified confd.conf with changes in my previous post to enable NETCONF tracing.</p>
+
+<p>After I have started the example with "make all start", I then start my NETCONF stream subscription as follows:</p>
+
+<pre><code>$ netconf-console -s all netconf-sub.xml</code></pre>
+
+<p>I then start up a cli session as follows:</p>
+
+<pre><code>bash-3.2$ make cli
+$HOME/confd-basic-6/ConfD/bin/confd_cli --user=admin --groups=admin \
+            --interactive || echo Exit
+Welcome to ConfD Basic
+
+The CLI may only be used during product development.
+Commercial use of the CLI is prohibited.
+You must disable the CLI in confd.conf for production.
+For more information, visit http://www.tail-f.com.
+admin connected from 127.0.0.1 using console on WAITAI-M-K092
+WAITAI-M-K092# config 
+Entering configuration mode terminal
+WAITAI-M-K092(config)# test test123
+WAITAI-M-K092(config)# commit
+Commit complete.</code></pre>
+
+<p>The following is what I have received on my netconf-console terminal:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;
+  &lt;eventTime&gt;2015-08-10T10:36:58.427756-07:00&lt;/eventTime&gt;
+  &lt;netconf-config-change xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-notifications"&gt;
+    &lt;changed-by&gt;
+      &lt;username&gt;admin&lt;/username&gt;
+      &lt;session-id&gt;0&lt;/session-id&gt;
+      &lt;source-host&gt;127.0.0.1&lt;/source-host&gt;
+    &lt;/changed-by&gt;
+    &lt;datastore&gt;running&lt;/datastore&gt;
+    &lt;edit&gt;
+      &lt;target xmlns:notif="http://tail-f.com/ns/test/notif"&gt;/notif:test&lt;/target&gt;
+      &lt;operation&gt;replace&lt;/operation&gt;
+    &lt;/edit&gt;
+  &lt;/netconf-config-change&gt;
+&lt;/notification&gt;</code></pre>
+
+<p>Following is the output of my netconf.trace file:</p>
+
+<pre><code>10-Aug-2015::10:36:58.431 **&lt; sess:11 write:
+&lt;notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;
+  &lt;eventTime&gt;2015-08-10T10:36:58.427756-07:00&lt;/eventTime&gt;
+  &lt;netconf-config-change xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-notifications"&gt;
+    &lt;changed-by&gt;
+      &lt;username&gt;admin&lt;/username&gt;
+      &lt;session-id&gt;0&lt;/session-id&gt;
+      &lt;source-host&gt;127.0.0.1&lt;/source-host&gt;
+    &lt;/changed-by&gt;
+    &lt;datastore&gt;running&lt;/datastore&gt;
+    &lt;edit&gt;
+      &lt;target xmlns:notif="http://tail-f.com/ns/test/notif"&gt;/notif:test&lt;/target&gt;
+      &lt;operation&gt;replace&lt;/operation&gt;
+    &lt;/edit&gt;
+  &lt;/netconf-config-change&gt;
+&lt;/notification&gt;</code></pre>
+
+<p>To find out the exact configuration parameter value changes in your YANG data model through NETCONF notifications, you will need to add your own custom NETCONF notifications for it and write ConfD client application code to generate them accordingly.</p></div><section class="post-menu-area clearfix"><nav class="post-controls clearfix"><div class="actions"><button class="widget-button like-count highlight-action" aria-label="1 person liked this post" title="1 person liked this post">1 Like</button><button aria-label="share a link to this post" title="share a link to this post" data-share-url="/t/subscription-to-notification/167/6" data-post-number="6" class="widget-button"><i class="fa fa-link" aria-hidden="true"></i></button></div></nav></section></div><section class="post-actions"></section></div><div class="gutter"><ul class="post-links"></ul></div></div></article></div><div class="time-gap small-action clearfix"><div class="topic-avatar"><i class="fa fa-fw" aria-hidden="true"></i></div><div class="small-action-desc timegap">9 months later</div></div><div class="topic-post clearfix regular"><article id="post_7" data-post-id="1149" data-user-id="220" class="boxed onscreen-post"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="tabLoc"></a><div class="row"><div class="topic-avatar"><a class="trigger-user-card main-avatar" href="http://discuss.tail-f.com/users/pomishra" data-user-card="pomishra"><img alt="" width="45" height="45" src="./Subscription to Notification - YANG - ConfD User Community_files/43_1.png" title="pomishra" class="avatar"></a><div class="poster-avatar-extra"></div></div><div class="topic-body"><div class="topic-meta-data"><div class="names trigger-user-card"><span class="username new-user"><a href="http://discuss.tail-f.com/users/pomishra" data-auto-route="true" data-user-card="pomishra">pomishra</a></span></div><div class="post-info"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/7" data-share-url="/t/subscription-to-notification/167/7" data-post-number="7" class="post-date"><span title="May 18, 2016 6:43pm" data-time="1463622189640" data-format="tiny" class="relative-date">May '16</span></a></div><div class="read-state read" title="Post is unread"><i class="fa fa-circle" aria-hidden="true"></i></div></div><div class="regular contents"><div class="cooked"><p>Hi,</p>
+
+<p>I am also trying to somewhat similar . I want the Northbound API to be notified whenever there is any change in the Confd Server database.</p>
+
+<p>I am writing the program in java though and the java docs for this is not great as such.<br>I want to send a commitnotification .</p>
+
+<p>I created new socket which is listening to the commit type notifications.<br>When I create a subscriber for the same and run it , i get following kind of error :</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;rpc-error&gt;
+    &lt;error-type&gt;protocol&lt;/error-type&gt;
+    &lt;error-tag&gt;operation-not-supported&lt;/error-tag&gt;
+    &lt;error-severity&gt;error&lt;/error-severity&gt;
+    &lt;error-message xml:lang="en"&gt;Unsupported capability :notification&lt;/error-message&gt;
+    &lt;error-info&gt;
+      &lt;bad-element&gt;create-subscription&lt;/bad-element&gt;
+    &lt;/error-info&gt;
+  &lt;/rpc-error&gt;
+&lt;/rpc-reply&gt;</code></pre>
+
+<p>my subscriber.xml looks like - </p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;capabilities&gt;
+    &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+  &lt;/capabilities&gt;
+&lt;/hello&gt;
+]]&gt;]]&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;create-subscription 
+    xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;
+  &lt;/create-subscription&gt;
+&lt;/rpc&gt;
+]]&gt;]]&gt;</code></pre>
+
+<p>Can someone please help me get what is the error here ? I have not created any stream and subscribed to default NETCONF notifications.<br>Also , is there any good java example for the same?</p>
+
+<p>Thanks,<br>Pooja</p></div><section class="post-menu-area clearfix"><nav class="post-controls clearfix"><div class="actions"><button aria-label="share a link to this post" title="share a link to this post" data-share-url="/t/subscription-to-notification/167/7" data-post-number="7" class="widget-button"><i class="fa fa-link" aria-hidden="true"></i></button></div></nav></section></div><section class="post-actions"></section></div><div class="gutter"><ul class="post-links"></ul></div></div></article></div><div class="topic-post clearfix regular"><article id="post_8" data-post-id="1150" data-user-id="4" class="boxed onscreen-post"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="tabLoc"></a><div class="row"><div class="topic-avatar"><a class="trigger-user-card main-avatar" href="http://discuss.tail-f.com/users/waitai" data-user-card="waitai"><img alt="" width="45" height="45" src="./Subscription to Notification - YANG - ConfD User Community_files/45(1).png" title="waitai" class="avatar"></a><div class="poster-avatar-extra"></div></div><div class="topic-body"><div class="topic-meta-data"><div class="names trigger-user-card"><span class="username staff admin moderator"><a href="http://discuss.tail-f.com/users/waitai" data-auto-route="true" data-user-card="waitai">waitai</a><i class="fa fa-shield" aria-hidden="true" title="This user is a moderator"></i></span></div><div class="post-info"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/8" data-share-url="/t/subscription-to-notification/167/8" data-post-number="8" class="post-date"><span title="May 18, 2016 8:14pm" data-time="1463627642081" data-format="tiny" class="relative-date">May '16</span></a></div><div class="read-state read" title="Post is unread"><i class="fa fa-circle" aria-hidden="true"></i></div></div><div class="regular contents"><div class="cooked"><aside class="quote" data-post="7" data-topic="167"><div class="title" style="cursor: pointer;">
+<div class="quote-controls"><i class="fa fa-chevron-down" title="expand/collapse"></i><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/7" title="go to the quoted post" class="back"></a></div>
+<img alt="" width="20" height="20" src="./Subscription to Notification - YANG - ConfD User Community_files/43_1(1).png" class="avatar">pomishra:</div>
+<blockquote><p>&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;<br>  &lt;create-subscription <br>    xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;<br>  &lt;/create-subscription&gt;<br>&lt;/rpc&gt;</p></blockquote></aside>
+
+<p>Your subscriber.xml is missing the stream to be subscribed.  To subscribe to the NETCONF stream as you have mentioned, you should add the following in between the create-subscription block:</p>
+
+<pre><code>&lt;stream&gt;NETCONF&lt;/stream&gt;</code></pre>
+
+<aside class="quote" data-post="7" data-topic="167"><div class="title" style="cursor: pointer;">
+<div class="quote-controls"><i class="fa fa-chevron-down" title="expand/collapse"></i><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/7" title="go to the quoted post" class="back"></a></div>
+<img alt="" width="20" height="20" src="./Subscription to Notification - YANG - ConfD User Community_files/43_1(1).png" class="avatar">pomishra:</div>
+<blockquote><p>Can someone please help me get what is the error here ?</p></blockquote></aside>
+
+<p>If you include your code, we may be able to help debug the source of the error.</p>
+
+<aside class="quote" data-post="7" data-topic="167"><div class="title" style="cursor: pointer;">
+<div class="quote-controls"><i class="fa fa-chevron-down" title="expand/collapse"></i><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/7" title="go to the quoted post" class="back"></a></div>
+<img alt="" width="20" height="20" src="./Subscription to Notification - YANG - ConfD User Community_files/43_1(1).png" class="avatar">pomishra:</div>
+<blockquote><p>Also , is there any good java example for the same?</p></blockquote></aside>
+
+<p>You can request sample Java example from your support team.</p></div><section class="post-menu-area clearfix"><nav class="post-controls clearfix"><div class="actions"><button aria-label="share a link to this post" title="share a link to this post" data-share-url="/t/subscription-to-notification/167/8" data-post-number="8" class="widget-button"><i class="fa fa-link" aria-hidden="true"></i></button></div></nav></section></div><section class="post-actions"></section></div><div class="gutter"><ul class="post-links"></ul></div></div></article></div><div class="topic-post clearfix regular"><article id="post_10" data-post-id="1152" data-user-id="19" class="boxed onscreen-post"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="tabLoc"></a><div class="row"><div class="topic-avatar"><a class="trigger-user-card main-avatar" href="http://discuss.tail-f.com/users/cohult" data-user-card="cohult"><img alt="" width="45" height="45" src="./Subscription to Notification - YANG - ConfD User Community_files/28_1.png" title="cohult" class="avatar"></a><div class="poster-avatar-extra"></div></div><div class="topic-body"><div class="topic-meta-data"><div class="names trigger-user-card"><span class="username staff admin moderator"><a href="http://discuss.tail-f.com/users/cohult" data-auto-route="true" data-user-card="cohult">cohult</a><i class="fa fa-shield" aria-hidden="true" title="This user is a moderator"></i></span></div><div class="post-info"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" data-share-url="/t/subscription-to-notification/167/10" data-post-number="10" class="post-date"><span title="May 19, 2016 12:35am" data-time="1463643352993" data-format="tiny" class="relative-date">May '16</span></a></div><div class="read-state read" title="Post is unread"><i class="fa fa-circle" aria-hidden="true"></i></div></div><div class="regular contents"><div class="cooked"><p>Hi pomishra,</p>
+
+<p>I believe your issue simply is that you did not enable the notification capability for NETCONF in your ConfD configuration file, i.e. confd.conf.</p>
+
+<pre><code>  &lt;netconf&gt;
+...
+    &lt;capabilities&gt;
+...
+      &lt;notification&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;/notification&gt;
+    &lt;/capabilities&gt;
+  &lt;/netconf&gt;</code></pre></div><section class="post-menu-area clearfix"><nav class="post-controls clearfix"><div class="actions"><button aria-label="share a link to this post" title="share a link to this post" data-share-url="/t/subscription-to-notification/167/10" data-post-number="10" class="widget-button"><i class="fa fa-link" aria-hidden="true"></i></button></div></nav></section></div><section class="post-actions"></section></div><div class="gutter"><ul class="post-links"></ul></div></div></article></div><div class="topic-post clearfix regular"><article id="post_11" data-post-id="1159" data-user-id="220" class="boxed onscreen-post"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="tabLoc"></a><div class="row"><div class="topic-avatar"><a class="trigger-user-card main-avatar" href="http://discuss.tail-f.com/users/pomishra" data-user-card="pomishra"><img alt="" width="45" height="45" src="./Subscription to Notification - YANG - ConfD User Community_files/43_1.png" title="pomishra" class="avatar"></a><div class="poster-avatar-extra"></div></div><div class="topic-body"><div class="topic-meta-data"><div class="names trigger-user-card"><span class="username new-user"><a href="http://discuss.tail-f.com/users/pomishra" data-auto-route="true" data-user-card="pomishra">pomishra</a></span></div><div class="post-info"><a href="http://discuss.tail-f.com/t/subscription-to-notification/167/11" data-share-url="/t/subscription-to-notification/167/11" data-post-number="11" class="post-date"><span title="May 19, 2016 11:27am" data-time="1463682475095" data-format="tiny" class="relative-date">May '16</span></a></div><div class="read-state read" title="Post is unread"><i class="fa fa-circle" aria-hidden="true"></i></div></div><div class="regular contents"><div class="cooked"><p>That worked.  Thanks a lot !</p></div><section class="post-menu-area clearfix"><nav class="post-controls clearfix"><div class="actions"><button aria-label="share a link to this post" title="share a link to this post" data-share-url="/t/subscription-to-notification/167/11" data-post-number="11" class="widget-button"><i class="fa fa-link" aria-hidden="true"></i></button></div></nav></section></div><section class="post-actions"></section></div><div class="gutter"><ul class="post-links"></ul></div></div></article></div></div></div>
+        </div>
+        <div id="topic-bottom"></div>
+
+<div id="ember968" class="ember-view">
+            <div id="topic-closing-info" class="ember-view"></div>
+              <div id="topic-footer-buttons" class="ember-view"><button id="ember1026" class="ember-view btn btn-primary create standard" title="Reply"><i class="fa fa-reply"></i>Reply</button></div>
+
+<!---->
+<!---->
+            <!---->
+
+              <div id="suggested-topics">
+                <h3>Suggested Topics</h3>
+                <div class="topics">
+                    <div id="ember1037" class="ember-view"><div id="ember1038" class="ember-view">    <table id="ember1047" class="ember-view topic-list">  <thead>
+    <tr><th data-sort-order="default" class="default">Topic</th>
+
+  <th data-sort-order="category" class="category">Category</th>
+
+<th data-sort-order="posts" class="posts num">Replies</th>
+
+<th data-sort-order="views" class="views num">Views</th>
+
+<th data-sort-order="activity" class="activity num">Activity</th>
+
+</tr>
+  </thead>
+<tbody>
+    <tr id="ember1068" class="ember-view topic-list-item category-yang" data-topic-id="543">
+<td class="main-link clearfix" colspan="1">
+  
+  <a href="http://discuss.tail-f.com/t/how-to-avoid-key-completion-when-using-tailf-cli-prefix-key-in-a-list/543" class="title">How to avoid key completion when using tailf:cli-prefix-key in a list</a>
+  
+    <span class="topic-post-badges">
+</span>
+
+  
+  
+</td>
+
+    <td class="category"><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a></td>
+
+
+
+<td class="num posts-map posts heatmap-" title="This topic has 2 replies">
+  <a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="posts-map badge-posts heatmap-"><span class="number" title="2">2</span></a>
+</td>
+
+
+
+
+
+<td class="num views "><span class="number" title="this topic has been viewed 453 times">453</span></td>
+
+<td class="num age activity" title="First post: June 16, 2016 5:31am
+Last post: June 16, 2016 9:04am"><a href="http://discuss.tail-f.com/t/how-to-avoid-key-completion-when-using-tailf-cli-prefix-key-in-a-list/543/3"><span class="relative-date with-year" data-time="1466093099734" data-format="tiny">Jun '16</span></a></td>
+
+</tr>
+    <tr id="ember1085" class="ember-view topic-list-item category-yang" data-topic-id="377">
+<td class="main-link clearfix" colspan="1">
+  
+  <a href="http://discuss.tail-f.com/t/using-tailf-cli-suppress-list-no-in-a-leaf-list-node/377" class="title">Using tailf:cli-suppress-list-no in a leaf-list node</a>
+  
+    <span class="topic-post-badges">
+</span>
+
+  
+  
+</td>
+
+    <td class="category"><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a></td>
+
+
+
+<td class="num posts-map posts heatmap-" title="This topic has 2 replies">
+  <a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="posts-map badge-posts heatmap-"><span class="number" title="2">2</span></a>
+</td>
+
+
+
+
+
+<td class="num views "><span class="number" title="this topic has been viewed 872 times">872</span></td>
+
+<td class="num age activity" title="First post: February 9, 2016 9:06am
+Last post: February 9, 2016 11:57pm"><a href="http://discuss.tail-f.com/t/using-tailf-cli-suppress-list-no-in-a-leaf-list-node/377/3"><span class="relative-date with-year" data-time="1455091042286" data-format="tiny">Feb '16</span></a></td>
+
+</tr>
+    <tr id="ember1086" class="ember-view topic-list-item category-yang" data-topic-id="192">
+<td class="main-link clearfix" colspan="1">
+  
+  <a href="http://discuss.tail-f.com/t/the-names-of-cli-nodes-parameters-modifiable/192" class="title">The names of CLI nodes/parameters modifiable?</a>
+  
+    <span class="topic-post-badges">
+</span>
+
+  
+  
+</td>
+
+    <td class="category"><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a></td>
+
+
+
+<td class="num posts-map posts heatmap-" title="This topic has 3 replies">
+  <a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="posts-map badge-posts heatmap-"><span class="number" title="3">3</span></a>
+</td>
+
+
+
+
+
+<td class="num views "><span class="number" title="this topic has been viewed 937 times">937</span></td>
+
+<td class="num age activity" title="First post: September 3, 2015 11:58pm
+Last post: September 8, 2015 5:30am"><a href="http://discuss.tail-f.com/t/the-names-of-cli-nodes-parameters-modifiable/192/4"><span class="relative-date with-year" data-time="1441715419337" data-format="tiny">Sep '15</span></a></td>
+
+</tr>
+    <tr id="ember1087" class="ember-view topic-list-item category-yang" data-topic-id="453">
+<td class="main-link clearfix" colspan="1">
+  
+  <a href="http://discuss.tail-f.com/t/container-with-multiple-list-enteries/453" class="title">Container with multiple list enteries</a>
+  
+    <span class="topic-post-badges">
+</span>
+
+  
+  
+</td>
+
+    <td class="category"><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a></td>
+
+
+
+<td class="num posts-map posts heatmap-" title="This topic has 1 reply">
+  <a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="posts-map badge-posts heatmap-"><span class="number" title="1">1</span></a>
+</td>
+
+
+
+
+
+<td class="num views "><span class="number" title="this topic has been viewed 544 times">544</span></td>
+
+<td class="num age coldmap-low activity" title="First post: April 13, 2016 1:56am
+Last post: May 10, 2016 3:28pm"><a href="http://discuss.tail-f.com/t/container-with-multiple-list-enteries/453/2"><span class="relative-date with-year" data-time="1462919308510" data-format="tiny">May '16</span></a></td>
+
+</tr>
+    <tr id="ember1088" class="ember-view topic-list-item category-yang" data-topic-id="470">
+<td class="main-link clearfix" colspan="1">
+  
+  <a href="http://discuss.tail-f.com/t/does-leafref-works-in-action-point-yang/470" class="title">Does leafref works in action point yang</a>
+  
+    <span class="topic-post-badges">
+</span>
+
+  
+  
+</td>
+
+    <td class="category"><a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a></td>
+
+
+
+<td class="num posts-map posts heatmap-" title="This topic has 2 replies">
+  <a href="http://discuss.tail-f.com/t/subscription-to-notification/167/10" class="posts-map badge-posts heatmap-"><span class="number" title="2">2</span></a>
+</td>
+
+
+
+
+
+<td class="num views "><span class="number" title="this topic has been viewed 536 times">536</span></td>
+
+<td class="num age activity" title="First post: April 29, 2016 2:01pm
+Last post: May 5, 2016 12:29pm"><a href="http://discuss.tail-f.com/t/does-leafref-works-in-action-point-yang/470/3"><span class="relative-date with-year" data-time="1462476588633" data-format="tiny">May '16</span></a></td>
+
+</tr>
+</tbody>
+</table>
+</div></div>
+                </div>
+                <h3>Want to read more? Browse other topics in <a class="badge-wrapper bullet" href="http://discuss.tail-f.com/c/yang"><span class="badge-category-bg" style="background-color: #92278F;"></span><span style="color: #FFFFFF;" data-drop-close="true" class="badge-category clear-badge" title="Discussion about YANG.">YANG</span></a> or <a href="http://discuss.tail-f.com/latest">view latest topics</a>.</h3>
+              </div>
+
+</div>
+      </section>
+    </div>
+
+  </div>
+
+<div id="share-link" class="ember-view"><!----></div>
+
+<!---->
+<!----></div>
+  <div id="user-card" class="ember-view show-badges"><!----></div>
+</div>
+
+<!---->
+  <div id="footer">
+			<div id="footer-content" class="clearfix">
+				<div id="footer-widgets" class="clearfix">
+                
+                <div id="socialFooterLinks">
+                    <span class="footerPrint">
+                    	<a href="javascript:window.print()"></a>
+                    </span>
+                    <span class="footerEmail">
+                        <a href="mailto:?subject=I%20saw%20this%20on%20Tail-f.com:%20Tail-f%20Systems%20-%20Multi-Vendor%20Service%20Orchestration%20and%20Network%20Programmability&amp;body=http://www.tail-f.com/"></a>
+                    </span>
+                    <span class="footerTwitter">
+                    	<a href="https://twitter.com/tailfsystems" target="_blank" title="Tail-f Systems on Twitter"></a>
+                    </span>
+                    <span class="footerLinkedin">												
+                    	<a href="http://www.linkedin.com/company/tail-f-systems" target="_blank" title="Tail-f Systems on LinkedIn"></a>
+                    </span>
+         			<span class="footerRSS">
+
+                    	<a href="http://www.tail-f.com/feed/" target="_blank" title="Tail-f Systems RSS Feed"></a>
+                    </span>
+                </div>
+
+                
+					<div id="text-6" class="footer-widget widget_text">
+<h4 class="widgettitle">Connect With Us</h4>			<div class="textwidget">
+<!--<p style="padding-bottom: 12px;"><a href="/request-evaluation">Request an Evaluation</a></p>-->
+
+<div class="connectLeft">
+
+<p><strong>Email:</strong> <a href="mailto:info@tail-f.com">info@tail-f.com</a></p>
+
+</div>
+
+<!--<div class="connectRight">
+
+<p><strong>US Headquarters</strong><br />Phone: +1 540 388 9754<br />Email: <a href="mailto:info@tail-f.com">info@tail-f.com</a></p>
+
+</div>-->
+</div>
+		</div> <!-- end .footer-widget --><div id="text-3" class="footer-widget widget_text">
+<h4 class="widgettitle">Support</h4>			<div class="textwidget">
+<!--<p><a href="#">Technical Documentation</a></p>
+<p><a href="#">Webinars</a></p>
+<p><a href="/request-evaluation">Request Evaluation</a></p>-->
+<p><a href="https://support.tail-f.com/rt/">Contact Support</a></p>
+</div>
+		</div> <!-- end .footer-widget -->
+        <div id="text-4" class="footer-widget widget_text">
+<h4 class="widgettitle">Popular Links</h4>			
+<div class="textwidget">
+<p><a href="http://www.tail-f.com/management-agent/">ConfD Product Information</a></p>
+<p><a href="http://info.tail-f.com/confd-evaluation-kick-start-guide">ConfD Kick Start Guide</a></p>
+<p><a href="http://www.tail-f.com/wordpress/wp-content/uploads/pdf/Tail-F_ConfDfree-brochure.pdf">ConfD Basic Brochure</a></p>
+<p><a href="http://discuss.tail-f.com/">ConfD User Community Forum</a></p>
+<p><a href="http://www.tail-f.com/customers">Customers</a></p>
+<p><a href="http://www.tail-f.com/blogs">Blogs</a></p>
+<p><a href="http://www.tail-f.com/events">Events</a></p>
+</div>
+		</div> <!-- end .footer-widget --><div id="text-5" class="footer-widget widget_text">
+<h4 class="widgettitle">About Tail-f</h4>			<div class="textwidget">
+<p><a href="http://www.tail-f.com/company-story">Company Story</a></p>
+<p><a href="http://www.tail-f.com/careers">Careers</a></p>
+<p><a href="http://www.tail-f.com/partners">Partners</a></p>
+</div>
+		</div> <!-- end .footer-widget -->					
+				</div> <!-- end #footer-widgets -->
+				<div id="copyright">
+					<div id="copyrightLinks">
+						<a href="http://www.tail-f.com/sitemap">Sitemap</a>
+						<a href="http://www.tail-f.com/privacy">Privacy</a>
+						<a href="http://www.tail-f.com/legal">Terms of Use</a>					
+					</div>
+					<div id="copyrightText">
+						©2015 Tail-f Systems. All Rights Reserved.
+					</div>
+				</div>
+			</div> <!-- end #footer-content -->
+		</div>
+<!---->
+
+<div id="discourse-modal" class="ember-view modal hidden" data-keyboard="false"><div class="modal-outer-container">
+  <div class="modal-middle-container">
+    <div class="modal-inner-container">
+      <div class="modal-header">
+        <a class="close" data-ember-action="1089"><i class="fa fa-times"></i></a>
+        <h3><!----></h3>
+        <div class="clearfix"></div>
+      </div>
+      <div id="modal-alert"></div>
+      <div id="ember1112" class="ember-view"></div>
+<!---->    </div>
+  </div>
+</div>
+</div>
+<div id="topic-entrance" class="ember-view hidden"><button id="ember1099" class="ember-view full jump-top btn no-text">  <i class="fa fa-caret-up"></i> Dec 31, '69 <br>4:00 PM
+</button>
+<button id="ember1100" class="ember-view full jump-button btn no-text">  Dec 31, '69 <br>4:00 PM <i class="fa fa-caret-down"></i>
+</button></div>
+<div id="reply-control" class="ember-view closed processed"><div class="grippie"></div><!----></div>
+</div></section>
+
+    <div id="offscreen-content">
+    </div>
+
+      <form id="hidden-login-form" method="post" action="http://discuss.tail-f.com/login" style="display: none;">
+        <input name="username" type="text" id="signin_username">
+        <input name="password" type="password" id="signin_password">
+        <input name="redirect" type="hidden">
+        <input type="submit" id="signin-button" value="Log In">
+      </form>
+
+      <script>
+        PreloadStore.store("site",{"default_archetype":"regular","notification_types":{"mentioned":1,"replied":2,"quoted":3,"edited":4,"liked":5,"private_message":6,"invited_to_private_message":7,"invitee_accepted":8,"posted":9,"moved_post":10,"linked":11,"granted_badge":12,"invited_to_topic":13,"custom":14,"group_mentioned":15,"group_message_summary":16},"post_types":{"regular":1,"moderator_action":2,"small_action":3,"whisper":4},"groups":[{"id":1,"name":"admins"},{"id":0,"name":"everyone"},{"id":2,"name":"moderators"},{"id":3,"name":"staff"},{"id":10,"name":"trust_level_0"},{"id":11,"name":"trust_level_1"},{"id":12,"name":"trust_level_2"},{"id":13,"name":"trust_level_3"},{"id":14,"name":"trust_level_4"}],"filters":["latest","unread","new","read","posted","bookmarks"],"periods":["all","yearly","quarterly","monthly","weekly","daily"],"top_menu_items":["latest","unread","new","read","posted","bookmarks","category","categories","top"],"anonymous_top_menu_items":["latest","top","categories","category","categories","top"],"uncategorized_category_id":1,"is_readonly":false,"disabled_plugins":[],"user_field_max_length":2048,"suppressed_from_homepage_category_ids":[],"post_action_types":[{"name_key":"bookmark","name":"Bookmark","description":"Bookmark this post","long_form":"bookmarked this post","is_flag":false,"icon":null,"id":1,"is_custom_flag":false},{"name_key":"like","name":"Like","description":"Like this post","long_form":"liked this","is_flag":false,"icon":"heart","id":2,"is_custom_flag":false},{"name_key":"off_topic","name":"Off-Topic","description":"This post is not relevant to the current discussion as defined by the title and first post, and should probably be moved elsewhere.","long_form":"flagged this as off-topic","is_flag":true,"icon":null,"id":3,"is_custom_flag":false},{"name_key":"inappropriate","name":"Inappropriate","description":"This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href=\"/guidelines\">our community guidelines<\/a>.","long_form":"flagged this as inappropriate","is_flag":true,"icon":null,"id":4,"is_custom_flag":false},{"name_key":"vote","name":"Vote","description":"Vote for this post","long_form":"voted for this post","is_flag":false,"icon":null,"id":5,"is_custom_flag":false},{"name_key":"spam","name":"Spam","description":"This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.","long_form":"flagged this as spam","is_flag":true,"icon":null,"id":8,"is_custom_flag":false},{"name_key":"notify_user","name":"Send @{{username}} a message","description":"I want to talk to this person directly and privately about their post.","long_form":"messaged user","is_flag":true,"icon":null,"id":6,"is_custom_flag":true},{"name_key":"notify_moderators","name":"Something Else","description":"This post requires staff attention for another reason not listed above.","long_form":"flagged this for staff attention","is_flag":true,"icon":null,"id":7,"is_custom_flag":true}],"topic_flag_types":[{"name_key":"inappropriate","name":"Inappropriate","description":"This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href=\"/guidelines\">our community guidelines<\/a>.","long_form":"flagged this as inappropriate","is_flag":true,"icon":null,"id":4,"is_custom_flag":false},{"name_key":"spam","name":"Spam","description":"This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.","long_form":"flagged this as spam","is_flag":true,"icon":null,"id":8,"is_custom_flag":false},{"name_key":"notify_moderators","name":"Something Else","description":"This topic requires general staff attention based on the <a href=\"/guidelines\">guidelines<\/a>, <a href=\"/tos\">TOS<\/a>, or for another reason not listed above.","long_form":"flagged this for moderator attention","is_flag":true,"icon":null,"id":7,"is_custom_flag":true}],"can_create_tag":false,"can_tag_topics":false,"categories":[{"id":1,"name":"Uncategorized","color":"BF1E2E","text_color":"FFFFFF","slug":"general","topic_count":60,"post_count":202,"position":0,"description":"Topics that don't need a category, or don't fit into any other existing category.","description_text":"","topic_url":"/t//","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":11,"name":"General","color":"3AB54A","text_color":"FFFFFF","slug":"","topic_count":68,"post_count":207,"position":1,"description":"Discussion about topics which do not fit into a more specific category.","description_text":"Discussion about topics which do not fit into a more specific category.","topic_url":"/t/about-the-general-category/26","logo_url":null,"background_url":null,"read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":5,"name":"Installation","color":"AB9364","text_color":"FFFFFF","slug":"installation","topic_count":11,"post_count":35,"position":2,"description":"Discussion about ConfD Installation.","description_text":"Discussion about ConfD Installation.","topic_url":"/t/about-the-installation-category/13","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":12,"name":"NETCONF","color":"25AAE2","text_color":"FFFFFF","slug":"netconf","topic_count":19,"post_count":78,"position":3,"description":"This category is for asking questions about or discussing NETCONF in general.  What the standards mean, how NETCONF works, etc.  ","description_text":"This category is for asking questions about or discussing NETCONF in general.  What the standards mean, how NETCONF works, etc.  ","topic_url":"/t/about-the-netconf-category/529","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":"","has_children":false},{"id":8,"name":"YANG","color":"92278F","text_color":"FFFFFF","slug":"yang","topic_count":183,"post_count":701,"position":4,"description":"Discussion about YANG.","description_text":"Discussion about YANG.","topic_url":"/t/about-the-yang-category/16","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":6,"name":"Core Engine and APIs","color":"F1592A","text_color":"FFFFFF","slug":"core-engine-and-apis","topic_count":58,"post_count":213,"position":5,"description":"Discussion about the ConfD Core Engine and APIs.","description_text":"Discussion about the ConfD Core Engine and APIs.","topic_url":"/t/about-the-core-engine-and-apis-category/14","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":7,"name":"CDB and APIs","color":"9EB83B","text_color":"FFFFFF","slug":"cdb-and-apis","topic_count":154,"post_count":618,"position":6,"description":"Discussion about the CDB database.","description_text":"Discussion about the CDB database.","topic_url":"/t/about-the-cdb-and-apis-category/15","logo_url":null,"background_url":null,"read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":9,"name":"Northbound Interfaces","color":"0E76BD","text_color":"FFFFFF","slug":"northbound-interfaces","topic_count":107,"post_count":345,"position":7,"description":"Discussion about ConfD Northbound Interfaces.","description_text":"Discussion about ConfD Northbound Interfaces.","topic_url":"/t/about-the-northbound-interfaces-category/17","logo_url":null,"background_url":null,"read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":10,"name":"Examples Set","color":"F7941D","text_color":"FFFFFF","slug":"example-set","topic_count":19,"post_count":80,"position":8,"description":"Discussion about the ConfD Examples Set.","description_text":"Discussion about the ConfD Examples Set.","topic_url":"/t/about-the-examples-set-category/20","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false},{"id":3,"name":"Suggestion Box","color":"808281","text_color":"FFFFFF","slug":"suggestion-box","topic_count":6,"post_count":18,"position":9,"description":"Have a suggestion?  Post it here!","description_text":"Have a suggestion?  Post it here!","topic_url":"/t/about-the-suggestion-box-category/2","logo_url":"","background_url":"","read_restricted":false,"permission":null,"notification_level":1,"topic_template":null,"has_children":false}],"trust_levels":[{"id":0,"name":"new user"},{"id":1,"name":"basic user"},{"id":2,"name":"member"},{"id":3,"name":"regular"},{"id":4,"name":"leader"}],"archetypes":[{"id":"regular","name":"Regular Topic","options":[]},{"id":"banner","name":"Banner Topic","options":[]}],"user_fields":[]});
+        PreloadStore.store("siteSettings",{"title":"ConfD User Community","contact_email":"jlawitzk@cisco.com","contact_url":"","logo_url":"","logo_small_url":"","mobile_logo_url":"","favicon_url":"http://www.tail-f.com/wordpress/wp-content/uploads/2013/02/favicon.ico","allow_user_locale":false,"suggested_topics":5,"track_external_right_clicks":false,"ga_universal_tracking_code":"","ga_universal_domain_name":"auto","ga_tracking_code":"","ga_domain_name":"","top_menu":"categories|latest|new|unread|top","post_menu":"like-count|like|share|flag|edit|bookmark|delete|admin|reply","post_menu_hidden_items":"flag|bookmark|edit|delete|admin","share_links":"twitter|facebook|google+|email","category_colors":"BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890","category_style":"bullet","enable_mobile_theme":true,"relative_date_duration":30,"category_featured_topics":3,"fixed_category_positions":true,"fixed_category_positions_on_create":false,"show_subcategory_list":false,"enable_badges":true,"enable_whispers":false,"invite_only":false,"login_required":false,"must_approve_users":false,"enable_local_logins":true,"allow_new_registrations":true,"enable_signup_cta":true,"enable_google_oauth2_logins":false,"enable_yahoo_logins":false,"enable_twitter_logins":false,"enable_instagram_logins":false,"enable_facebook_logins":false,"enable_github_logins":false,"enable_sso":false,"sso_overrides_avatar":false,"min_username_length":3,"max_username_length":20,"min_password_length":10,"min_admin_password_length":15,"logout_redirect":"","full_name_required":false,"enable_names":true,"invites_per_page":40,"delete_user_max_post_age":60,"delete_all_posts_max":15,"show_email_on_profile":false,"enable_user_directory":true,"allow_anonymous_posting":false,"anonymous_posting_min_trust_level":1,"hide_user_profiles_from_public":false,"min_post_length":20,"min_first_post_length":20,"min_private_message_post_length":10,"max_post_length":32000,"min_topic_title_length":15,"max_topic_title_length":255,"min_private_message_title_length":2,"allow_uncategorized_topics":true,"min_title_similar_length":10,"min_body_similar_length":15,"enable_private_messages":true,"edit_history_visible_to_public":true,"delete_removed_posts_after":24,"traditional_markdown_linebreaks":false,"allow_html_tables":false,"suppress_reply_directly_below":true,"suppress_reply_directly_above":true,"max_reply_history":1,"newuser_max_images":1,"newuser_max_attachments":0,"display_name_on_posts":false,"show_time_gap_days":7,"short_progress_text_threshold":10000,"default_code_lang":"auto","autohighlight_all_code":false,"highlighted_languages":"apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars","censored_words":"","enable_emoji":true,"emoji_set":"emoji_one","email_time_window_mins":10,"disable_digest_emails":false,"email_in":false,"disable_emails":false,"bounce_score_threshold":4,"max_image_size_kb":3072,"max_attachment_size_kb":3072,"authorized_extensions":"jpg|jpeg|png|gif","max_image_width":690,"max_image_height":500,"prevent_anons_from_downloading_files":false,"enable_s3_uploads":false,"allow_profile_backgrounds":true,"allow_uploaded_avatars":true,"allow_animated_avatars":false,"default_avatars":"","external_system_avatars_enabled":true,"external_system_avatars_url":"/letter_avatar_proxy/v2/letter/{first_letter}/{color}/{size}.png","tl1_requires_read_posts":30,"tl3_links_no_follow":false,"use_admin_ip_whitelist":false,"alert_admins_if_errors_per_minute":0,"alert_admins_if_errors_per_hour":0,"enable_long_polling":true,"long_polling_base_url":"/","background_polling_interval":60000,"polling_interval":3000,"anon_polling_interval":15000,"flush_timings_secs":20,"verbose_localization":false,"max_new_topics":500,"tos_url":"","privacy_policy_url":"","faq_url":"","maximum_backups":5,"version_checks":true,"suppress_uncategorized_badge":true,"min_search_term_length":3,"topic_views_heat_low":1000,"topic_views_heat_medium":2000,"topic_views_heat_high":5000,"topic_post_like_heat_low":0.5,"topic_post_like_heat_medium":1.0,"topic_post_like_heat_high":2.0,"history_hours_low":12,"history_hours_medium":24,"history_hours_high":48,"cold_age_days_low":14,"cold_age_days_medium":90,"cold_age_days_high":180,"global_notice":"","show_create_topics_notice":true,"bootstrap_mode_min_users":50,"bootstrap_mode_enabled":false,"automatically_unpin_topics":true,"read_time_word_count":500,"disable_mailing_list_mode":false,"default_topics_automatic_unpin":true,"tagging_enabled":false,"tag_style":"simple","max_tags_per_topic":5,"max_tag_length":20,"min_trust_level_to_tag_topics":0,"max_tag_search_results":5,"show_filter_by_tag":false,"tags_sort_alphabetically":false,"staff_tags":"","suppress_overlapping_tags_in_list":false,"poll_enabled":true,"poll_maximum_options":20,"details_enabled":true,"available_locales":"ar|bs_BA|cs|da|de|en|es|fa_IR|fi|fr|gl|he|id|it|ja|ko|nb_NO|nl|pl_PL|pt|pt_BR|ro|ru|sk|sq|sv|te|tr_TR|uk|vi|zh_CN|zh_TW"});
+        PreloadStore.store("customHTML",{"top":"","footer":"<div id=\"footer\">\r\n\t\t\t<div id=\"footer-content\" class=\"clearfix\">\r\n\t\t\t\t<div id=\"footer-widgets\" class=\"clearfix\">\r\n                \r\n                <div id=\"socialFooterLinks\">\r\n                    <span class=\"footerPrint\">\r\n                    \t<a href=\"javascript:window.print()\"><\/a>\r\n                    <\/span>\r\n                    <span class=\"footerEmail\">\r\n                        <a href=\"mailto:?subject=I%20saw%20this%20on%20Tail-f.com:%20Tail-f%20Systems%20-%20Multi-Vendor%20Service%20Orchestration%20and%20Network%20Programmability&amp;body=http://www.tail-f.com/\"><\/a>\r\n                    <\/span>\r\n                    <span class=\"footerTwitter\">\r\n                    \t<a href=\"https://twitter.com/tailfsystems\" target=\"_blank\" title=\"Tail-f Systems on Twitter\"><\/a>\r\n                    <\/span>\r\n                    <span class=\"footerLinkedin\">\t\t\t\t\t\t\t\t\t\t\t\t\r\n                    \t<a href=\"http://www.linkedin.com/company/tail-f-systems\" target=\"_blank\" title=\"Tail-f Systems on LinkedIn\"><\/a>\r\n                    <\/span>\r\n         \t\t\t<span class=\"footerRSS\">\r\n\r\n                    \t<a href=\"http://www.tail-f.com/feed/\" target=\"_blank\" title=\"Tail-f Systems RSS Feed\"><\/a>\r\n                    <\/span>\r\n                <\/div>\r\n\r\n                \r\n\t\t\t\t\t<div id=\"text-6\" class=\"footer-widget widget_text\">\n<h4 class=\"widgettitle\">Connect With Us<\/h4>\t\t\t<div class=\"textwidget\">\n<!--<p style=\"padding-bottom: 12px;\"><a href=\"/request-evaluation\">Request an Evaluation<\/a><\/p>-->\r\n\r\n<div class=\"connectLeft\">\r\n\r\n<p><strong>Email:<\/strong> <a href=\"mailto:info@tail-f.com\">info@tail-f.com<\/a><\/p>\r\n\r\n<\/div>\r\n\r\n<!--<div class=\"connectRight\">\r\n\r\n<p><strong>US Headquarters<\/strong><br />Phone: +1 540 388 9754<br />Email: <a href=\"mailto:info@tail-f.com\">info@tail-f.com<\/a><\/p>\r\n\r\n<\/div>-->\n<\/div>\r\n\t\t<\/div> <!-- end .footer-widget --><div id=\"text-3\" class=\"footer-widget widget_text\">\n<h4 class=\"widgettitle\">Support<\/h4>\t\t\t<div class=\"textwidget\">\n<!--<p><a href=\"#\">Technical Documentation<\/a><\/p>\r\n<p><a href=\"#\">Webinars<\/a><\/p>\r\n<p><a href=\"/request-evaluation\">Request Evaluation<\/a><\/p>-->\r\n<p><a href=\"https://support.tail-f.com/rt/\">Contact Support<\/a><\/p>\n<\/div>\r\n\t\t<\/div> <!-- end .footer-widget -->\r\n        <div id=\"text-4\" class=\"footer-widget widget_text\">\n<h4 class=\"widgettitle\">Popular Links<\/h4>\t\t\t\r\n<div class=\"textwidget\">\r\n<p><a href=\"http://www.tail-f.com/management-agent/\">ConfD Product Information<\/a><\/p>\r\n<p><a href=\"http://info.tail-f.com/confd-evaluation-kick-start-guide\">ConfD Kick Start Guide<\/a><\/p>\r\n<p><a href=\"http://www.tail-f.com/wordpress/wp-content/uploads/pdf/Tail-F_ConfDfree-brochure.pdf\">ConfD Basic Brochure<\/a><\/p>\r\n<p><a href=\"http://discuss.tail-f.com/\">ConfD User Community Forum<\/a><\/p>\r\n<p><a href=\"http://www.tail-f.com/customers\">Customers<\/a><\/p>\r\n<p><a href=\"http://www.tail-f.com/blogs\">Blogs<\/a><\/p>\r\n<p><a href=\"http://www.tail-f.com/events\">Events<\/a><\/p>\r\n<\/div>\r\n\t\t<\/div> <!-- end .footer-widget --><div id=\"text-5\" class=\"footer-widget widget_text\">\n<h4 class=\"widgettitle\">About Tail-f<\/h4>\t\t\t<div class=\"textwidget\">\n<p><a href=\"http://www.tail-f.com/company-story\">Company Story<\/a><\/p>\r\n<p><a href=\"http://www.tail-f.com/careers\">Careers<\/a><\/p>\r\n<p><a href=\"http://www.tail-f.com/partners\">Partners<\/a><\/p>\n<\/div>\r\n\t\t<\/div> <!-- end .footer-widget -->\t\t\t\t\t\r\n\t\t\t\t<\/div> <!-- end #footer-widgets -->\r\n\t\t\t\t<div id=\"copyright\">\r\n\t\t\t\t\t<div id=\"copyrightLinks\">\r\n\t\t\t\t\t\t<a href=\"http://www.tail-f.com/sitemap\">Sitemap<\/a>\r\n\t\t\t\t\t\t<a href=\"http://www.tail-f.com/privacy\">Privacy<\/a>\r\n\t\t\t\t\t\t<a href=\"http://www.tail-f.com/legal\">Terms of Use<\/a>\t\t\t\t\t\r\n\t\t\t\t\t<\/div>\r\n\t\t\t\t\t<div id=\"copyrightText\">\r\n\t\t\t\t\t\t©2015 Tail-f Systems. All Rights Reserved.\r\n\t\t\t\t\t<\/div>\r\n\t\t\t\t<\/div>\r\n\t\t\t<\/div> <!-- end #footer-content -->\r\n\t\t<\/div>"});
+        PreloadStore.store("banner",{"html":"<h2>Tail-f – ConfD Developer Days 2016 - Oct 4th &amp; 5th at the Sheraton San Jose Hotel<\/h2>\n\n<p>We are excited to once again provide the perfect forum to provide developers an opportunity to improve and expand their ConfD, NETCONF and YANG knowledge and skill set. Attendees will benefit from direct engagement with members of the ConfD product development team and the many longtime users attending. Topics this year will focus on:<\/p>\n\n<p>NETCONF and YANG Done Right<br>Application debugging tips and tricks<br>NETCONF-driven application testing<br>ConfD AAA &amp; NACM tutorial<\/p>\n\n<p>Attend this year’s event to learn the new capabilities of ConfD, NETCONF and YANG.<\/p>\n\n<p>This year's event will be held Oct 4 &amp; 5 at the Sheraton San Jose hotel.<br><a href=\"https://www.eventbrite.com/e/tail-f-confd-developer-days-2016-october-4-5-tickets-26545264601\" rel=\"nofollow\"><br>For more information and to register.<\/a><\/p>","key":597,"url":"http://discuss.tail-f.com/t/confd-developers-conference-2016/597"});
+        PreloadStore.store("customEmoji",[]);
+        PreloadStore.store("translationOverrides",{});
+        PreloadStore.store("topic_167",{"post_stream":{"posts":[{"id":325,"name":"pavan","username":"pavanfds","avatar_template":"/letter_avatar_proxy/v2/letter/p/a88e57/{size}.png","created_at":"2015-08-07T18:00:43.586Z","cooked":"<p>I am trying to create a subscription to a change in database. i want the server to send a notification to the client when ever there is a change in a particular variable value.<br> I am trying to follow the netconf_notification example and the RFC-5277 doc but i cant get it to work.<\/p>\n\n<p>i have added this in the Yang model<br>notification alarm{<br>    leaf alarm{<br>        type leafref {<br>        path \" /xxxx/xxxx/alarm\"<br>        }<br>}<\/p>\n\n<p>create a stream and try to create a subscription for this using <br>create-subscriptionon<br>           xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;<br>    stream&gt;abcd /stream&gt;<br> /create-subscription&gt;<br>i get a ok reply but after that when i make changes to that variable i dont get any message<\/p>\n\n<p>Please provide suggestions or a good example to help me get this working<\/p>","post_number":1,"post_type":1,"updated_at":"2015-08-07T18:00:43.586Z","reply_count":0,"reply_to_post_number":null,"quote_count":0,"avg_time":66,"incoming_link_count":1008,"reads":55,"score":5006.3,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"pavan","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"actions_summary":[],"moderator":false,"admin":false,"staff":false,"user_id":81,"hidden":false,"hidden_reason_id":null,"trust_level":1,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":326,"name":"Wai Tai","username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png","created_at":"2015-08-07T21:53:41.255Z","cooked":"<p>First of all, without including your code, it is difficult to guess what may have gone wrong.<\/p>\n\n<p>Did you invoke the confd_notification_send( ) API call in your code upon the specific changes in your database?  If yes, can you respond with your code fragment?<\/p>","post_number":2,"post_type":1,"updated_at":"2015-08-07T21:53:41.255Z","reply_count":2,"reply_to_post_number":null,"quote_count":0,"avg_time":33,"incoming_link_count":3,"reads":53,"score":37.25,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"Wai Tai","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"actions_summary":[],"moderator":true,"admin":true,"staff":true,"user_id":4,"hidden":false,"hidden_reason_id":null,"trust_level":2,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":327,"name":"Wai Tai","username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png","created_at":"2015-08-08T00:12:07.859Z","cooked":"<p>To help with your debugging,  you can also look at netconf.log (log for troubleshooting NETCONF operations) and the NETCONF traffic trace log to see if there are any error messages or notifications are being generated or not from your code.<\/p>\n\n<p>You can enable those two NETCONF related logs in confd.conf as follows:<\/p>\n\n<pre><code>&lt;logs&gt;\n  &lt;netconfLog&gt;\n    &lt;enabled&gt;true&lt;/enabled&gt;\n    &lt;file&gt;\n      &lt;enabled&gt;true&lt;/enabled&gt;\n      &lt;name&gt;./netconf.log&lt;/name&gt;\n    &lt;/file&gt;\n  &lt;/netconfLog&gt;\n  &lt;netconfTraceLog&gt;\n    &lt;enabled&gt;true&lt;/enabled&gt;\n    &lt;filename&gt;./netconf.trace&lt;/filename&gt;\n    &lt;format&gt;pretty&lt;/format&gt;\n  &lt;/netconfTraceLog&gt;\n&lt;/logs&gt;<\/code><\/pre>","post_number":3,"post_type":1,"updated_at":"2015-08-08T00:12:07.859Z","reply_count":0,"reply_to_post_number":2,"quote_count":0,"avg_time":39,"incoming_link_count":2,"reads":51,"score":22.15,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"Wai Tai","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"reply_to_user":{"username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png"},"actions_summary":[],"moderator":true,"admin":true,"staff":true,"user_id":4,"hidden":false,"hidden_reason_id":null,"trust_level":2,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":337,"name":"pavan","username":"pavanfds","avatar_template":"/letter_avatar_proxy/v2/letter/p/a88e57/{size}.png","created_at":"2015-08-10T13:58:38.925Z","cooked":"<p>Hi, <br>I looking to this in a standard way without using the confd lib.<br>we have the confd library on one machine and the northbound API on another machine. the notrhbound API is creating a subscription to the default NETCONF stream using<\/p>\n\n<p>create-subscriptionon<br>           xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;<br>    stream&gt;NETCONF /stream&gt;<br> /create-subscription&gt;<\/p>\n\n<p>and i want the Northbound API to be notified whenever there is any change in the Confd Server database.<\/p>\n\n<p>As of now when i change some value in the confd server i get a netconf-session-start and immediately netconf-session-end at the client but no information about any data change.<\/p>\n\n<p>I would like to know if this feature is supported, if yes what are the functions i need to call to trigger this.<\/p>\n\n<p>Thank You<\/p>","post_number":4,"post_type":1,"updated_at":"2015-08-10T13:58:38.925Z","reply_count":1,"reply_to_post_number":2,"quote_count":0,"avg_time":47,"incoming_link_count":3,"reads":51,"score":32.55,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"pavan","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"reply_to_user":{"username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png"},"actions_summary":[],"moderator":false,"admin":false,"staff":false,"user_id":81,"hidden":false,"hidden_reason_id":null,"trust_level":1,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":339,"name":"Wai Tai","username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png","created_at":"2015-08-10T17:56:03.453Z","cooked":"<p>Perhaps the following will help.<\/p>\n\n<p>I have modified the standard netconf-notifications example in confd-basic-6 as follows:<\/p>\n\n<p>Added the following to notif.yang at the top level:<\/p>\n\n<pre><code>leaf test {\n  type string;\n}<\/code><\/pre>\n\n<p>This allows me to make configuration changes to the example project at runtime.<\/p>\n\n<p>I have then created a XML file for creating my NETCONF stream as follows:<\/p>\n\n<pre><code>&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;hello xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\"&gt;\n  &lt;capabilities&gt;\n    &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;\n  &lt;/capabilities&gt;\n&lt;/hello&gt;\n]]&gt;]]&gt;\n&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;rpc xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"1\"&gt;\n  &lt;create-subscription xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;\n    &lt;stream&gt;NETCONF&lt;/stream&gt;\n  &lt;/create-subscription&gt;\n&lt;/rpc&gt;\n]]&gt;]]&gt;<\/code><\/pre>\n\n<p>I have modified confd.conf with changes in my previous post to enable NETCONF tracing.<\/p>\n\n<p>After I have started the example with \"make all start\", I then start my NETCONF stream subscription as follows:<\/p>\n\n<pre><code>$ netconf-console -s all netconf-sub.xml<\/code><\/pre>\n\n<p>I then start up a cli session as follows:<\/p>\n\n<pre><code>bash-3.2$ make cli\n$HOME/confd-basic-6/ConfD/bin/confd_cli --user=admin --groups=admin \\\n            --interactive || echo Exit\nWelcome to ConfD Basic\n\nThe CLI may only be used during product development.\nCommercial use of the CLI is prohibited.\nYou must disable the CLI in confd.conf for production.\nFor more information, visit http://www.tail-f.com.\nadmin connected from 127.0.0.1 using console on WAITAI-M-K092\nWAITAI-M-K092# config \nEntering configuration mode terminal\nWAITAI-M-K092(config)# test test123\nWAITAI-M-K092(config)# commit\nCommit complete.<\/code><\/pre>\n\n<p>The following is what I have received on my netconf-console terminal:<\/p>\n\n<pre><code>&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;notification xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;\n  &lt;eventTime&gt;2015-08-10T10:36:58.427756-07:00&lt;/eventTime&gt;\n  &lt;netconf-config-change xmlns=\"urn:ietf:params:xml:ns:yang:ietf-netconf-notifications\"&gt;\n    &lt;changed-by&gt;\n      &lt;username&gt;admin&lt;/username&gt;\n      &lt;session-id&gt;0&lt;/session-id&gt;\n      &lt;source-host&gt;127.0.0.1&lt;/source-host&gt;\n    &lt;/changed-by&gt;\n    &lt;datastore&gt;running&lt;/datastore&gt;\n    &lt;edit&gt;\n      &lt;target xmlns:notif=\"http://tail-f.com/ns/test/notif\"&gt;/notif:test&lt;/target&gt;\n      &lt;operation&gt;replace&lt;/operation&gt;\n    &lt;/edit&gt;\n  &lt;/netconf-config-change&gt;\n&lt;/notification&gt;<\/code><\/pre>\n\n<p>Following is the output of my netconf.trace file:<\/p>\n\n<pre><code>10-Aug-2015::10:36:58.431 **&lt; sess:11 write:\n&lt;notification xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;\n  &lt;eventTime&gt;2015-08-10T10:36:58.427756-07:00&lt;/eventTime&gt;\n  &lt;netconf-config-change xmlns=\"urn:ietf:params:xml:ns:yang:ietf-netconf-notifications\"&gt;\n    &lt;changed-by&gt;\n      &lt;username&gt;admin&lt;/username&gt;\n      &lt;session-id&gt;0&lt;/session-id&gt;\n      &lt;source-host&gt;127.0.0.1&lt;/source-host&gt;\n    &lt;/changed-by&gt;\n    &lt;datastore&gt;running&lt;/datastore&gt;\n    &lt;edit&gt;\n      &lt;target xmlns:notif=\"http://tail-f.com/ns/test/notif\"&gt;/notif:test&lt;/target&gt;\n      &lt;operation&gt;replace&lt;/operation&gt;\n    &lt;/edit&gt;\n  &lt;/netconf-config-change&gt;\n&lt;/notification&gt;<\/code><\/pre>\n\n<p>To find out the exact configuration parameter value changes in your YANG data model through NETCONF notifications, you will need to add your own custom NETCONF notifications for it and write ConfD client application code to generate them accordingly.<\/p>","post_number":6,"post_type":1,"updated_at":"2015-12-23T02:29:04.787Z","reply_count":1,"reply_to_post_number":4,"quote_count":0,"avg_time":63,"incoming_link_count":14,"reads":47,"score":102.55,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"Wai Tai","primary_group_name":null,"version":3,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"reply_to_user":{"username":"pavanfds","avatar_template":"/letter_avatar_proxy/v2/letter/p/a88e57/{size}.png"},"actions_summary":[{"id":2,"count":1}],"moderator":true,"admin":true,"staff":true,"user_id":4,"hidden":false,"hidden_reason_id":null,"trust_level":2,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":1149,"name":"pooja mishra","username":"pomishra","avatar_template":"/user_avatar/discuss.tail-f.com/pomishra/{size}/43_1.png","created_at":"2016-05-19T01:43:09.640Z","cooked":"<p>Hi,<\/p>\n\n<p>I am also trying to somewhat similar . I want the Northbound API to be notified whenever there is any change in the Confd Server database.<\/p>\n\n<p>I am writing the program in java though and the java docs for this is not great as such.<br>I want to send a commitnotification .<\/p>\n\n<p>I created new socket which is listening to the commit type notifications.<br>When I create a subscriber for the same and run it , i get following kind of error :<\/p>\n\n<pre><code>&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;rpc-reply xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"1\"&gt;\n  &lt;rpc-error&gt;\n    &lt;error-type&gt;protocol&lt;/error-type&gt;\n    &lt;error-tag&gt;operation-not-supported&lt;/error-tag&gt;\n    &lt;error-severity&gt;error&lt;/error-severity&gt;\n    &lt;error-message xml:lang=\"en\"&gt;Unsupported capability :notification&lt;/error-message&gt;\n    &lt;error-info&gt;\n      &lt;bad-element&gt;create-subscription&lt;/bad-element&gt;\n    &lt;/error-info&gt;\n  &lt;/rpc-error&gt;\n&lt;/rpc-reply&gt;<\/code><\/pre>\n\n<p>my subscriber.xml looks like - <\/p>\n\n<pre><code>&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;hello xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\"&gt;\n  &lt;capabilities&gt;\n    &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;\n  &lt;/capabilities&gt;\n&lt;/hello&gt;\n]]&gt;]]&gt;\n&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;rpc xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"1\"&gt;\n  &lt;create-subscription \n    xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;\n  &lt;/create-subscription&gt;\n&lt;/rpc&gt;\n]]&gt;]]&gt;<\/code><\/pre>\n\n<p>Can someone please help me get what is the error here ? I have not created any stream and subscribed to default NETCONF notifications.<br>Also , is there any good java example for the same?<\/p>\n\n<p>Thanks,<br>Pooja<\/p>","post_number":7,"post_type":1,"updated_at":"2016-05-19T01:45:40.668Z","reply_count":1,"reply_to_post_number":6,"quote_count":0,"avg_time":52,"incoming_link_count":2,"reads":28,"score":23.2,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"pooja mishra","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"reply_to_user":{"username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png"},"actions_summary":[],"moderator":false,"admin":false,"staff":false,"user_id":220,"hidden":false,"hidden_reason_id":null,"trust_level":0,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":1150,"name":"Wai Tai","username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png","created_at":"2016-05-19T03:14:02.081Z","cooked":"<aside class=\"quote\" data-post=\"7\" data-topic=\"167\"><div class=\"title\">\n<div class=\"quote-controls\"><\/div>\n<img alt=\"\" width=\"20\" height=\"20\" src=\"//discuss.tail-f.com/user_avatar/discuss.tail-f.com/pomishra/40/43_1.png\" class=\"avatar\">pomishra:<\/div>\n<blockquote><p>&lt;rpc xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"1\"&gt;<br>  &lt;create-subscription <br>    xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"&gt;<br>  &lt;/create-subscription&gt;<br>&lt;/rpc&gt;<\/p><\/blockquote><\/aside>\n\n<p>Your subscriber.xml is missing the stream to be subscribed.  To subscribe to the NETCONF stream as you have mentioned, you should add the following in between the create-subscription block:<\/p>\n\n<pre><code>&lt;stream&gt;NETCONF&lt;/stream&gt;<\/code><\/pre>\n\n<aside class=\"quote\" data-post=\"7\" data-topic=\"167\"><div class=\"title\">\n<div class=\"quote-controls\"><\/div>\n<img alt=\"\" width=\"20\" height=\"20\" src=\"//discuss.tail-f.com/user_avatar/discuss.tail-f.com/pomishra/40/43_1.png\" class=\"avatar\">pomishra:<\/div>\n<blockquote><p>Can someone please help me get what is the error here ?<\/p><\/blockquote><\/aside>\n\n<p>If you include your code, we may be able to help debug the source of the error.<\/p>\n\n<aside class=\"quote\" data-post=\"7\" data-topic=\"167\"><div class=\"title\">\n<div class=\"quote-controls\"><\/div>\n<img alt=\"\" width=\"20\" height=\"20\" src=\"//discuss.tail-f.com/user_avatar/discuss.tail-f.com/pomishra/40/43_1.png\" class=\"avatar\">pomishra:<\/div>\n<blockquote><p>Also , is there any good java example for the same?<\/p><\/blockquote><\/aside>\n\n<p>You can request sample Java example from your support team.<\/p>","post_number":8,"post_type":1,"updated_at":"2016-05-19T03:14:45.064Z","reply_count":0,"reply_to_post_number":7,"quote_count":1,"avg_time":50,"incoming_link_count":0,"reads":27,"score":7.9,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"Wai Tai","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"reply_to_user":{"username":"pomishra","avatar_template":"/user_avatar/discuss.tail-f.com/pomishra/{size}/43_1.png"},"actions_summary":[],"moderator":true,"admin":true,"staff":true,"user_id":4,"hidden":false,"hidden_reason_id":null,"trust_level":2,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":1152,"name":"Conny Ohult","username":"cohult","avatar_template":"/user_avatar/discuss.tail-f.com/cohult/{size}/28_1.png","created_at":"2016-05-19T07:35:52.993Z","cooked":"<p>Hi pomishra,<\/p>\n\n<p>I believe your issue simply is that you did not enable the notification capability for NETCONF in your ConfD configuration file, i.e. confd.conf.<\/p>\n\n<pre><code>  &lt;netconf&gt;\n...\n    &lt;capabilities&gt;\n...\n      &lt;notification&gt;\n        &lt;enabled&gt;true&lt;/enabled&gt;\n      &lt;/notification&gt;\n    &lt;/capabilities&gt;\n  &lt;/netconf&gt;<\/code><\/pre>","post_number":10,"post_type":1,"updated_at":"2016-05-19T07:36:04.236Z","reply_count":1,"reply_to_post_number":null,"quote_count":0,"avg_time":19,"incoming_link_count":0,"reads":27,"score":11.35,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"Conny Ohult","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"actions_summary":[],"moderator":true,"admin":true,"staff":true,"user_id":19,"hidden":false,"hidden_reason_id":null,"trust_level":2,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false},{"id":1159,"name":"pooja mishra","username":"pomishra","avatar_template":"/user_avatar/discuss.tail-f.com/pomishra/{size}/43_1.png","created_at":"2016-05-19T18:27:55.095Z","cooked":"<p>That worked.  Thanks a lot !<\/p>","post_number":11,"post_type":1,"updated_at":"2016-05-19T18:27:55.095Z","reply_count":0,"reply_to_post_number":10,"quote_count":0,"avg_time":16,"incoming_link_count":1,"reads":26,"score":11.0,"yours":false,"topic_id":167,"topic_slug":"subscription-to-notification","display_username":"pooja mishra","primary_group_name":null,"version":1,"can_edit":false,"can_delete":false,"can_recover":false,"can_wiki":false,"read":true,"user_title":null,"reply_to_user":{"username":"cohult","avatar_template":"/user_avatar/discuss.tail-f.com/cohult/{size}/28_1.png"},"actions_summary":[],"moderator":false,"admin":false,"staff":false,"user_id":220,"hidden":false,"hidden_reason_id":null,"trust_level":0,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false}],"stream":[325,326,327,337,339,1149,1150,1152,1159]},"id":167,"title":"Subscription to Notification","fancy_title":"Subscription to Notification","posts_count":9,"created_at":"2015-08-07T18:00:43.383Z","views":2813,"reply_count":7,"participant_count":4,"like_count":1,"last_posted_at":"2016-05-19T18:27:55.095Z","visible":true,"closed":false,"archived":false,"has_summary":false,"archetype":"regular","slug":"subscription-to-notification","category_id":8,"word_count":1404,"deleted_at":null,"user_id":81,"draft":null,"draft_key":"topic_167","draft_sequence":null,"unpinned":null,"pinned_globally":false,"pinned":false,"pinned_at":null,"pinned_until":null,"details":{"auto_close_at":null,"auto_close_hours":null,"auto_close_based_on_last_post":false,"created_by":{"id":81,"username":"pavanfds","avatar_template":"/letter_avatar_proxy/v2/letter/p/a88e57/{size}.png"},"last_poster":{"id":220,"username":"pomishra","avatar_template":"/user_avatar/discuss.tail-f.com/pomishra/{size}/43_1.png"},"participants":[{"id":4,"username":"waitai","avatar_template":"/letter_avatar_proxy/v2/letter/w/5f9b8f/{size}.png","post_count":4},{"id":220,"username":"pomishra","avatar_template":"/user_avatar/discuss.tail-f.com/pomishra/{size}/43_1.png","post_count":2},{"id":81,"username":"pavanfds","avatar_template":"/letter_avatar_proxy/v2/letter/p/a88e57/{size}.png","post_count":2},{"id":19,"username":"cohult","avatar_template":"/user_avatar/discuss.tail-f.com/cohult/{size}/28_1.png","post_count":1}],"suggested_topics":[{"id":543,"title":"How to avoid key completion when using tailf:cli-prefix-key in a list","fancy_title":"How to avoid key completion when using tailf:cli-prefix-key in a list","slug":"how-to-avoid-key-completion-when-using-tailf-cli-prefix-key-in-a-list","posts_count":3,"reply_count":1,"highest_post_number":3,"image_url":null,"created_at":"2016-06-16T12:31:20.146Z","last_posted_at":"2016-06-16T16:04:59.734Z","bumped":true,"bumped_at":"2016-06-16T16:04:59.734Z","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"bookmarked":null,"liked":null,"archetype":"regular","like_count":0,"views":453,"category_id":8},{"id":377,"title":"Using tailf:cli-suppress-list-no in a leaf-list node","fancy_title":"Using tailf:cli-suppress-list-no in a leaf-list node","slug":"using-tailf-cli-suppress-list-no-in-a-leaf-list-node","posts_count":3,"reply_count":1,"highest_post_number":3,"image_url":null,"created_at":"2016-02-09T17:06:34.707Z","last_posted_at":"2016-02-10T07:57:22.286Z","bumped":true,"bumped_at":"2016-02-10T07:57:22.286Z","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"bookmarked":null,"liked":null,"archetype":"regular","like_count":1,"views":872,"category_id":8},{"id":192,"title":"The names of CLI nodes/parameters modifiable?","fancy_title":"The names of CLI nodes/parameters modifiable?","slug":"the-names-of-cli-nodes-parameters-modifiable","posts_count":4,"reply_count":2,"highest_post_number":4,"image_url":null,"created_at":"2015-09-04T06:58:05.430Z","last_posted_at":"2015-09-08T12:30:19.337Z","bumped":true,"bumped_at":"2015-09-08T12:30:19.337Z","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"bookmarked":null,"liked":null,"archetype":"regular","like_count":0,"views":937,"category_id":8},{"id":453,"title":"Container with multiple list enteries","fancy_title":"Container with multiple list enteries","slug":"container-with-multiple-list-enteries","posts_count":2,"reply_count":0,"highest_post_number":2,"image_url":null,"created_at":"2016-04-13T08:56:50.257Z","last_posted_at":"2016-05-10T22:28:28.510Z","bumped":true,"bumped_at":"2016-05-10T22:28:28.510Z","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"bookmarked":null,"liked":null,"archetype":"regular","like_count":0,"views":544,"category_id":8},{"id":470,"title":"Does leafref works in action point yang","fancy_title":"Does leafref works in action point yang","slug":"does-leafref-works-in-action-point-yang","posts_count":3,"reply_count":1,"highest_post_number":3,"image_url":null,"created_at":"2016-04-29T21:01:52.975Z","last_posted_at":"2016-05-05T19:29:48.633Z","bumped":true,"bumped_at":"2016-05-05T19:29:48.633Z","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"bookmarked":null,"liked":null,"archetype":"regular","like_count":0,"views":536,"category_id":8}],"notification_level":1,"can_flag_topic":false},"highest_post_number":11,"deleted_by":null,"actions_summary":[{"id":4,"count":0,"hidden":false,"can_act":false},{"id":7,"count":0,"hidden":false,"can_act":false},{"id":8,"count":0,"hidden":false,"can_act":false}],"chunk_size":20,"bookmarked":null});
+      </script>
+
+    
+
+    <script>
+  window.assetPath = (function(){
+    var map = {"defer/html-sanitizer-bundle":"/assets/defer/html-sanitizer-bundle-d16d6db88ba7f52519e32490435898443349921e4f227e7bf443b7f66dfc8096.js"};
+    return function(asset) { return map[asset]; };
+  })();
+</script>
+
+<script>
+  Ember.RSVP.configure('onerror', function(e) {
+    // Ignore TransitionAborted exceptions that bubble up
+    if (e && e.message === "TransitionAborted") { return; }
+
+    window.onerror(e && e.message, null,null,null,e);
+  });
+
+
+</script>
+
+<script>
+  Discourse.CDN = '';
+  Discourse.BaseUrl = 'discuss.tail-f.com'.replace(/:[\d]*$/,"");
+  Discourse.BaseUri = '';
+  Discourse.Environment = 'production';
+  Discourse.SiteSettings = PreloadStore.get('siteSettings');
+  Discourse.LetterAvatarVersion = '5_b81b9db9c25c85a3cb45c5969b40553e';
+  I18n.defaultLocale = 'en';
+  PreloadStore.get("customEmoji").forEach(function(emoji) {
+    Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
+  });
+  Discourse.start();
+  Discourse.set('assetVersion','9a38e361b3bbac9521e0bd7689bf8da1');
+  Discourse.Session.currentProp("disableCustomCSS", false);
+  Discourse.HighlightJSPath = "/highlight-js/discuss.tail-f.com/133b1767dbeecf92cad6dfc38d42cde22195db05.js";
+</script>
+
+<script src="./Subscription to Notification - YANG - ConfD User Community_files/browser-update-f57286e74ddbc53aa899689b01ef467078911e4138050c561939955849af35dd.js"></script>
+
+
+    
+
+      
+  
+
+</body></html>

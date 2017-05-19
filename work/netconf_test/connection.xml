@@ -1,0 +1,24 @@
+<connections>
+ -      <connection-id>1</connection-id>
+ -      <source>
+ -        <port-id>3</port-id>
+ -        <wavelength-id>1</wavelength-id>
+ -      </source>
+ -      <destination>
+ -        <port-id>2</port-id>
+ -      </destination>
+ -      <attenuation>1.5</attenuation>
+</connections>
+
+
+<ports>
+    <port-id>3</port-id>
+    <port>
+        <ocm-stats>
+            <wavelength-number>1</wavelength-number>
+            <wavelength-stats>
+                <wavelength-power>1.0</wavelength-power>
+            </wavelength-stats>
+        </ocm-stats>
+    </port>
+</ports>
